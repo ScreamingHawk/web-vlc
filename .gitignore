@@ -58,4 +58,4 @@ typings/
 .env
 
 # CoffeeScript
-*.js
+webpack.config.js

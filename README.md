@@ -9,12 +9,12 @@ Install dependencies.
 npm i
 ```
 
-Edit `config.coffee` to your defaults.
+Edit `server/config.coffee` to your defaults.
 
-Compile CoffeeScript.
+Compile CoffeeScript and Webpack.
 
 ```
-npm run compile
+npm run build
 ```
 
 Run the server.
@@ -31,7 +31,13 @@ Note your path may be different if you changed the config.
 Watch for CoffeeScript changes.
 
 ```
-npm run compile-watch
+npm run coffee-watch
+```
+
+Watch for Webpack changes.
+
+```
+npm run webpack-watch
 ```
 
 Run server watching for changes.

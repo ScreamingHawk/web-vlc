@@ -18,11 +18,11 @@ app.use '/play', require './routes/play'
 app.use '/shows', require './routes/shows'
 
 # Configure static pages
-app.use express.static path.join __dirname, 'client'
+app.use express.static path.join __dirname, '../client'
 
 app.get '/', (req, res)->
 	# Send home page
-	res.sendFile path.join __dirname, 'client/home.html'
+	res.sendFile path.join __dirname, '../client/public/index.html'
 
 # Run server
 app.listen config.server.port, ->
