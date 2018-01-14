@@ -4,6 +4,7 @@
   "description": "A website for selecting shows to watch on VLC locally",
   "main": "server.js",
   "dependencies": {
+    "cross-spawn": "^5.1.0",
     "express": "^4.16.2",
     "winston": "^2.4.0"
   },
