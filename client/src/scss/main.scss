@@ -6,6 +6,30 @@ $main-brand: #585088;
 $dark-accent: #8E92E1;
 $dark-shade: #1A1E49;
 
+$primary: #575088;
+$info: #191e49;
+$success: #4f9361;
+$warning: #cd8229;
+$danger: #f44336;
+
+@mixin border-radius($radius) {
+	-webkit-border-radius: $radius;
+	-moz-border-radius: $radius;
+	-ms-border-radius: $radius;
+	border-radius: $radius;
+}
+
+@mixin margin-vertical($margin) {
+	margin-top: $margin;
+	margin-bottom: $margin;
+}
+
+@mixin border-box() {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
 body {
 	font: 100% $font-stack;
 	color: $dark-shade;
@@ -14,4 +38,35 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
 	color: $main-brand;
+}
+
+.flex {
+	display: flex;
+	&.center {
+		align-items: center;
+		justify-content: center;
+	}
+	.box {
+		display: block;
+		flex-basis: 0;
+		flex-grow: 1;
+		flex-shrink: 1;
+	}
+}
+
+
+.card {
+	@include margin-vertical(30px);
+	img {
+		margin: 0;
+		max-width: 300px;
+		@include border-radius(3px);
+		transition: background-image 1s;
+		box-shadow: 0 16px 38px -12px rgba(0, 0, 0, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2)
+	}
+	.content {
+		@include border-box();
+		max-width: 300px;
+		padding: 10px;
+	}
 }
