@@ -1,5 +1,17 @@
+$font-stack: Helvetica, sans-serif;
+
+$light-shade: #F4F5F6;
+$light-accent: #5FCBE6;
+$main-brand: #585088;
+$dark-accent: #8E92E1;
+$dark-shade: #1A1E49;
+
 body {
-	background: #ACCEEC;
-	color: #005CC5;
-	text-align: center;
+	font: 100% $font-stack;
+	color: $dark-shade;
+	background-color: $light-shade;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: $main-brand;
 }

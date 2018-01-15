@@ -10,9 +10,10 @@ router = express.Router()
 
 exports = module.exports = router
 
+videoList = []
 showList = []
 # Refresh the list
-refreshList = (callback)->
+refreshLists = (callback)->
 	log.debug "Refreshing video list"
 
 	# Get all files in sub folders
@@ -28,11 +29,28 @@ refreshList = (callback)->
 						fileList.push getFileMeta fPath, fMime
 		fileList
 
-	# Build the list from all locations
-	showList = []
+	# Build the list of videos from all locations
+	videoList = []
 	for loc in config.files.locations
-		showList = showList.concat walkSync loc
-	callback? showList
+		videoList = videoList.concat walkSync loc
+
+	# Build the list of shows from all videos
+	showListDict = {}
+	for video in videoList
+		if !showListDict[video.show]?
+			showListDict[video.show] =
+				name: video.show
+				seasons: if video.season? then [video.season] else []
+				count: 1
+		else
+			if video.season? && !(video.season in showListDict[video.show].seasons)
+				showListDict[video.show].seasons.push video.season
+			showListDict[video.show].count++
+	showList = []
+	for name, show of showListDict
+		showList.push show
+
+	callback?()
 
 getFileMeta = (fPath, fMime)->
 	# Create meta obj
@@ -62,7 +80,7 @@ getFileMeta = (fPath, fMime)->
 	return fMeta
 
 # Call on init
-refreshList()
+refreshLists()
 
 router.get '/', (req, res)->
 	# List all shows
