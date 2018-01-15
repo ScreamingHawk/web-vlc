@@ -18,15 +18,19 @@ refreshLists = (callback)->
 
 	# Get all files in sub folders
 	walkSync = (dir, fileList = [])->
-		fs.readdirSync dir
-			.forEach (file)->
-				fPath = path.join dir, file
-				if fs.statSync(fPath).isDirectory()
-					walkSync fPath, fileList
-				else
-					fMime = mime.getType file
-					if fMime.startsWith "video"
-						fileList.push getFileMeta fPath, fMime
+		try
+			fs.readdirSync dir
+				.forEach (file)->
+					fPath = path.join dir, file
+					if fs.statSync(fPath).isDirectory()
+						walkSync fPath, fileList
+					else
+						fMime = mime.getType file
+						if fMime.startsWith "video"
+							fileList.push getFileMeta fPath, fMime
+		catch err
+			log.error "Unable to read directory #{dir}. Is your config file set up correctly?"
+			log.error err
 		fileList
 
 	# Build the list of videos from all locations

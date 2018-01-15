@@ -10,6 +10,11 @@ log.add log.transports.Console,
 	timestamp: true
 	level: config.server.logLevel
 
+# Catch top level exceptions and log them.
+# This should prevent the server from terminating due to a rogue exception.
+process.on 'uncaughtException', (error) ->
+	log.error "CRITICAL: #{error.stack}"
+
 # Configure server
 app = express()
 
@@ -28,8 +33,3 @@ app.get '/bundle.js', (req, res)->
 # Run server
 app.listen config.server.port, ->
 	log.info "Server running at http://localhost:#{config.server.port}"
-
-# Catch top level exceptions and log them.
-# This should prevent the server from terminating due to a rogue exception.
-process.on 'uncaughtException', (error) ->
-	log.error "CRITICAL: #{error.stack}"
