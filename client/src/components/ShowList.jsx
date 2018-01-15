@@ -10,7 +10,7 @@ export default class ShowList extends Component {
 	}
 	async getShowList(){
 		const shows = await (await fetch('/shows')).json()
-		this.setState({shows: shows})
+		this.setState({shows: shows.concat(shows).concat(shows)})
 
 		const apiData = await (await fetch('/config/api/omdb')).json()
 		for (let i in shows){
@@ -33,7 +33,7 @@ export default class ShowList extends Component {
 				imgSrc = show.image
 			}
 			return (
-				<div className="box card center" key={show.name}>
+				<div className="box card inverted" key={show.name}>
 					<img src={imgSrc}></img>
 					<div className="content">
 						<h3>{show.name}</h3>
@@ -51,7 +51,7 @@ export default class ShowList extends Component {
 			)
 		});
 		return (
-			<div className="flex">
+			<div className="flex wrap center">
 				{showRenders}
 			</div>
 		)

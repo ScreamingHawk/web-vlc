@@ -1,4 +1,4 @@
-$font-stack: Helvetica, sans-serif;
+$font-stack: "Roboto", "Helvetica", "Arial", sans-serif;
 
 $light-shade: #F4F5F6;
 $light-accent: #5FCBE6;
@@ -42,21 +42,27 @@ h1, h2, h3, h4, h5, h6 {
 
 .flex {
 	display: flex;
-	&.center {
-		align-items: center;
-		justify-content: center;
-	}
 	.box {
 		display: block;
 		flex-basis: 0;
 		flex-grow: 1;
 		flex-shrink: 1;
 	}
+	&.center {
+		align-items: center;
+		justify-content: center;
+	}
+	&.wrap {
+		flex-wrap: wrap;
+	}
 }
 
 
 .card {
-	@include margin-vertical(30px);
+	margin: 30px;
+	padding: 30px;
+	@include border-radius(8px);
+	max-width: 300px;
 	img {
 		margin: 0;
 		max-width: 300px;
@@ -68,5 +74,9 @@ h1, h2, h3, h4, h5, h6 {
 		@include border-box();
 		max-width: 300px;
 		padding: 10px;
+	}
+	&.inverted {
+		background-color: $dark-shade;
+		color: $light-shade;
 	}
 }
