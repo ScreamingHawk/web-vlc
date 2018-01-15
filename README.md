@@ -39,3 +39,15 @@ Run server watching for changes.
 ```
 npm run start-watch
 ```
+
+# Configuration
+
+Files must be organised like so:
+
+```
+Show Name
+	> Season x
+		> video with episode x.ext
+```
+
+Season folder may be omitted.

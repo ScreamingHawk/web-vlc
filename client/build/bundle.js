@@ -951,9 +951,9 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactDom = __webpack_require__(18);
 
-var _App = __webpack_require__(27);
+var _ShowList = __webpack_require__(27);
 
-var _App2 = _interopRequireDefault(_App);
+var _ShowList2 = _interopRequireDefault(_ShowList);
 
 var _main = __webpack_require__(28);
 
@@ -961,7 +961,7 @@ var _main2 = _interopRequireDefault(_main);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-(0, _reactDom.render)(_react2.default.createElement(_App2.default, null), document.getElementById('root'));
+(0, _reactDom.render)(_react2.default.createElement(ShowList, null), document.getElementById('root'));
 
 /***/ }),
 /* 15 */
@@ -7733,30 +7733,49 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var App = function (_Component) {
-	_inherits(App, _Component);
+var ShowList = function (_Component) {
+	_inherits(ShowList, _Component);
 
-	function App() {
-		_classCallCheck(this, App);
+	function ShowList(props) {
+		_classCallCheck(this, ShowList);
 
-		return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+		var _this = _possibleConstructorReturn(this, (ShowList.__proto__ || Object.getPrototypeOf(ShowList)).call(this, props));
+
+		_this.state = { shows: [] };
+		return _this;
 	}
 
-	_createClass(App, [{
+	_createClass(ShowList, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			this.getShowList();
+		}
+	}, {
+		key: 'getShowList',
+		value: function getShowList() {
+			var _this2 = this;
+
+			$.getJSON('/shows').then(function (_ref) {
+				var results = _ref.results;
+				return _this2.setState({ shows: results });
+			});
+		}
+	}, {
 		key: 'render',
 		value: function render() {
+			var out = this.state.shows;
 			return _react2.default.createElement(
 				'h1',
 				null,
-				'Hello World'
+				out
 			);
 		}
 	}]);
 
-	return App;
+	return ShowList;
 }(_react.Component);
 
-exports.default = App;
+exports.default = ShowList;
 
 /***/ }),
 /* 28 */

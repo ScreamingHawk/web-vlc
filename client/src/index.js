@@ -1,10 +1,10 @@
 import React from 'react';
 import { render } from 'react-dom';
-import App from './components/App.jsx';
+import App from './components/ShowList.jsx';
 
 import styles from './scss/main.scss';
 
 render(
-	<App />,
+	<ShowList />,
 	document.getElementById('root')
 );
