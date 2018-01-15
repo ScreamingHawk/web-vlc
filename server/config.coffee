@@ -9,4 +9,9 @@ module.exports =
 		# The locations of the video files
 		locations: [
 				"E:\\Videos\\Anime"
+				"C:\\Users\\MichaelSta\\Videos"
 			]
+	api:
+		omdb:
+			url: "http://www.omdbapi.com/"
+			key: "XXXXXXXX"

@@ -21,6 +21,7 @@ app = express()
 # Configure routes
 app.use '/play', require './routes/play'
 app.use '/shows', require './routes/shows'
+app.use '/config', require './routes/config'
 
 app.get '/', (req, res)->
 	# Send home page
