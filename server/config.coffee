@@ -8,5 +8,5 @@ module.exports =
 	files:
 		# The locations of the video files
 		locations: [
-				"C:\\Users\\MichaelSta\\Videos"
+				"E:\\Videos\\Anime"
 			]

@@ -46,14 +46,15 @@ getFileMeta = (fPath, fMime)->
 		fMime = mime.getType fMeta.file
 	fMeta.mime = fMime
 	# Get episode
-	episode = fMeta.filename?.match /(?:e|x|episode)?(\d)+/, "i"
-	if episode?
-		fMeta.episode = episode[0]
+	episode = fMeta.filename?.match /(?:e|x|_|-|episode|^)\s*(\d{1,2})/, "i"
+	if episode? && !isNaN episode[1]
+		fMeta.episode = Number episode[1]
 	# Get season from folder
 	i = 2
-	season = parts[parts.length - i]?.match /(?:s|season)?(\d)+/, "i"
-	if season?
-		fMeta.season = season[0]
+	season = parts[parts.length - i]?.match /(?:s|season)?(\d{1,2})/, "i"
+	if season? && !isNaN season[0]
+		fMeta.season = Number season[0]
+		# Bump folder for getting show
 		i++
 	# Get show
 	fMeta.show = parts[parts.length - i]
