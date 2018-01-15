@@ -92,5 +92,5 @@ router.get '/', (req, res)->
 
 router.get '/refresh', (req, res)->
 	# Refresh the list
-	refreshList()
+	refreshLists()
 	res.sendStatus 200
