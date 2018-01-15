@@ -32,7 +32,8 @@
     "webpack": "./node_modules/.bin/webpack",
     "webpack-watch": "./node_modules/.bin/webpack -w",
     "start": "node server/server.js",
-    "start-watch": "node ./node_modules/nodemon/bin/nodemon server/server.js"
+    "start-watch": "node ./node_modules/nodemon/bin/nodemon server/server.js",
+    "complete": "npm run build && npm start"
   },
   "repository": {
     "type": "git",

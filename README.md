@@ -9,18 +9,12 @@ Install dependencies.
 npm i
 ```
 
-Edit `server/config.coffee` to your defaults.
+Edit `server/config.coffee` with your defaults.
 
-Compile CoffeeScript and Webpack.
-
-```
-npm run build
-```
-
-Run the server.
+Build everything and run in a single command, because you are lazy.
 
 ```
-npm start
+npm run complete
 ```
 
 Navigate to the application at `http://localhost:3000`.
