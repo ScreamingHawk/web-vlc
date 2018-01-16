@@ -102,8 +102,13 @@ button {
 		flex-grow: 1;
 		flex-shrink: 1;
 	}
+	&.row {
+		flex-direction: row;
+	}
+	&.spaced {
+		justify-content: space-between;
+	}
 	&.center {
-		align-items: center;
 		justify-content: center;
 	}
 	&.wrap {
@@ -131,4 +136,15 @@ button {
 		padding: 10px;
 	}
 	@extend %uninvertable
+}
+
+.video {
+	margin: 10px;
+	width: 100%;
+}
+
+// ---- Helpers ---
+
+.right {
+	margin-left: auto;
 }
