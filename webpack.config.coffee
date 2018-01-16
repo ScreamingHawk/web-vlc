@@ -31,4 +31,11 @@ module.exports =
 									"es2015"
 								]
 					]
+				,
+					test: /\.(png|jpg|svg)$/
+					use: [
+						loader: "url-loader"
+						options:
+								limit: 25000
+					]
 			]
