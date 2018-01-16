@@ -10,20 +10,7 @@ export default class ShowList extends Component {
 	}
 	async getShowList(){
 		const shows = await (await fetch('/shows')).json()
-		this.setState({shows: shows.concat(shows).concat(shows)})
-
-		const apiData = await (await fetch('/config/api/omdb')).json()
-		for (let i in shows){
-			const details = await (await fetch(`${apiData.url}?apikey=${apiData.key}&t=${shows[i].name}`)).json()
-			if (details.Response == "True"){
-				const newShows = this.state.shows.slice()
-				let show = newShows[i]
-				show.image = details.Poster
-				show.plot = details.Plot
-				show.imdbRating = details.imdbRating
-				this.setState({shows: newShows})
-			}
-		}
+		this.setState({shows: shows})
 	}
 	render() {
 		let showRenders = this.state.shows.map(function(show){
@@ -46,6 +33,7 @@ export default class ShowList extends Component {
 							<br/>
 							<b>Episodes on disk:</b> {show.count}
 						</p>
+						<button className="primary large">Watch me!</button>
 					</div>
 				</div>
 			)

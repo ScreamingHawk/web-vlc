@@ -9,7 +9,7 @@ $dark-shade: #1A1E49;
 $primary: #575088;
 $info: #191e49;
 $success: #4f9361;
-$warning: #cd8229;
+$warn: #cd8229;
 $danger: #f44336;
 
 @mixin border-radius($radius) {
@@ -30,14 +30,68 @@ $danger: #f44336;
 	box-sizing: border-box;
 }
 
-body {
-	font: 100% $font-stack;
+@mixin transition-all($time) {
+	-webkit-transition: all $time ease-out;
+	-moz-transition: all $time ease-out;
+	-o-transition: all $time ease-out;
+	transition: all $time ease-out;
+}
+
+%invertable {
 	color: $dark-shade;
 	background-color: $light-shade;
+	&.inverted {
+		background-color: $dark-shade;
+		color: $light-shade;
+	}
+}
+%uninvertable {
+	background-color: $dark-shade;
+	color: $light-shade;
+	&.inverted {
+		color: $dark-shade;
+		background-color: $light-shade;
+	}
+}
+
+body {
+	font: 100% $font-stack;
+	@extend %invertable
 }
 
 h1, h2, h3, h4, h5, h6 {
 	color: $main-brand;
+}
+
+button {
+	@include border-radius(3px);
+	color: $light-shade;
+	@include transition-all(0.3s);
+	border: none;
+	cursor: pointer;
+	padding: 10px;
+	&.large {
+		font-size: 1.2em;
+		padding: 15px;
+	}
+	&.primary {
+		background-color: $primary;
+	}
+	&.info {
+		background-color: $info;
+	}
+	&.success {
+		background-color: $success;
+	}
+	&.warn {
+		background-color: $warn;
+	}
+	&.danger {
+		background-color: $danger;
+	}
+	&:hover {
+		opacity: 0.8;
+	}
 }
 
 .flex {
@@ -57,6 +111,7 @@ h1, h2, h3, h4, h5, h6 {
 	}
 }
 
+// ---- Card ----
 
 .card {
 	margin: 30px;
@@ -75,8 +130,5 @@ h1, h2, h3, h4, h5, h6 {
 		max-width: 300px;
 		padding: 10px;
 	}
-	&.inverted {
-		background-color: $dark-shade;
-		color: $light-shade;
-	}
+	@extend %uninvertable
 }

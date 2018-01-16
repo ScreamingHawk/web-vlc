@@ -3,6 +3,7 @@ express = require 'express'
 fs = require 'fs'
 path = require 'path'
 mime = require 'mime'
+request = require 'request'
 
 config = require '../config'
 
@@ -46,15 +47,27 @@ refreshLists = (callback)->
 				name: video.show
 				seasons: if video.season? then [video.season] else []
 				count: 1
+				videos: [video]
 		else
 			if video.season? && !(video.season in showListDict[video.show].seasons)
 				showListDict[video.show].seasons.push video.season
 			showListDict[video.show].count++
+			showListDict[video.show].videos.push video
 	showList = []
 	for name, show of showListDict
+		setApiDetails show
 		showList.push show
 
 	callback?()
+
+setApiDetails = (show)->
+	request "#{config.api.omdb.url}?apikey=#{config.api.omdb.key}&t=#{show.name}", (err, res)=>
+		if res.statusCode is 200
+			body = JSON.parse res.body
+			if body.Response == "True"
+				show.image = body.Poster
+				show.plot = body.Plot
+				show.imdbRating = body.imdbRating
 
 getFileMeta = (fPath, fMime)->
 	# Create meta obj
@@ -88,7 +101,30 @@ refreshLists()
 
 router.get '/', (req, res)->
 	# List all shows
-	res.send showList
+	shows = []
+	for show in showList
+		shows.push
+			name: show.name
+			seasons: show.seasons
+			count: show.count
+			image: show.image
+			plot: show.plot
+			imdbRating: show.imdbRating
+	if !shows
+		res.sendStatus 404
+	else
+		res.send shows
+
+router.get '/:showName', (req, res)->
+	# List all videos for a show
+	videos = []
+	for show in showList
+		if show.name == req.params.showName
+			videos = show.videos
+	if !videos
+		res.sendStatus 404
+	else
+		res.send videos
 
 router.get '/refresh', (req, res)->
 	# Refresh the list
