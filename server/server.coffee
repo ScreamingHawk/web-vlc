@@ -1,6 +1,7 @@
 express = require 'express'
 log = require 'winston'
 path = require 'path'
+bodyParser = require 'body-parser'
 
 config = require './config'
 
@@ -17,6 +18,10 @@ process.on 'uncaughtException', (error) ->
 
 # Configure server
 app = express()
+app.use bodyParser.json
+	limit: '50mb'
+app.use bodyParser.urlencoded
+	extended: false
 
 # Configure routes
 app.use '/play', require './routes/play'

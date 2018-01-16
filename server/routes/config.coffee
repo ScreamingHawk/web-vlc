@@ -11,6 +11,6 @@ router.get '/api/:api', (req, res)->
 	# Return api details
 	apiData = config.api[req.params.api]
 	if apiData?
-		res.send apiData
+		res.json apiData
 	else
 		res.sendStatus 404

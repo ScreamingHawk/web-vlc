@@ -113,7 +113,7 @@ router.get '/', (req, res)->
 	if !shows
 		res.sendStatus 404
 	else
-		res.send shows
+		res.json shows
 
 router.get '/:showName', (req, res)->
 	# List all videos for a show
@@ -124,7 +124,7 @@ router.get '/:showName', (req, res)->
 	if !videos
 		res.sendStatus 404
 	else
-		res.send videos
+		res.json videos
 
 router.get '/refresh', (req, res)->
 	# Refresh the list

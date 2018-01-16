@@ -8,7 +8,9 @@ router = express.Router()
 
 exports = module.exports = router
 
-router.get '/', (req, res)->
+router.post '/', (req, res)->
+	log.debug req.body
+	log.debug "Playing video at path #{req.body?.path}"
 	# Open vlc
 	child = spawn config.vlc.command
 	data = ""
@@ -18,4 +20,6 @@ router.get '/', (req, res)->
 		res.send err
 		throw err
 	child.on 'close', (code)->
-		res.send "#{code}: #{data}"
+		res.json
+			code: code
+			data: data
