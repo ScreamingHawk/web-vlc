@@ -141,6 +141,11 @@ button {
 .video {
 	margin: 10px;
 	width: 100%;
+	align-items: center;
+	span {
+		word-wrap: break-word;
+		word-break: break-all;
+	}
 }
 
 // ---- Helpers ---
