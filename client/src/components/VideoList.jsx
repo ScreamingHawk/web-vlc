@@ -5,20 +5,24 @@ export default class VideoList extends Component {
 	constructor(props){
 		super(props)
 		this.state = {videos: []}
+
+		this.getVideoList = this.getVideoList.bind(this)
 	}
-	async getVideoList(show){
-		const videos = await (await fetch(`/shows/${show}`)).json()
+	async getVideoList(){
+		const videos = await (await fetch(`/shows/${this.props.show.name}`)).json()
 		this.setState({videos: videos})
 	}
 	render() {
 		if (!this.state.videos.length){
 			return (
-				<button className="primary large" onClick={() => this.getVideoList(this.props.show)}>Load episodes</button>
+				<button className="primary large" onClick={this.getVideoList}>Load episodes</button>
 			)
 		}
+		const setVideo = this.props.setVideo
+		const show = this.props.show
 		let videoRenders = this.state.videos.map(function(video){
 			return (
-				<Video {...video} key={video.filename} />
+				<Video {...video} key={video.filename} setVideo={setVideo} show={show} />
 			)
 		});
 		return (

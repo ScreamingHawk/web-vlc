@@ -44,7 +44,7 @@ export default class Show extends Component {
 						<br/>
 						<b>Episodes on disk:</b> {this.props.count}
 					</p>
-					<VideoList show={this.props.name} />
+					<VideoList show={this.props} setVideo={this.props.setVideo} />
 				</div>
 			</div>
 		)

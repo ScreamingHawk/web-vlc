@@ -9,6 +9,8 @@ export default class App extends Component {
 			isViewing: false,
 			video: null
 		}
+
+		this.setVideo = this.setVideo.bind(this)
 	}
 	toggleViewing(){
 		this.setState({
@@ -26,10 +28,10 @@ export default class App extends Component {
 		let view
 		let isViewingText
 		if (this.state.isViewing){
-			view = <Viewing />
+			view = <Viewing {...this.state.video} />
 			isViewingText = "View List"
 		} else {
-			view = <ShowList />
+			view = <ShowList setVideo={this.setVideo} />
 			isViewingText = "Now Playing"
 		}
 		return (

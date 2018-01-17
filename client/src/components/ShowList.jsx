@@ -14,9 +14,10 @@ export default class ShowList extends Component {
 		this.setState({shows: shows})
 	}
 	render() {
+		const setVideo = this.props.setVideo
 		let showRenders = this.state.shows.map(function(show){
 			return (
-				<Show {...show} key={show.name} />
+				<Show {...show} key={show.name} setVideo={setVideo} />
 			)
 		});
 		return (

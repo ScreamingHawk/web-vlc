@@ -16,6 +16,17 @@ export default class Viewing extends Component {
 			})
 		})
 	}
+	async volume(val){
+		await fetch("/play/volume", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				volume: val
+			})
+		})
+	}
 	async seek(val){
 		await fetch("/play/seek", {
 			method: "POST",
@@ -34,9 +45,9 @@ export default class Viewing extends Component {
 	}
 	render() {
 		let img
-		if (this.props.image){
+		if (this.props.show.image){
 			img = (
-				<img src={this.props.image}></img>
+				<img src={this.props.show.image}></img>
 			)
 		} else {
 			img = (
@@ -46,6 +57,9 @@ export default class Viewing extends Component {
 		return (
 			<div className="viewing flex column center">
 				{img}
+				<div className="controls text-center">
+					<span>{this.props.show.name} : {this.props.filename}</span>
+				</div>
 				<div className="controls">
 					<button className="info" onClick={this.pause}>Pause</button>
 					<button className="info" onClick={() => this.volume("down")}>Vol down</button>

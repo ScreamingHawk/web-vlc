@@ -3,17 +3,20 @@ import React, { Component } from 'react'
 export default class Video extends Component {
 	constructor(props){
 		super(props)
+
+		this.watchVideo = this.watchVideo.bind(this)
 	}
-	async watchVideo(path){
+	async watchVideo(){
 		await fetch("/play", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json"
 			},
 			body: JSON.stringify({
-				path: path
+				path: this.props.path
 			})
 		})
+		this.props.setVideo(this.props)
 	}
 	async volume(){
 		await fetch("/play/volume", {
@@ -30,7 +33,7 @@ export default class Video extends Component {
 		return (
 			<div className="video flex row spaced center">
 				<span>{this.props.filename}</span>
-				<button className="success" onClick={() => this.watchVideo(this.props.path)}>Watch!</button>
+				<button className="success" onClick={this.watchVideo}>Watch!</button>
 			</div>
 		)
 	}
