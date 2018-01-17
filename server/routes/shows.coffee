@@ -57,6 +57,8 @@ refreshLists = (callback)->
 	for name, show of showListDict
 		setApiDetails show
 		showList.push show
+	showList.sort (a, b)->
+		a.name.localeCompare b.name
 
 	callback?()
 
