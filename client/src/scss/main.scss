@@ -7,7 +7,7 @@ $dark-accent: #8E92E1;
 $dark-shade: #1A1E49;
 
 $primary: #575088;
-$info: #191e49;
+$info: #5FCBE6;
 $success: #4f9361;
 $warn: #cd8229;
 $danger: #f44336;
@@ -19,9 +19,9 @@ $danger: #f44336;
 	border-radius: $radius;
 }
 
-@mixin margin-vertical($margin) {
-	margin-top: $margin;
-	margin-bottom: $margin;
+@mixin margin-horizontal($margin) {
+	margin-left: $margin;
+	margin-right: $margin;
 }
 
 @mixin border-box() {
@@ -105,11 +105,17 @@ button {
 	&.row {
 		flex-direction: row;
 	}
+	&.column {
+		flex-direction: column;
+	}
 	&.spaced {
 		justify-content: space-between;
 	}
-	&.center {
+	&.justify {
 		justify-content: center;
+	}
+	&.center {
+		align-items: center;
 	}
 	&.wrap {
 		flex-wrap: wrap;
@@ -141,10 +147,28 @@ button {
 .video {
 	margin: 10px;
 	width: 100%;
-	align-items: center;
 	span {
 		word-wrap: break-word;
 		word-break: break-all;
+	}
+}
+
+// ---- Viewing ----
+
+.viewing {
+	@extend .card;
+	min-width: 80%;
+	margin: 0 auto;
+	img {
+		max-width: 100%;
+	}
+	.controls {
+		margin-top: 30px;
+		@extend .flex;
+		@extend .row;
+		& > * {
+			@include margin-horizontal(3px);
+		}
 	}
 }
 

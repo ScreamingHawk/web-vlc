@@ -20,7 +20,7 @@ export default class ShowList extends Component {
 			)
 		});
 		return (
-			<div className="flex wrap center">
+			<div className="flex wrap justify">
 				{showRenders}
 			</div>
 		)

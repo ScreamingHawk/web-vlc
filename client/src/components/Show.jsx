@@ -7,9 +7,8 @@ export default class Show extends Component {
 		super(props)
 		this.state = {videos: []}
 	}
-	render() {
-		//TODO Placeholder image
-		let img = null
+	render(){
+		let img
 		if (this.props.image){
 			img = (
 				<img src={this.props.image}></img>
@@ -19,7 +18,7 @@ export default class Show extends Component {
 				<img src={no_image}></img>
 			)
 		}
-		let apiP = null
+		let apiP
 		if (this.props.imdbRating){
 			apiP = (
 				<p>

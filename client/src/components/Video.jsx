@@ -28,10 +28,9 @@ export default class Video extends Component {
 	}
 	render() {
 		return (
-			<div className="video flex row spaced">
+			<div className="video flex row spaced center">
 				<span>{this.props.filename}</span>
 				<button className="success" onClick={() => this.watchVideo(this.props.path)}>Watch!</button>
-				<button className="danger" onClick={() => this.volume()}>Vol!</button>
 			</div>
 		)
 	}

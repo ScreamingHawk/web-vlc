@@ -68,27 +68,40 @@ router.post '/volume', (req, res)->
 	vlcApi "volume", vol, (ok)->
 		res.sendStatus if ok then 200 else 503
 
+# Seek
+router.post '/seek', (req, res)->
+	if !req.body?.seek?
+		log.warn "Seek value not supplied"
+		res.sendStatus 400
+		return
+	# Call seek API
+	vlcApi "seek", req.body.seek, (ok)->
+		res.sendStatus if ok then 200 else 503
+
+# Pause
+router.post '/pause', (req, res)->
+	# Call pause API
+	vlcApi "pl_pause", null, (ok)->
+		res.sendStatus if ok then 200 else 503
+
 vlcApi = (command, value, callback)->
 	# Encode value
 	if value?
-		value = value.replace /%/g, "%25"
-			.replace /\+/g, "%2B"
-			.replace /#/g, "%23"
-			.replace /\s/g, "+"
+		value = encodeURIComponent value
+			.replace /%20/g, "+"
 	#Send request
 	url = "#{config.vlc.http.url}?command=#{command}"
 	if value?
 		url += "&val=#{value}"
+	log.debug "VLC api: #{url}"
 	request
 			url: url
 			headers:
-				Authorization: "Basic #{new Buffer(":#{config.vlc.http.password}")}"
+				Authorization: "Basic #{new Buffer(":#{config.vlc.http.password}").toString "base64"}"
 		, (err, res) =>
 			if err?
 				log.error "Error contacting VLC (#{res?.statusCode})"
 				log.error err
 				callback? false
 				return
-			log.debug "response:"
-			log.debug res.statusCode
-			callback? true
+			callback? res.statusCode is 200
