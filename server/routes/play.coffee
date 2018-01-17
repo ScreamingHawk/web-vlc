@@ -100,8 +100,13 @@ vlcApi = (command, value, callback)->
 				Authorization: "Basic #{new Buffer(":#{config.vlc.http.password}").toString "base64"}"
 		, (err, res) =>
 			if err?
-				log.error "Error contacting VLC (#{res?.statusCode})"
+				log.error "Error contacting VLC"
+				log.info "Have you configured the VLC HTTP API?" # Maybe it's just not running
 				log.error err
 				callback? false
 				return
+			if res.statusCode isnt 200
+				log.error "Error contact VLC (#{res?.statusCode})"
+				if res.statusCode is 401
+					log.error "Authentication error. Have you configured the VLC HTTP password correctly?"
 			callback? res.statusCode is 200
