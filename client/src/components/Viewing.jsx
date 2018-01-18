@@ -69,7 +69,7 @@ export default class Viewing extends Component {
 			<span><i>No video playing...</i></span>
 		)
 		if (this.props.show){
-			if (this.props.show.image){
+		if (this.props.image && this.props.image != "N/A"){
 				img = (
 					<img src={this.props.show.image}></img>
 				)

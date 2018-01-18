@@ -11,7 +11,7 @@ export default class Show extends Component {
 		let img = (
 			<NoImage />
 		)
-		if (this.props.image){
+		if (this.props.image && this.props.image != "N/A"){
 			img = (
 				<img src={this.props.image}></img>
 			)
