@@ -10,6 +10,7 @@
     "mime": "^2.2.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
+    "react-svg-loader": "^2.1.0",
     "react-toastify": "^3.2.2",
     "request": "^2.83.0",
     "url-loader": "^0.6.2",

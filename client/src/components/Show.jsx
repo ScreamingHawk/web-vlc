@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import no_image from '../img/no_image.png'
 import VideoList from './VideoList.jsx'
+import NoImage from '../img/no_image.svg'
 
 export default class Show extends Component {
 	constructor(props){
@@ -8,14 +8,12 @@ export default class Show extends Component {
 		this.state = {videos: []}
 	}
 	render(){
-		let img
+		let img = (
+			<NoImage />
+		)
 		if (this.props.image){
 			img = (
 				<img src={this.props.image}></img>
-			)
-		} else {
-			img = (
-				<img src={no_image}></img>
 			)
 		}
 		let apiP

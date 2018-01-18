@@ -32,10 +32,18 @@ module.exports =
 								]
 					]
 				,
-					test: /\.(png|jpg|svg)$/
+					test: /\.(png|jpg)$/
 					use: [
 						loader: "url-loader"
 						options:
 								limit: 25000
+					]
+				,
+					test: /\.svg$/
+					use: [
+						"babel-loader"
+							loader: "react-svg-loader"
+							options:
+								jsx: false
 					]
 			]

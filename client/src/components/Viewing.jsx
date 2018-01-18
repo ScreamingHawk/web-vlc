@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
-import no_image from '../img/no_image.png'
+import NoImage from '../img/no_image.svg'
 
 export default class Viewing extends Component {
 	constructor(props){
@@ -47,7 +47,7 @@ export default class Viewing extends Component {
 	}
 	render() {
 		let img = (
-			<img src={no_image}></img>
+			<NoImage />
 		)
 		let name = (
 			<span><i>No video playing...</i></span>
