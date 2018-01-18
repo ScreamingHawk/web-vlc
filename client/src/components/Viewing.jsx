@@ -1,10 +1,18 @@
 import React, { Component } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
+
 import NoImage from '../img/no_image.svg'
+import VolumePlus from '../img/volume_plus.svg'
+import VolumeMinus from '../img/volume_minus.svg'
+import Rewind30s from '../img/rewind_30s.svg'
 
 export default class Viewing extends Component {
 	constructor(props){
 		super(props)
+
+		this.state = {
+			paused: false
+		}
 
 		this.volume = this.volume.bind(this)
 		this.seek = this.seek.bind(this)
@@ -15,6 +23,7 @@ export default class Viewing extends Component {
 			toast.error("Error contact VLC!", {
 				position: toast.POSITION.BOTTOM_CENTER
 			})
+			return null
 		}
 		return response
 	}
@@ -44,6 +53,13 @@ export default class Viewing extends Component {
 		await fetch("/play/pause", {
 			method: "POST"
 		}).then(this.handleApiErrors)
+		.then((response) => {
+			if (response){
+				this.setState({
+					paused: !this.state.paused
+				})
+			}
+		})
 	}
 	render() {
 		let img = (
@@ -62,6 +78,8 @@ export default class Viewing extends Component {
 				<span>{this.props.show.name} : {this.props.filename}</span>
 			)
 		}
+		console.log(this.state.paused)
+		let pauseText = this.state.paused ? "Play" : "Pause"
 		return (
 			<div className="viewing flex column center">
 				{img}
@@ -70,10 +88,16 @@ export default class Viewing extends Component {
 				</div>
 				<ToastContainer autoClose={3000} />
 				<div className="controls">
-					<button className="info" onClick={this.pause}>Pause</button>
-					<button className="info" onClick={() => this.volume("down")}>Vol down</button>
-					<button className="info" onClick={() => this.volume("up")}>Vol up</button>
-					<button className="info" onClick={() => this.seek("-30s")}>Rewind 30s</button>
+					<button className="info" onClick={this.pause}>{pauseText}</button>
+					<button className="info" onClick={() => this.volume("down")}>
+						<VolumeMinus />
+					</button>
+					<button className="info" onClick={() => this.volume("up")}>
+						<VolumePlus />
+					</button>
+					<button className="info" onClick={() => this.seek("-30s")}>
+						<Rewind30s />
+					</button>
 				</div>
 			</div>
 		)

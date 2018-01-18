@@ -129,7 +129,8 @@ button {
 	padding: 30px;
 	@include border-radius(8px);
 	max-width: 300px;
-	img, svg {
+	& > img,
+	& > svg {
 		margin: 0;
 		max-width: 300px;
 		@include border-radius(3px);
