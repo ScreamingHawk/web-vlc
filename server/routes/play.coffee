@@ -30,13 +30,8 @@ router.post '/', (req, res)->
 	# Open vlc
 	log.debug "Running command #{config.vlc.command} with flags #{cmdFlags}"
 	child = spawn config.vlc.command, cmdFlags
-	data = ""
-	child.stdout.on 'data', (chunk)->
-		data += chunk
 	child.on 'error', (err)->
 		log.error "VLC error: #{err}"
-	child.on 'close', (code)->
-		log.debug "VLC closed"
 
 	res.sendStatus 200
 
@@ -54,10 +49,10 @@ router.post '/volume', (req, res)->
 	vol = null
 	if req.body.volume == "up"
 		log.debug "Upping volume"
-		vol = "+5"
+		vol = "+10"
 	else if req.body.volume == "down"
 		log.debug "Lowering volume"
-		vol = "-5"
+		vol = "-10"
 	else if isNaN req.body.volume
 		log.warn "Volume value invalid"
 		res.sendStatus 400
