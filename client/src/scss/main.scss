@@ -94,6 +94,21 @@ button {
 	}
 }
 
+input {
+	font-family: $font-stack;
+	border: 0;
+	border-bottom: 2px solid $dark-accent;
+	padding: 5px;
+	min-width: 45%;
+
+	&::placeholder {
+		color: $dark-accent;
+	}
+	&:focus {
+		outline: none;
+	}
+}
+
 .flex {
 	display: flex;
 	.box {
