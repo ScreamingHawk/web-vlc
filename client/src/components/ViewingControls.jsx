@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 
+import Pause from '../img/pause.svg'
+import Play from '../img/play.svg'
 import VolumePlus from '../img/volume_plus.svg'
 import VolumeMinus from '../img/volume_minus.svg'
 import Rewind30s from '../img/rewind_30s.svg'
@@ -61,11 +63,13 @@ export default class Viewing extends Component {
 		})
 	}
 	render() {
-		let pauseText = this.state.paused ? "Play" : "Pause"
+		let pauseIcon = this.state.paused ? (<Play />) : (<Pause />)
 		return (
 			<div className="controls">
 				<ToastContainer autoClose={3000} />
-				<button className="info" onClick={this.pause}>{pauseText}</button>
+				<button className="info" onClick={this.pause}>
+					{pauseIcon}
+				</button>
 				<button className="info" onClick={() => this.volume("down")}>
 					<VolumeMinus />
 				</button>
