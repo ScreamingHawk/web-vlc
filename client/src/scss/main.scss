@@ -100,6 +100,7 @@ input {
 	border-bottom: 2px solid $dark-accent;
 	padding: 5px;
 	min-width: 45%;
+	background: transparent;
 
 	&::placeholder {
 		color: $dark-accent;
