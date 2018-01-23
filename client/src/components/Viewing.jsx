@@ -31,7 +31,7 @@ export default class Viewing extends Component {
 				<div className="controls text-center">
 					{name}
 				</div>
-				<ViewingControls />
+				<ViewingControls video={this.props} setVideo={this.props.setVideo} />
 			</div>
 		)
 	}

@@ -130,6 +130,22 @@ router.get '/:showName', (req, res)->
 	else
 		res.json videos
 
+router.get '/:showName/:videoFilename/next', (req, res)->
+	# List the next show
+	sendNext = false
+	for show in showList
+		if show.name == req.params.showName
+			for video in show.videos
+				if sendNext
+					# Send this video
+					res.json video
+					return
+				if video.filename == req.params.videoFilename
+					# Matched current, send the next one
+					sendNext = true
+	# Fail over
+	res.sendStatus 404
+
 router.get '/refresh', (req, res)->
 	# Refresh the list
 	refreshLists()

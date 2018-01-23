@@ -5,12 +5,13 @@ import Viewing from './Viewing.jsx'
 export default class App extends Component {
 	constructor(props){
 		super(props)
+
+		this.setVideo = this.setVideo.bind(this)
+
 		this.state = {
 			isViewing: false,
 			video: null
 		}
-
-		this.setVideo = this.setVideo.bind(this)
 	}
 	toggleViewing(){
 		this.setState({
@@ -18,7 +19,17 @@ export default class App extends Component {
 			video: this.state.video
 		})
 	}
-	setVideo(video){
+	async setVideo(video){
+		console.log(video)
+		await fetch("/play", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				path: video.path
+			})
+		})
 		this.setState({
 			isViewing: true,
 			video: video
@@ -28,7 +39,7 @@ export default class App extends Component {
 		let view
 		let isViewingText
 		if (this.state.isViewing){
-			view = <Viewing {...this.state.video} />
+			view = <Viewing {...this.state.video} setVideo={this.setVideo} />
 			isViewingText = "View List"
 		} else {
 			view = <ShowList setVideo={this.setVideo} />

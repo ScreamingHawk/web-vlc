@@ -6,28 +6,8 @@ export default class Video extends Component {
 
 		this.watchVideo = this.watchVideo.bind(this)
 	}
-	async watchVideo(){
-		await fetch("/play", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify({
-				path: this.props.path
-			})
-		})
+	watchVideo(){
 		this.props.setVideo(this.props)
-	}
-	async volume(){
-		await fetch("/play/volume", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify({
-				volume: "up"
-			})
-		})
 	}
 	render() {
 		return (
