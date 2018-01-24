@@ -11,14 +11,18 @@ export default class Show extends Component {
 
 		this.unhideRated = this.unhideRated.bind(this)
 
-		let ratingHidden = this.props.rating && (
-				this.props.rating.indexOf("R") > -1 ||
-				this.props.rating.indexOf("MA") > -1 ||
-				this.props.rating.indexOf("N/A") > -1 // Assume not rated is lewd
+		const { show } = this.props
+
+		const isCurrentShow = this.props.currentVideo != null && this.props.currentVideo.show.name == show.name
+		const ratingHidden = !isCurrentShow && show.rating && (
+				show.rating.indexOf("R") > -1 ||
+				show.rating.indexOf("MA") > -1 ||
+				show.rating.indexOf("N/A") > -1 // Assume not rated is lewd
 			)
 		this.state = {
 			videos: [],
-			ratingHidden: ratingHidden
+			ratingHidden: ratingHidden,
+			isCurrentShow: isCurrentShow
 		}
 	}
 	unhideRated(){
@@ -28,22 +32,23 @@ export default class Show extends Component {
 		})
 	}
 	render(){
+		const { show } = this.props
 		let img = (
 			<NoImage />
 		)
-		if (this.props.image && this.props.image != "N/A"){
+		if (show.image && show.image != "N/A"){
 			if (this.state.ratingHidden){
 				img = (
 					<Mature className="clickable" onClick={this.unhideRated} />
 				)
 			} else {
 				img = (
-					<img src={this.props.image}></img>
+					<img src={show.image}></img>
 				)
 			}
 		}
 		let plotP = (
-			<p>{this.props.plot}</p>
+			<p>{show.plot}</p>
 		)
 		if (this.state.ratingHidden){
 			plotP = (
@@ -55,28 +60,32 @@ export default class Show extends Component {
 				<i>Details not found.</i>
 			</p>
 		)
-		if (this.props.imdbRating){
+		if (show.imdbRating){
 			apiP = (
 				<p>
-					<b>IMDB Rating:</b> {this.props.imdbRating}
+					<b>IMDB Rating:</b> {show.imdbRating}
 					<br/>
-					<b>Rated:</b> {this.props.rating != null ? this.props.rating : "No Rating"}
+					<b>Rated:</b> {show.rating != null ? show.rating : "No Rating"}
 				</p>
 			)
 		}
+		let className = "box card"
+		if (this.state.isCurrentShow){
+			className += " highlight"
+		}
 		return (
-			<div className="box card" key={this.props.name}>
+			<div className={className} key={show.name}>
 				{img}
 				<div className="content">
-					<h2>{this.props.name}</h2>
+					<h2>{show.name}</h2>
 					{plotP}
 					{apiP}
 					<p>
-						<b>Seasons on disk:</b> {this.props.seasons.length > 0 ? this.props.seasons.join(", ") : "None"}
+						<b>Seasons on disk:</b> {show.seasons.length > 0 ? show.seasons.join(", ") : "None"}
 						<br/>
-						<b>Episodes on disk:</b> {this.props.count}
+						<b>Episodes on disk:</b> {show.count}
 					</p>
-					<VideoList show={this.props} setVideo={this.props.setVideo} />
+					<VideoList show={show} setVideo={this.props.setVideo} />
 				</div>
 			</div>
 		)

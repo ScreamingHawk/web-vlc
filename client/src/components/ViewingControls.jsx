@@ -25,7 +25,9 @@ export default class Viewing extends Component {
 		}
 	}
 	componentDidMount(){
-		this.getNextVideo()
+		if (this.state.video){
+			this.getNextVideo()
+		}
 	}
 	handleApiErrors(response){
 		if (response.status == 503){

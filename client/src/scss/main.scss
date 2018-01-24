@@ -158,7 +158,10 @@ input {
 		max-width: 300px;
 		padding: 10px;
 	}
-	@extend %uninvertable
+	@extend %uninvertable;
+	&.highlight {
+		background-color: $dark-accent;
+	}
 }
 
 .video {

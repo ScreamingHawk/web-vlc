@@ -4,13 +4,14 @@ import Show from './Show.jsx'
 export default class ShowList extends Component {
 	constructor(props){
 		super(props)
+
+		this.filterShows = this.filterShows.bind(this)
+
 		this.state = {
 			shows: [],
 			filteredShows: [],
 			search: ""
 		}
-
-		this.filterShows = this.filterShows.bind(this)
 	}
 	componentDidMount(){
 		this.getShowList()
@@ -35,10 +36,10 @@ export default class ShowList extends Component {
 		})
 	}
 	render() {
-		const setVideo = this.props.setVideo
+		const sendProps = this.props
 		let showRenders = this.state.filteredShows.map(function(show){
 			return (
-				<Show {...show} key={show.name} setVideo={setVideo} />
+					<Show {...sendProps} show={show} key={show.name} />
 			)
 		});
 		return (

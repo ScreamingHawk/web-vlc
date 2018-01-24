@@ -16,7 +16,7 @@ export default class Viewing extends Component {
 			<span><i>No video playing...</i></span>
 		)
 		const { currentVideo } = this.props
-		if (currentVideo.show){
+		if (currentVideo && currentVideo.show){
 			if (currentVideo.show.image && currentVideo.show.image != "N/A"){
 				img = (
 					<img src={currentVideo.show.image}></img>

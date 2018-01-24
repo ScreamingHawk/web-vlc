@@ -35,13 +35,17 @@ export default class App extends Component {
 		})
 	}
 	render(){
+		const sendProps = {
+			currentVideo: this.state.video,
+			setVideo: this.setVideo
+		}
 		let view
 		let isViewingText
 		if (this.state.isViewing){
-			view = <Viewing currentVideo={this.state.video} setVideo={this.setVideo} />
+			view = <Viewing {...sendProps} />
 			isViewingText = "View List"
 		} else {
-			view = <ShowList setVideo={this.setVideo} />
+			view = <ShowList {...sendProps} />
 			isViewingText = "Now Playing"
 		}
 		return (
