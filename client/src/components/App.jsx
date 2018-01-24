@@ -20,7 +20,6 @@ export default class App extends Component {
 		})
 	}
 	async setVideo(video){
-		console.log(video)
 		await fetch("/play", {
 			method: "POST",
 			headers: {
