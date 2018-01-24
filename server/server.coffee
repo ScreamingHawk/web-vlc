@@ -24,13 +24,21 @@ app.use bodyParser.urlencoded
 	extended: false
 
 # Configure routes
+showsRoutes = require './routes/shows'
 app.use '/play', require './routes/play'
-app.use '/shows', require './routes/shows'
+app.use '/shows', showsRoutes
 app.use '/config', require './routes/config'
 
 app.get '/', (req, res)->
-	# Send home page
-	res.sendFile path.join __dirname, '../client/index.html'
+	sendHome = =>
+		# Send home page
+		res.sendFile path.join __dirname, '../client/index.html'
+	if req.query.refresh?
+		# Refresh the list
+		showsRoutes.refreshLists sendHome
+	else
+		sendHome()
+
 
 app.get '/bundle.js', (req, res)->
 	# Send bundled js

@@ -14,7 +14,7 @@ exports = module.exports = router
 videoList = []
 showList = []
 # Refresh the list
-refreshLists = (callback)->
+refreshLists = exports.refreshLists = (callback)->
 	log.debug "Refreshing video list"
 
 	# Get all files in sub folders
@@ -72,6 +72,7 @@ setApiDetails = (show)->
 				show.image = body.Poster
 				show.plot = body.Plot
 				show.imdbRating = body.imdbRating
+				show.rating = body.Rated
 
 getFileMeta = (fPath, fMime)->
 	# Create meta obj
@@ -114,6 +115,7 @@ router.get '/', (req, res)->
 			image: show.image
 			plot: show.plot
 			imdbRating: show.imdbRating
+			rating: show.rating
 	if !shows
 		res.sendStatus 404
 	else

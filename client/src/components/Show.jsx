@@ -1,32 +1,66 @@
 import React, { Component } from 'react'
+
 import VideoList from './VideoList.jsx'
+
 import NoImage from '../img/no_image.svg'
+import Mature from '../img/mature.svg'
 
 export default class Show extends Component {
 	constructor(props){
 		super(props)
-		this.state = {videos: []}
+
+		this.unhideRated = this.unhideRated.bind(this)
+
+		let ratingHidden = this.props.rating && (
+				this.props.rating.indexOf("R") > -1 ||
+				this.props.rating.indexOf("MA") > -1 ||
+				this.props.rating.indexOf("N/A") > -1 // Assume not rated is lewd
+			)
+		this.state = {
+			videos: [],
+			ratingHidden: ratingHidden
+		}
+	}
+	unhideRated(){
+		this.setState({
+			videos: this.state.videos,
+			ratingHidden: false
+		})
 	}
 	render(){
 		let img = (
 			<NoImage />
 		)
 		if (this.props.image && this.props.image != "N/A"){
-			img = (
-				<img src={this.props.image}></img>
+			if (this.state.ratingHidden){
+				img = (
+					<Mature className="clickable" onClick={this.unhideRated} />
+				)
+			} else {
+				img = (
+					<img src={this.props.image}></img>
+				)
+			}
+		}
+		let plotP = (
+			<p>{this.props.plot}</p>
+		)
+		if (this.state.ratingHidden){
+			plotP = (
+				<p><i>Plot hidden.</i></p>
 			)
 		}
-		let apiP
+		let apiP = (
+			<p>
+				<i>Details not found.</i>
+			</p>
+		)
 		if (this.props.imdbRating){
 			apiP = (
 				<p>
 					<b>IMDB Rating:</b> {this.props.imdbRating}
-				</p>
-			)
-		} else {
-			apiP = (
-				<p>
-					<i>Details not found.</i>
+					<br/>
+					<b>Rated:</b> {this.props.rating != null ? this.props.rating : "No Rating"}
 				</p>
 			)
 		}
@@ -35,7 +69,7 @@ export default class Show extends Component {
 				{img}
 				<div className="content">
 					<h2>{this.props.name}</h2>
-					<p>{this.props.plot}</p>
+					{plotP}
 					{apiP}
 					<p>
 						<b>Seasons on disk:</b> {this.props.seasons.length > 0 ? this.props.seasons.join(", ") : "None"}
