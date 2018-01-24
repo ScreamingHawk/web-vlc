@@ -38,7 +38,7 @@ export default class App extends Component {
 		let view
 		let isViewingText
 		if (this.state.isViewing){
-			view = <Viewing {...this.state.video} setVideo={this.setVideo} />
+			view = <Viewing currentVideo={this.state.video} setVideo={this.setVideo} />
 			isViewingText = "View List"
 		} else {
 			view = <ShowList setVideo={this.setVideo} />

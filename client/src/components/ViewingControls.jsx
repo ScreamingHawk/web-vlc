@@ -19,7 +19,7 @@ export default class Viewing extends Component {
 		this.playNextVideo = this.playNextVideo.bind(this)
 
 		this.state = {
-			video: this.props.video,
+			video: this.props.currentVideo,
 			paused: false,
 			nextVideo: null
 		}

@@ -15,14 +15,15 @@ export default class Viewing extends Component {
 		let name = (
 			<span><i>No video playing...</i></span>
 		)
-		if (this.props.show){
-			if (this.props.show.image && this.props.show.image != "N/A"){
+		const { currentVideo } = this.props
+		if (currentVideo.show){
+			if (currentVideo.show.image && currentVideo.show.image != "N/A"){
 				img = (
-					<img src={this.props.show.image}></img>
+					<img src={currentVideo.show.image}></img>
 				)
 			}
 			name = (
-				<span>{this.props.show.name} : {this.props.filename}</span>
+				<span>{currentVideo.show.name} : {currentVideo.filename}</span>
 			)
 		}
 		return (
@@ -31,7 +32,7 @@ export default class Viewing extends Component {
 				<div className="controls text-center">
 					{name}
 				</div>
-				<ViewingControls video={this.props} setVideo={this.props.setVideo} />
+				<ViewingControls {...this.props} />
 			</div>
 		)
 	}
