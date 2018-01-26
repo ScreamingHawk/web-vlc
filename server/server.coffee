@@ -19,7 +19,7 @@ process.on 'uncaughtException', (error) ->
 # Configure server
 app = express()
 app.use bodyParser.json
-	limit: '50mb'
+	limit: '1mb'
 app.use bodyParser.urlencoded
 	extended: false
 
