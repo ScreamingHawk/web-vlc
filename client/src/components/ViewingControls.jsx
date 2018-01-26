@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 
+import Slider from 'rc-slider'
+import 'rc-slider/assets/index.css';
+
 import Pause from '../img/pause.svg'
 import Play from '../img/play.svg'
 import VolumePlus from '../img/volume_plus.svg'
@@ -12,6 +15,8 @@ export default class Viewing extends Component {
 	constructor(props){
 		super(props)
 
+		this.getVideoStatus = this.getVideoStatus.bind(this)
+		this.tick = this.tick.bind(this)
 		this.volume = this.volume.bind(this)
 		this.seek = this.seek.bind(this)
 		this.pause = this.pause.bind(this)
@@ -21,12 +26,19 @@ export default class Viewing extends Component {
 		this.state = {
 			video: this.props.currentVideo,
 			paused: false,
-			nextVideo: null
+			videoLength: 0,
+			videoTime: 0,
+			nextVideo: null,
 		}
 	}
 	componentDidMount(){
 		if (this.state.video){
+			this.getVideoStatus()
 			this.getNextVideo()
+			// Tick every second
+			setInterval(this.tick, 1000)
+			// Call status every 10 seconds for variance
+			setInterval(this.getVideoStatus, 10000)
 		}
 	}
 	handleApiErrors(response){
@@ -38,14 +50,34 @@ export default class Viewing extends Component {
 		}
 		return response
 	}
+	apiJson(response){
+		if (response.status == 200){
+			return response.json()
+		}
+	}
+	tick(){
+		if (!this.state.paused){
+			this.setState({
+				videoTime: this.state.videoTime + 1
+			})
+		}
+	}
+	async getVideoStatus(){
+		await fetch(`/play/status`)
+			.then(this.handleApiErrors)
+			.then(this.apiJson)
+			.then(status => {
+				this.setState({
+					videoLength: Number(status.length[0]),
+					videoTime: Number(status.time[0]),
+				})
+			})
+	}
 	async getNextVideo(){
 		await fetch(`/shows/${this.state.video.show.name}/${this.state.video.filename}/next`)
 			.then(this.handleApiErrors)
-			.then(response => {
-				if (response.status == 200){
-					return response.json()
-				}
-			}).then(video => {
+			.then(this.apiJson)
+			.then(video => {
 				if (video != null){
 					video.show = this.state.video.show
 				}
@@ -76,22 +108,38 @@ export default class Viewing extends Component {
 		}).then(this.handleApiErrors)
 	}
 	async seek(val){
-		await fetch("/play/seek", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify({
-				seek: val
+		if (!isNaN(val)){
+			// Seeking to position, set time immediately
+			this.setState({
+				videoTime: val
 			})
-		}).then(this.handleApiErrors)
+		}
+		await fetch("/play/seek", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					seek: val
+				})
+			})
+			.then(this.handleApiErrors)
+			.then(response => {
+				if (isNaN(val)){
+					this.getVideoStatus()
+				}
+			})
 	}
 	async pause(){
 		await fetch("/play/pause", {
 			method: "POST"
 		}).then(this.handleApiErrors)
-		.then((response) => {
+		.then(response => {
 			if (response){
+				if (this.state.paused){
+					// Unpause, update time
+					this.getVideoStatus()
+				}
 				this.setState({
 					paused: !this.state.paused,
 				})
@@ -99,28 +147,51 @@ export default class Viewing extends Component {
 		})
 	}
 	render() {
-		let pauseIcon = this.state.paused ? (<Play />) : (<Pause />)
-		let playNextButton = this.state.nextVideo == null ? null : (
+		const pauseIcon = this.state.paused ? (<Play />) : (<Pause />)
+		const playNextButton = this.state.nextVideo == null ? null : (
 			<button className="info" onClick={() => this.playNextVideo()}>
 				<PlayNext />
 			</button>
 		)
+		const formatTime = (seconds) => {
+			if (seconds == null || seconds == 0){
+				return "0:00"
+			}
+			let d = new Date(null)
+			d.setSeconds(seconds)
+			let time = d.toISOString().substr(11, 8)
+			let c = time.charAt(0)
+			while ((c == "0" || c == ":") && time.length > 4) {
+				time = time.substr(1)
+				c = time.charAt(0)
+			}
+			return time
+		}
+		const videoTimeTime = formatTime(this.state.videoTime)
+		const videoLengthTime = formatTime(this.state.videoLength)
 		return (
-			<div className="controls">
+			<div>
 				<ToastContainer autoClose={3000} />
-				<button className="info" onClick={this.pause}>
-					{pauseIcon}
-				</button>
-				<button className="info" onClick={() => this.volume("down")}>
-					<VolumeMinus />
-				</button>
-				<button className="info" onClick={() => this.volume("up")}>
-					<VolumePlus />
-				</button>
-				<button className="info" onClick={() => this.seek("-30s")}>
-					<Rewind30s />
-				</button>
-				{playNextButton}
+				<div className="controls">
+					<span>{videoTimeTime}</span>
+					<Slider min={0} max={this.state.videoLength} defaultValue={this.state.videoTime} tipFormatter={formatTime} onAfterChange={this.seek} />
+					<span>{videoLengthTime}</span>
+				</div>
+				<div className="controls">
+					<button className="info" onClick={this.pause}>
+						{pauseIcon}
+					</button>
+					<button className="info" onClick={() => this.volume("down")}>
+						<VolumeMinus />
+					</button>
+					<button className="info" onClick={() => this.volume("up")}>
+						<VolumePlus />
+					</button>
+					<button className="info" onClick={() => this.seek("-30s")}>
+						<Rewind30s />
+					</button>
+					{playNextButton}
+				</div>
 			</div>
 		)
 	}

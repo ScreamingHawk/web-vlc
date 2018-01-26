@@ -8,13 +8,15 @@
     "cross-spawn": "^5.1.0",
     "express": "^4.16.2",
     "mime": "^2.2.0",
+    "rc-slider": "^8.6.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-svg-loader": "^2.1.0",
     "react-toastify": "^3.2.2",
     "request": "^2.83.0",
     "url-loader": "^0.6.2",
-    "winston": "^2.4.0"
+    "winston": "^2.4.0",
+    "xml2js": "^0.4.19"
   },
   "devDependencies": {
     "babel": "^6.23.0",

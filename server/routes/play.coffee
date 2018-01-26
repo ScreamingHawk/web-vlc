@@ -2,6 +2,7 @@ log = require 'winston'
 express = require 'express'
 spawn = require 'cross-spawn'
 request = require 'request'
+{ parseString } = require 'xml2js'
 
 config = require '../config'
 
@@ -35,10 +36,15 @@ router.post '/', (req, res)->
 
 	res.sendStatus 200
 
-# Test if VLC is running
-router.get '/', (req, res)->
-	res.json
-		open: vlcOpen
+# Get VLC status
+router.get '/status', (req, res)->
+	vlcApi null, null, (ok, xmlStatus)->
+		if ok && xmlStatus?
+			parseString xmlStatus, (err, status)->
+				log.debug "VLC status: #{status}"
+				res.json status.root
+		else
+			res.sendStatus 503
 
 # Change volume
 router.post '/volume', (req, res)->
@@ -85,9 +91,11 @@ vlcApi = (command, value, callback)->
 		value = encodeURIComponent value
 			.replace /%20/g, "+"
 	#Send request
-	url = "#{config.vlc.http.url}?command=#{command}"
-	if value?
-		url += "&val=#{value}"
+	url = "#{config.vlc.http.url}"
+	if command?
+		url += "?command=#{command}"
+		if value?
+			url += "&val=#{value}"
 	log.debug "VLC api: #{url}"
 	request
 			url: url
@@ -100,8 +108,9 @@ vlcApi = (command, value, callback)->
 				log.error err
 				callback? false
 				return
-			if res.statusCode isnt 200
-				log.error "Error contact VLC (#{res?.statusCode})"
+			if res?.statusCode isnt 200
+				log.error "Error contact VLC (#{res.statusCode})"
 				if res.statusCode is 401
 					log.error "Authentication error. Have you configured the VLC HTTP password correctly?"
-			callback? res.statusCode is 200
+
+			callback? res?.statusCode is 200, res.body
