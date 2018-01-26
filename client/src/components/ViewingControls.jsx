@@ -50,9 +50,7 @@ export default class Viewing extends Component {
 					video.show = this.state.video.show
 				}
 				this.setState({
-					video: this.state.video,
-					paused: this.state.paused,
-					nextVideo: video
+					nextVideo: video,
 				})
 			})
 	}
@@ -95,9 +93,7 @@ export default class Viewing extends Component {
 		.then((response) => {
 			if (response){
 				this.setState({
-					video: this.state.video,
 					paused: !this.state.paused,
-					nextVideo: this.state.nextVideo
 				})
 			}
 		})

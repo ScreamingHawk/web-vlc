@@ -27,7 +27,6 @@ export default class Show extends Component {
 	}
 	unhideRated(){
 		this.setState({
-			videos: this.state.videos,
 			ratingHidden: false
 		})
 	}

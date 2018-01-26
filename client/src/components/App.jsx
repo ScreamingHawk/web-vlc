@@ -16,7 +16,6 @@ export default class App extends Component {
 	toggleViewing(){
 		this.setState({
 			isViewing: !this.state.isViewing,
-			video: this.state.video
 		})
 	}
 	async setVideo(video){
