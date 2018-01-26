@@ -41,7 +41,6 @@ router.get '/status', (req, res)->
 	vlcApi null, null, (ok, xmlStatus)->
 		if ok && xmlStatus?
 			parseString xmlStatus, (err, status)->
-				log.debug "VLC status: #{status}"
 				res.json status.root
 		else
 			res.sendStatus 503
