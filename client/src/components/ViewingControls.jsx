@@ -171,19 +171,24 @@ export default class Viewing extends Component {
 				<PlayNext />
 			</button>
 		)
-		const formatTime = (seconds) => {
-			if (seconds == null || seconds == 0){
+		const formatTime = (time) => {
+			if (time == null || time == 0){
 				return "0:00"
 			}
-			let d = new Date(null)
-			d.setSeconds(seconds)
-			let time = d.toISOString().substr(11, 8)
-			let c = time.charAt(0)
-			while ((c == "0" || c == ":") && time.length > 4) {
-				time = time.substr(1)
-				c = time.charAt(0)
+			let seconds = time % 60
+			let minutes = Math.floor(time / 60) % 60
+			let hours = Math.floor(time / 3600)
+			let formatted = ""
+			if (hours > 0){
+				formatted = hours + ":"
 			}
-			return time
+			if (hours > 0){
+				formatted += String(minutes).padStart(2, "0") + ":"
+			} else {
+				formatted = minutes + ":"
+			}
+			formatted += String(seconds).padStart(2, "0")
+			return formatted
 		}
 		const videoTimeTime = formatTime(this.state.videoTime)
 		const videoLengthTime = formatTime(this.state.videoLength)
