@@ -174,7 +174,7 @@ export default class Viewing extends Component {
 				<ToastContainer autoClose={3000} />
 				<div className="controls">
 					<span>{videoTimeTime}</span>
-					<Slider min={0} max={this.state.videoLength} defaultValue={this.state.videoTime} tipFormatter={formatTime} onAfterChange={this.seek} />
+					<Slider min={0} max={this.state.videoLength} value={this.state.videoTime} tipFormatter={formatTime} onChange={this.seek} />
 					<span>{videoLengthTime}</span>
 				</div>
 				<div className="controls">
