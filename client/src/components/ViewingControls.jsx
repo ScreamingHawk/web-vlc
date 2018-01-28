@@ -15,6 +15,7 @@ export default class Viewing extends Component {
 	constructor(props){
 		super(props)
 
+		this.handleApiErrors = this.handleApiErrors.bind(this)
 		this.getVideoStatus = this.getVideoStatus.bind(this)
 		this.tick = this.tick.bind(this)
 		this.volume = this.volume.bind(this)
@@ -29,6 +30,7 @@ export default class Viewing extends Component {
 			videoLength: 0,
 			videoTime: 0,
 			nextVideo: null,
+			vlcApiError: false,
 		}
 	}
 	componentDidMount(){
@@ -43,15 +45,23 @@ export default class Viewing extends Component {
 	}
 	handleApiErrors(response){
 		if (response.status == 503){
-			toast.error("Error contact VLC!", {
-				position: toast.POSITION.BOTTOM_CENTER
-			})
+			if (!this.state.vlcApiError){
+				this.setState({
+					vlcApiError: true
+				})
+				toast.error("Error contact VLC!", {
+					position: toast.POSITION.BOTTOM_CENTER
+				})
+			}
 			return null
 		}
+		this.setState({
+			vlcApiError: false
+		})
 		return response
 	}
 	apiJson(response){
-		if (response.status == 200){
+		if (response != null && response.status == 200){
 			return response.json()
 		}
 	}
