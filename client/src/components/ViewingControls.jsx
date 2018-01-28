@@ -39,8 +39,8 @@ export default class Viewing extends Component {
 			this.getNextVideo()
 			// Tick every second
 			setInterval(this.tick, 1000)
-			// Call status every 10 seconds for variance
-			setInterval(this.getVideoStatus, 10000)
+			// Call status every 2.5 seconds for variance
+			setInterval(this.getVideoStatus, 2500)
 		}
 	}
 	handleApiErrors(response){
