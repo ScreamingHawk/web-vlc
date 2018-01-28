@@ -67,9 +67,16 @@ export default class Viewing extends Component {
 	}
 	tick(){
 		if (!this.state.paused){
-			this.setState({
-				videoTime: this.state.videoTime + 1
-			})
+			if (this.state.videoTime >= this.state.videoLength){
+				this.setState({
+					videoTime: this.state.videoLength,
+					paused: true,
+				})
+			} else {
+				this.setState({
+					videoTime: this.state.videoTime + 1,
+				})
+			}
 		}
 	}
 	async getVideoStatus(){
