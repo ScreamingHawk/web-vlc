@@ -80,6 +80,7 @@ export default class Viewing extends Component {
 				this.setState({
 					videoLength: Number(status.length[0]),
 					videoTime: Number(status.time[0]),
+					paused: status.state[0] != "playing",
 				})
 			})
 	}
