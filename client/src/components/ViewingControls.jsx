@@ -49,7 +49,7 @@ export default class Viewing extends Component {
 				this.setState({
 					vlcApiError: true
 				})
-				toast.error("Error contact VLC!", {
+				toast.error("Error contacting VLC!", {
 					position: toast.POSITION.BOTTOM_CENTER
 				})
 			}
