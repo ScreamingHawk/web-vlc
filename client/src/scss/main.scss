@@ -118,6 +118,9 @@ input {
 		flex-grow: 1;
 		flex-shrink: 1;
 	}
+	.grow {
+		flex-grow: 1;
+	}
 	&.row {
 		flex-direction: row;
 	}
@@ -186,9 +189,19 @@ input {
 		margin-top: 30px;
 		@extend .flex;
 		@extend .row;
+		@extend .justify;
 		& > * {
 			@include margin-horizontal(3px);
 		}
+	}
+}
+
+.slider-box {
+	@extend .controls;
+	@extend .grow;
+	@extend .center;
+	.rc-slider {
+		@include margin-horizontal(10px);
 	}
 }
 
@@ -200,4 +213,8 @@ input {
 
 .clickable {
 	cursor: pointer;
+}
+
+.wide75 {
+	min-width: 75%;
 }

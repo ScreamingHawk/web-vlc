@@ -195,9 +195,9 @@ export default class Viewing extends Component {
 		const videoTimeTime = formatTime(this.state.videoTime)
 		const videoLengthTime = formatTime(this.state.videoLength)
 		return (
-			<div>
+			<div className="wide75">
 				<ToastContainer autoClose={5000} />
-				<div className="controls">
+				<div className="slider-box">
 					<span>{videoTimeTime}</span>
 					<Slider min={0} max={this.state.videoLength} value={this.state.videoTime} tipFormatter={formatTime} onChange={this.seek} />
 					<span>{videoLengthTime}</span>
