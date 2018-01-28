@@ -84,11 +84,13 @@ export default class Viewing extends Component {
 			.then(this.handleApiErrors)
 			.then(this.apiJson)
 			.then(status => {
-				this.setState({
-					videoLength: Number(status.length[0]),
-					videoTime: Number(status.time[0]),
-					paused: status.state[0] != "playing",
-				})
+				if (status != null){
+					this.setState({
+						videoLength: Number(status.length[0]),
+						videoTime: Number(status.time[0]),
+						paused: status.state[0] != "playing",
+					})
+				}
 			})
 	}
 	async getNextVideo(){
