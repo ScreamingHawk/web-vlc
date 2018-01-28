@@ -29,6 +29,7 @@ export default class Viewing extends Component {
 			paused: false,
 			videoLength: 0,
 			videoTime: 0,
+			volume: 0,
 			nextVideo: null,
 			vlcApiError: false,
 		}
@@ -89,6 +90,7 @@ export default class Viewing extends Component {
 						videoLength: Number(status.length[0]),
 						videoTime: Number(status.time[0]),
 						paused: status.state[0] != "playing",
+						volume: Number(status.volume[0]),
 					})
 				}
 			})
@@ -117,15 +119,27 @@ export default class Viewing extends Component {
 		}
 	}
 	async volume(val){
-		await fetch("/play/volume", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify({
+		if (!isNaN(val)){
+			// Setting volume directly, update immediately
+			this.setState({
 				volume: val
 			})
-		}).then(this.handleApiErrors)
+		}
+		await fetch("/play/volume", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					volume: val
+				})
+			})
+			.then(this.handleApiErrors)
+			.then(response => {
+				if (isNaN(val)){
+					this.getVideoStatus()
+				}
+			})
 	}
 	async seek(val){
 		if (!isNaN(val)){
@@ -192,15 +206,25 @@ export default class Viewing extends Component {
 			formatted += String(seconds).padStart(2, "0")
 			return formatted
 		}
-		const videoTimeTime = formatTime(this.state.videoTime)
-		const videoLengthTime = formatTime(this.state.videoLength)
+		const volumePercentage = (vol) => {
+			if (vol == null){
+				return "0"
+			}
+			// Volume goes from 0 to 125 but API scales 0 to 320. VLC why?
+			return Math.round(vol * 125 / 320)
+		}
 		return (
 			<div className="wide75">
 				<ToastContainer autoClose={5000} />
 				<div className="slider-box">
-					<span>{videoTimeTime}</span>
+					<span>{formatTime(this.state.videoTime)}</span>
 					<Slider min={0} max={this.state.videoLength} value={this.state.videoTime} tipFormatter={formatTime} onChange={this.seek} />
-					<span>{videoLengthTime}</span>
+					<span>{formatTime(this.state.videoLength)}</span>
+				</div>
+				<div className="slider-box">
+					<span>Vol</span>
+					<Slider min={0} max={320} value={this.state.volume} tipFormatter={volumePercentage} onChange={this.volume} />
+					<span>{volumePercentage(this.state.volume)}</span>
 				</div>
 				<div className="controls">
 					<button className="info" onClick={this.pause}>
