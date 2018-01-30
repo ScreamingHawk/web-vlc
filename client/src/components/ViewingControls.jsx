@@ -215,33 +215,37 @@ export default class Viewing extends Component {
 			return Math.round(vol * 125 / 320)
 		}
 		return (
-			<div className="wide75">
+			<div className="wide75 width350">
 				<ToastContainer autoClose={5000} />
 				<div className="slider-box">
-					<span>{formatTime(this.state.videoTime)}</span>
-					<Slider min={0} max={this.state.videoLength} value={this.state.videoTime} tipFormatter={formatTime} onChange={this.seek} />
-					<span>{formatTime(this.state.videoLength)}</span>
+					<button className="info" onClick={() => this.seek("-30s")}>
+						<Rewind30s />
+					</button>
+					<div className="flex row grow">
+						<span>{formatTime(this.state.videoTime)}</span>
+						<Slider min={0} max={this.state.videoLength} value={this.state.videoTime} tipFormatter={formatTime} onChange={this.seek} />
+						<span>{formatTime(this.state.videoLength)}</span>
+					</div>
+					<button className="info" onClick={() => this.seek("30s")}>
+						<FastForward30s />
+					</button>
 				</div>
 				<div className="slider-box">
-					<span>Vol</span>
-					<Slider min={0} max={320} value={this.state.volume} tipFormatter={volumePercentage} onChange={this.volume} />
-					<span>{volumePercentage(this.state.volume)}</span>
+					<button className="info" onClick={() => this.volume("down")}>
+						<VolumeMinus />
+					</button>
+					<div className="flex row grow">
+						<span>Vol</span>
+						<Slider min={0} max={320} value={this.state.volume} tipFormatter={volumePercentage} onChange={this.volume} />
+						<span>{volumePercentage(this.state.volume)}</span>
+					</div>
+					<button className="info" onClick={() => this.volume("up")}>
+						<VolumePlus />
+					</button>
 				</div>
 				<div className="controls">
 					<button className="info" onClick={this.pause}>
 						{pauseIcon}
-					</button>
-					<button className="info" onClick={() => this.volume("down")}>
-						<VolumeMinus />
-					</button>
-					<button className="info" onClick={() => this.volume("up")}>
-						<VolumePlus />
-					</button>
-					<button className="info" onClick={() => this.seek("-30s")}>
-						<Rewind30s />
-					</button>
-					<button className="info" onClick={() => this.seek("30s")}>
-						<FastForward30s />
 					</button>
 					{playNextButton}
 				</div>
