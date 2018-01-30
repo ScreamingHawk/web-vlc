@@ -9,6 +9,7 @@ import Play from '../img/play.svg'
 import VolumePlus from '../img/volume_plus.svg'
 import VolumeMinus from '../img/volume_minus.svg'
 import Rewind30s from '../img/rewind_30s.svg'
+import FastForward30s from '../img/fastforward_30s.svg'
 import PlayNext from '../img/play_next.svg'
 
 export default class Viewing extends Component {
@@ -238,6 +239,9 @@ export default class Viewing extends Component {
 					</button>
 					<button className="info" onClick={() => this.seek("-30s")}>
 						<Rewind30s />
+					</button>
+					<button className="info" onClick={() => this.seek("30s")}>
+						<FastForward30s />
 					</button>
 					{playNextButton}
 				</div>

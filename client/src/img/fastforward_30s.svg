@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+	<path d="
+		M 85 50
+		A 35 35 0 1 0 50 85"
+		fill="none"
+		stroke="#1a1e49"
+		stroke-linejoin="round"
+		stroke-width="8"
+		transform="rotate(-15, 50, 50)"
+		/>
+	<polygon
+		points="75,45 95,45 85,60"
+		fill="#1a1e49"
+		stroke="none"
+		transform="rotate(-15, 50, 50)"
+		/>
+	<text
+		x="50%"
+		y="50%"
+		alignment-baseline="central"
+		text-anchor="middle"
+		font-weight="400"
+		font-size="25"
+		font-family="sans-serif"
+		letter-spacing="0"
+		word-spacing="0"
+		fill="#1a1e49"
+		style="line-height: 1.25;">
+		+30s
+	</text>
+</svg>
