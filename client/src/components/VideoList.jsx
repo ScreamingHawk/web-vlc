@@ -7,10 +7,14 @@ export default class VideoList extends Component {
 		this.state = {videos: []}
 
 		this.getVideoList = this.getVideoList.bind(this)
+		this.resetVideoList = this.resetVideoList.bind(this)
 	}
 	async getVideoList(){
 		const videos = await (await fetch(`/shows/${this.props.show.name}`)).json()
 		this.setState({videos: videos})
+	}
+	resetVideoList(){
+		this.setState({videos: []})
 	}
 	render() {
 		if (!this.state.videos.length){
@@ -27,7 +31,10 @@ export default class VideoList extends Component {
 		});
 		return (
 			<div>
-				<h3>Episodes</h3>
+				<div className="flex row spaced center">
+					<h3>Episodes</h3>
+					<button className="primary" onClick={this.resetVideoList}>Hide episodes</button>
+				</div>
 				{videoRenders}
 			</div>
 		)

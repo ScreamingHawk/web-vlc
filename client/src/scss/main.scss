@@ -208,7 +208,7 @@ input {
 // ---- Helpers ---
 
 .right {
-	margin-left: auto;
+	float: right;
 }
 
 .clickable {
@@ -220,4 +220,7 @@ input {
 }
 .width350 {
 	width: 350px;
+}
+.marginup10 {
+	margin-top: -10px;
 }
