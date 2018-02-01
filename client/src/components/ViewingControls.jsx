@@ -31,6 +31,7 @@ export default class Viewing extends Component {
 			videoLength: 0,
 			videoTime: 0,
 			volume: 0,
+			volumeToastId: null,
 			nextVideo: null,
 			vlcApiError: false,
 		}
@@ -87,11 +88,24 @@ export default class Viewing extends Component {
 			.then(this.apiJson)
 			.then(status => {
 				if (status != null){
+					let statusVolume = Number(status.volume[0])
+					let volumeToastId = this.state.volumeToastId
+					if (statusVolume >= 300){
+						// Max is 320 but give some buffer
+						if (!toast.isActive(volumeToastId)){
+							volumeToastId = toast.info("Volume at max", {
+								position: toast.POSITION.BOTTOM_CENTER
+							})
+						}
+					} else {
+						toast.dismiss(volumeToastId)
+					}
 					this.setState({
 						videoLength: Number(status.length[0]),
 						videoTime: Number(status.time[0]),
 						paused: status.state[0] != "playing",
-						volume: Number(status.volume[0]),
+						volume: statusVolume,
+						volumeToastId: volumeToastId,
 					})
 				}
 			})
@@ -207,45 +221,29 @@ export default class Viewing extends Component {
 			formatted += String(seconds).padStart(2, "0")
 			return formatted
 		}
-		const volumePercentage = (vol) => {
-			if (vol == null){
-				return "0"
-			}
-			// Volume goes from 0 to 125 but API scales 0 to 320. VLC why?
-			return Math.round(vol * 125 / 320)
-		}
 		return (
-			<div className="wide75 width350">
+			<div>
 				<ToastContainer autoClose={5000} />
 				<div className="slider-box">
-					<button className="info" onClick={() => this.seek("-30s")}>
-						<Rewind30s />
-					</button>
-					<div className="flex row grow">
-						<span>{formatTime(this.state.videoTime)}</span>
-						<Slider min={0} max={this.state.videoLength} value={this.state.videoTime} tipFormatter={formatTime} onChange={this.seek} />
-						<span>{formatTime(this.state.videoLength)}</span>
-					</div>
-					<button className="info" onClick={() => this.seek("30s")}>
-						<FastForward30s />
-					</button>
-				</div>
-				<div className="slider-box">
-					<button className="info" onClick={() => this.volume("down")}>
-						<VolumeMinus />
-					</button>
-					<div className="flex row grow">
-						<span>Vol</span>
-						<Slider min={0} max={320} value={this.state.volume} tipFormatter={volumePercentage} onChange={this.volume} />
-						<span>{volumePercentage(this.state.volume)}</span>
-					</div>
-					<button className="info" onClick={() => this.volume("up")}>
-						<VolumePlus />
-					</button>
+					<span>{formatTime(this.state.videoTime)}</span>
+					<Slider min={0} max={this.state.videoLength} value={this.state.videoTime} tipFormatter={formatTime} onChange={this.seek} />
+					<span>{formatTime(this.state.videoLength)}</span>
 				</div>
 				<div className="controls">
 					<button className="info" onClick={this.pause}>
 						{pauseIcon}
+					</button>
+					<button className="info" onClick={() => this.seek("-30s")}>
+						<Rewind30s />
+					</button>
+					<button className="info" onClick={() => this.seek("30s")}>
+						<FastForward30s />
+					</button>
+					<button className="info" onClick={() => this.volume("down")}>
+						<VolumeMinus />
+					</button>
+					<button className="info" onClick={() => this.volume("up")}>
+						<VolumePlus />
 					</button>
 					{playNextButton}
 				</div>
