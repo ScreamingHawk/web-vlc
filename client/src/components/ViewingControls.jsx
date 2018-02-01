@@ -33,34 +33,48 @@ export default class Viewing extends Component {
 			volume: 0,
 			volumeToastId: null,
 			nextVideo: null,
-			vlcApiError: false,
+			vlcErrorToastId: null,
+			intervals: [],
 		}
 	}
 	componentDidMount(){
 		if (this.state.video){
 			this.getVideoStatus()
 			this.getNextVideo()
+			let intervals = []
 			// Tick every second
-			setInterval(this.tick, 1000)
+			intervals.push(setInterval(this.tick, 1000))
 			// Call status every 2.5 seconds for variance
-			setInterval(this.getVideoStatus, 2500)
+			intervals.push(setInterval(this.getVideoStatus, 2500))
+			this.setState({
+				intervals: intervals,
+			})
+		}
+	}
+	componentWillUnmount(){
+		for (let interval of this.state.intervals){
+			clearInterval(interval)
 		}
 	}
 	handleApiErrors(response){
+		let vlcErrorToastId = this.state.vlcErrorToastId
 		if (response.status == 503){
-			if (!this.state.vlcApiError){
-				this.setState({
-					vlcApiError: true
+			if (!toast.isActive(vlcErrorToastId)){
+				// Clear all toasts
+				toast.dismiss()
+				vlcErrorToastId = toast.error("Error contacting VLC!", {
+					position: toast.POSITION.BOTTOM_CENTER,
+					autoClose: false,
 				})
-				toast.error("Error contacting VLC!", {
-					position: toast.POSITION.BOTTOM_CENTER
+				this.setState({
+					vlcErrorToastId: vlcErrorToastId,
 				})
 			}
 			return null
 		}
-		this.setState({
-			vlcApiError: false
-		})
+		if (vlcErrorToastId){
+			toast.dismissAll(vlcErrorToastId)
+		}
 		return response
 	}
 	apiJson(response){
@@ -97,7 +111,7 @@ export default class Viewing extends Component {
 								position: toast.POSITION.BOTTOM_CENTER
 							})
 						}
-					} else {
+					} else if (volumeToastId) {
 						toast.dismiss(volumeToastId)
 					}
 					this.setState({
