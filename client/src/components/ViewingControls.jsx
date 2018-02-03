@@ -73,7 +73,7 @@ export default class Viewing extends Component {
 			return null
 		}
 		if (vlcErrorToastId){
-			toast.dismissAll(vlcErrorToastId)
+			toast.dismiss(vlcErrorToastId)
 		}
 		return response
 	}
