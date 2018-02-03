@@ -250,7 +250,7 @@ export default class Viewing extends Component {
 					<button className="info" onClick={() => this.seek("-30s")}>
 						<Rewind30s />
 					</button>
-					<button className="info" onClick={() => this.seek("30s")}>
+					<button className="info" onClick={() => this.seek("+30s")}>
 						<FastForward30s />
 					</button>
 					<button className="info" onClick={() => this.volume("down")}>
