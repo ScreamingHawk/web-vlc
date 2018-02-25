@@ -148,6 +148,27 @@ router.get '/:showName/:videoFilename/next', (req, res)->
 	# Fail over
 	res.sendStatus 404
 
+router.post '/search', (req, res)->
+	if !req.body?.filename?
+		# Filename required
+		log.warn "Video filename not supplied"
+		res.sendStatus 400
+		return
+	log.debug "Filename searching: #{req.body.filename}"
+
+	for show in showList
+		for video in show.videos
+			log.debug "Testing: #{video.filename}"
+			if video.filename.indexOf(req.body.filename) > -1
+				# Clone the video
+				v = JSON.parse JSON.stringify video
+				# Send the show with the video
+				v.show = show
+				res.json v
+				return
+	# Fail over
+	res.sendStatus 400
+
 router.get '/refresh', (req, res)->
 	# Refresh the list
 	refreshLists()

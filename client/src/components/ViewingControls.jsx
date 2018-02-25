@@ -17,6 +17,9 @@ export default class Viewing extends Component {
 		super(props)
 
 		this.handleApiErrors = this.handleApiErrors.bind(this)
+		this.getVlcFilename = this.getVlcFilename.bind(this)
+		this.getVlcFilenameFromStatus = this.getVlcFilenameFromStatus.bind(this)
+		this.updateVideoUsingVlcFilenameStatus = this.updateVideoUsingVlcFilenameStatus.bind(this)
 		this.getVideoStatus = this.getVideoStatus.bind(this)
 		this.tick = this.tick.bind(this)
 		this.volume = this.volume.bind(this)
@@ -27,7 +30,8 @@ export default class Viewing extends Component {
 
 		this.state = {
 			video: this.props.currentVideo,
-			paused: false,
+			vlcFilename: null, // Sometimes this is different because VLC...
+			paused: true, // Start paused. The status check will unpause
 			videoLength: 0,
 			videoTime: 0,
 			volume: 0,
@@ -46,9 +50,12 @@ export default class Viewing extends Component {
 			intervals.push(setInterval(this.tick, 1000))
 			// Call status every 2.5 seconds for variance
 			intervals.push(setInterval(this.getVideoStatus, 2500))
+			this.getVlcFilename()
 			this.setState({
 				intervals: intervals,
 			})
+		} else {
+			this.getVlcFilename(this.updateVideoUsingVlcFilenameStatus)
 		}
 	}
 	componentWillUnmount(){
@@ -96,12 +103,86 @@ export default class Viewing extends Component {
 			}
 		}
 	}
+	getVlcFilename(callback){
+		fetch(`/play/status`)
+			.then(this.handleApiErrors)
+			.then(this.apiJson)
+			.then(status => {
+				if (this.state.video == null || this.state.video.filename == null){
+					const filename = this.getVlcFilenameFromStatus(status)
+					this.setState({
+						vlcFilename: filename
+					}, ()=>{
+						if (callback != null){
+							callback()
+						}
+					})
+				}
+			})
+	}
+	getVlcFilenameFromStatus(status){
+		if (status != null){
+			try {
+				for (let i of status.information[0].category[0].info){
+					if (i["$"].name == "filename"){
+						return i["_"]
+					}
+				}
+			} catch (e){
+				if (e instanceof TypeError){
+					// Some unexpected status type
+					console.log("TypeError reading status response", e)
+				} else {
+					throw e
+				}
+			}
+		}
+	}
+	updateVideoUsingVlcFilenameStatus(){
+		// Got a playing video. Try to find it
+		fetch(`/shows/search`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				filename: this.state.vlcFilename
+			})
+		})
+		.then(this.handleApiErrors)
+		.then(this.apiJson)
+		.then(video => {
+			if (video != null){
+				this.props.setVideo(video, true)
+				this.setState({
+					video: video
+				}, () => {
+					// Try the mounting stuff again
+					this.componentWillUnmount()
+					this.componentDidMount()
+				})
+			} else {
+				toast.error("Error getting playing video!", {
+					position: toast.POSITION.BOTTOM_CENTER,
+				})
+			}
+		})
+	}
 	async getVideoStatus(){
 		await fetch(`/play/status`)
 			.then(this.handleApiErrors)
 			.then(this.apiJson)
 			.then(status => {
 				if (status != null){
+					if (this.state.vlcFilename != null){
+						let vlcFilename = this.getVlcFilenameFromStatus(status)
+						if (vlcFilename != this.state.vlcFilename){
+							this.setState({
+								vlcFilename: vlcFilename
+							}, this.updateVideoUsingVlcFilenameStatus)
+							return
+						}
+					}
 					let statusVolume = Number(status.volume[0])
 					let volumeToastId = this.state.volumeToastId
 					if (statusVolume >= 300){
@@ -125,17 +206,19 @@ export default class Viewing extends Component {
 			})
 	}
 	async getNextVideo(){
-		await fetch(`/shows/${this.state.video.show.name}/${this.state.video.filename}/next`)
-			.then(this.handleApiErrors)
-			.then(this.apiJson)
-			.then(video => {
-				if (video != null){
-					video.show = this.state.video.show
-				}
-				this.setState({
-					nextVideo: video,
+		if (this.state.video != null){
+			await fetch(`/shows/${this.state.video.show.name}/${this.state.video.filename}/next`)
+				.then(this.handleApiErrors)
+				.then(this.apiJson)
+				.then(video => {
+					if (video != null){
+						video.show = this.state.video.show
+					}
+					this.setState({
+						nextVideo: video,
+					})
 				})
-			})
+		}
 	}
 	playNextVideo(){
 		if (this.state.nextVideo){

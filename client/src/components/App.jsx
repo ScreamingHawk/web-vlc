@@ -18,16 +18,18 @@ export default class App extends Component {
 			isViewing: !this.state.isViewing,
 		})
 	}
-	async setVideo(video){
-		await fetch("/play", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify({
-				path: video.path
+	async setVideo(video, justState=false){
+		if (!justState){
+			await fetch("/play", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					path: video.path
+				})
 			})
-		})
+		}
 		this.setState({
 			isViewing: true,
 			video: video
