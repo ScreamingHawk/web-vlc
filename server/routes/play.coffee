@@ -2,13 +2,15 @@ log = require 'winston'
 express = require 'express'
 spawn = require 'cross-spawn'
 request = require 'request'
+path = require 'path'
 { parseString } = require 'xml2js'
 
 config = require '../config'
 
 router = express.Router()
-
 exports = module.exports = router
+
+nowPlaying = null
 
 # Request vlc to open a file
 router.post '/', (req, res)->
@@ -33,6 +35,12 @@ router.post '/', (req, res)->
 	child = spawn config.vlc.command, cmdFlags
 	child.on 'error', (err)->
 		log.error "VLC error: #{err}"
+	child.on 'close', (err)->
+		nowPlaying = null
+
+	# Get filename
+	parts = req.body.path.split path.sep
+	nowPlaying = parts[parts.length - 1]
 
 	res.sendStatus 200
 
@@ -44,6 +52,14 @@ router.get '/status', (req, res)->
 				res.json status.root
 		else
 			res.sendStatus 503
+
+# Get the filename of the currently playing video
+router.get '/nowplaying', (req, res)->
+	if !nowPlaying
+		res.sendStatus 404
+	else
+		res.send
+			filename: nowPlaying
 
 # Change volume
 router.post '/volume', (req, res)->

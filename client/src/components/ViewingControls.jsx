@@ -19,7 +19,8 @@ export default class Viewing extends Component {
 		this.handleApiErrors = this.handleApiErrors.bind(this)
 		this.getVlcFilename = this.getVlcFilename.bind(this)
 		this.getVlcFilenameFromStatus = this.getVlcFilenameFromStatus.bind(this)
-		this.updateVideoUsingVlcFilenameStatus = this.updateVideoUsingVlcFilenameStatus.bind(this)
+		this.updateVideoUsingFilename = this.updateVideoUsingFilename.bind(this)
+		this.updatePlayingVideo = this.updatePlayingVideo.bind(this)
 		this.getVideoStatus = this.getVideoStatus.bind(this)
 		this.tick = this.tick.bind(this)
 		this.volume = this.volume.bind(this)
@@ -55,7 +56,7 @@ export default class Viewing extends Component {
 				intervals: intervals,
 			})
 		} else {
-			this.getVlcFilename(this.updateVideoUsingVlcFilenameStatus)
+			this.updatePlayingVideo()
 		}
 	}
 	componentWillUnmount(){
@@ -103,6 +104,17 @@ export default class Viewing extends Component {
 			}
 		}
 	}
+	updatePlayingVideo(){
+		fetch(`/play/nowplaying`)
+			.then(this.handleApiErrors)
+			.then(this.apiJson)
+			.then(response => {
+				if ((response != null && response.filename != null) &&
+						(this.state.video == null || this.state.video.filename == null)){
+					this.updateVideoUsingFilename(response.filename)
+				}
+			})
+	}
 	getVlcFilename(callback){
 		fetch(`/play/status`)
 			.then(this.handleApiErrors)
@@ -138,7 +150,7 @@ export default class Viewing extends Component {
 			}
 		}
 	}
-	updateVideoUsingVlcFilenameStatus(){
+	updateVideoUsingFilename(filename){
 		// Got a playing video. Try to find it
 		fetch(`/shows/search`, {
 			method: "POST",
@@ -146,7 +158,7 @@ export default class Viewing extends Component {
 				"Content-Type": "application/json"
 			},
 			body: JSON.stringify({
-				filename: this.state.vlcFilename
+				filename: filename || this.state.vlcFilename
 			})
 		})
 		.then(this.handleApiErrors)
@@ -179,7 +191,7 @@ export default class Viewing extends Component {
 						if (vlcFilename != this.state.vlcFilename){
 							this.setState({
 								vlcFilename: vlcFilename
-							}, this.updateVideoUsingVlcFilenameStatus)
+							}, this.updateVideoUsingFilename)
 							return
 						}
 					}
