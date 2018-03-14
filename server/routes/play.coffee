@@ -38,8 +38,6 @@ router.post '/', (req, res)->
 	child = spawn config?.vlc.command, cmdFlags
 	child.on 'error', (err)->
 		log.error "VLC error: #{err}"
-	child.on 'close', (err)->
-		nowPlaying = null
 
 	# Get filename
 	parts = req.body.path.split path.sep
