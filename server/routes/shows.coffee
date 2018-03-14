@@ -65,14 +65,15 @@ refreshLists = exports.refreshLists = (callback)->
 	callback?()
 
 setApiDetails = (show)->
-	request "#{config.api.omdb.url}?apikey=#{config.api.omdb.key}&t=#{show.name}", (err, res)=>
-		if res.statusCode is 200
-			body = JSON.parse res.body
-			if body.Response == "True"
-				show.image = body.Poster
-				show.plot = body.Plot
-				show.imdbRating = body.imdbRating
-				show.rating = body.Rated
+	if config?.api?.omdb
+		request "#{config?.api.omdb.url}?apikey=#{config?.api.omdb.key}&t=#{show.name}", (err, res)=>
+			if res.statusCode is 200
+				body = JSON.parse res.body
+				if body.Response == "True"
+					show.image = body.Poster
+					show.plot = body.Plot
+					show.imdbRating = body.imdbRating
+					show.rating = body.Rated
 
 getFileMeta = (fPath, fMime)->
 	# Create meta obj
