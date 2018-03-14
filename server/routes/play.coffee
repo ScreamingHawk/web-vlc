@@ -5,10 +5,13 @@ request = require 'request'
 path = require 'path'
 { parseString } = require 'xml2js'
 
-config = require '../config'
-
 router = express.Router()
 exports = module.exports = router
+
+config = null
+
+exports.init = (c)->
+	config = c
 
 nowPlaying = null
 
@@ -24,15 +27,15 @@ router.post '/', (req, res)->
 
 	# Build vlc command
 	cmdFlags = ["--one-instance", "--no-playlist-enqueue"]
-	if config.vlc.fullscreen
+	if config?.vlc.fullscreen
 		cmdFlags.push "-f"
-	if config.vlc.playAndExit
+	if config?.vlc.playAndExit
 		cmdFlags.push "--play-and-exit"
 	cmdFlags.push "#{req.body.path}"
 
 	# Open vlc
-	log.debug "Running command #{config.vlc.command} with flags #{cmdFlags}"
-	child = spawn config.vlc.command, cmdFlags
+	log.debug "Running command #{config?.vlc.command} with flags #{cmdFlags}"
+	child = spawn config?.vlc.command, cmdFlags
 	child.on 'error', (err)->
 		log.error "VLC error: #{err}"
 	child.on 'close', (err)->
@@ -106,7 +109,7 @@ vlcApi = (command, value, callback)->
 		value = encodeURIComponent value
 			.replace /%20/g, "+"
 	#Send request
-	url = "#{config.vlc.http.url}"
+	url = "#{config?.vlc.http.url}"
 	if command?
 		url += "?command=#{command}"
 		if value?
@@ -115,7 +118,7 @@ vlcApi = (command, value, callback)->
 	request
 			url: url
 			headers:
-				Authorization: "Basic #{new Buffer(":#{config.vlc.http.password}").toString "base64"}"
+				Authorization: "Basic #{new Buffer(":#{config?.vlc.http.password}").toString "base64"}"
 		, (err, res) =>
 			if err?
 				log.error "Error contacting VLC"

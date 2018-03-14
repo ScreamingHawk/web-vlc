@@ -2,8 +2,9 @@ express = require 'express'
 log = require 'winston'
 path = require 'path'
 bodyParser = require 'body-parser'
+requireYaml = require 'require-yml'
 
-config = require './config'
+config = requireYaml path.join __dirname, 'config.yaml'
 
 # Configure logger
 log.remove log.transports.Console
@@ -25,9 +26,16 @@ app.use bodyParser.urlencoded
 
 # Configure routes
 showsRoutes = require './routes/shows'
-app.use '/play', require './routes/play'
+showsRoutes.init config
 app.use '/shows', showsRoutes
-app.use '/config', require './routes/config'
+
+playRoutes = require './routes/play'
+playRoutes.init config
+app.use '/play', playRoutes
+
+configRoutes = require './routes/config'
+configRoutes.init config
+app.use '/config', configRoutes
 
 app.get '/', (req, res)->
 	sendHome = =>

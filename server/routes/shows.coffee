@@ -5,11 +5,14 @@ path = require 'path'
 mime = require 'mime'
 request = require 'request'
 
-config = require '../config'
-
 router = express.Router()
-
 exports = module.exports = router
+
+config = null
+
+exports.init = (c)->
+	config = c
+	refreshLists()
 
 videoList = []
 showList = []
@@ -66,7 +69,7 @@ refreshLists = exports.refreshLists = (callback)->
 
 setApiDetails = (show)->
 	if config?.api?.omdb
-		request "#{config?.api.omdb.url}?apikey=#{config?.api.omdb.key}&t=#{show.name}", (err, res)=>
+		request "#{config.api.omdb.url}?apikey=#{config.api.omdb.key}&t=#{show.name}", (err, res)=>
 			if res.statusCode is 200
 				body = JSON.parse res.body
 				if body.Response == "True"
@@ -101,9 +104,6 @@ getFileMeta = (fPath, fMime)->
 	fMeta.show = parts[parts.length - i]
 
 	return fMeta
-
-# Call on init
-refreshLists()
 
 router.get '/', (req, res)->
 	# List all shows

@@ -25,7 +25,7 @@ To do this, check the following setting.
 
 ### App configuration
 
-Edit `server/config.coffee` with your defaults.
+Edit `server/config.yaml` with your defaults.
 
 Ensure the `vlc.command` works in your console.
 
@@ -53,7 +53,7 @@ Install dependencies.
 npm i
 ```
 
-Edit `server/config.coffee` with your defaults.
+Edit `server/config.yaml` with your defaults.
 
 Build everything and run in a single command, because you are lazy.
 
