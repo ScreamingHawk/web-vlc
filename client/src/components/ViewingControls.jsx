@@ -37,6 +37,7 @@ export default class Viewing extends Component {
 			videoTime: 0,
 			volume: 0,
 			volumeToastId: null,
+			testVolume: false,
 			nextVideo: null,
 			vlcErrorToastId: null,
 			intervals: [],
@@ -199,7 +200,7 @@ export default class Viewing extends Component {
 					let volumeToastId = this.state.volumeToastId
 					if (statusVolume >= 300){
 						// Max is 320 but give some buffer
-						if (!toast.isActive(volumeToastId)){
+						if (!toast.isActive(volumeToastId) && this.state.testVolume){
 							volumeToastId = toast.info("Volume at max", {
 								position: toast.POSITION.BOTTOM_CENTER
 							})
@@ -213,6 +214,7 @@ export default class Viewing extends Component {
 						paused: status.state[0] != "playing",
 						volume: statusVolume,
 						volumeToastId: volumeToastId,
+						testVolume: false,
 					})
 				}
 			})
@@ -246,7 +248,7 @@ export default class Viewing extends Component {
 		if (!isNaN(val)){
 			// Setting volume directly, update immediately
 			this.setState({
-				volume: val
+				volume: val,
 			})
 		}
 		await fetch("/play/volume", {
@@ -261,7 +263,9 @@ export default class Viewing extends Component {
 			.then(this.handleApiErrors)
 			.then(response => {
 				if (isNaN(val)){
-					this.getVideoStatus()
+					this.setState({
+						testVolume: true,
+					}, this.getVideoStatus);
 				}
 			})
 	}
