@@ -23,6 +23,10 @@ $danger: #f44336;
 	margin-left: $margin;
 	margin-right: $margin;
 }
+@mixin margin-vertical($margin) {
+	margin-top: $margin;
+	margin-bottom: $margin;
+}
 
 @mixin border-box() {
 	-webkit-box-sizing: border-box;
@@ -211,6 +215,10 @@ input {
 	float: right;
 }
 
+.block {
+	display: block;
+}
+
 .clickable {
 	cursor: pointer;
 }
@@ -223,4 +231,7 @@ input {
 }
 .marginup10 {
 	margin-top: -10px;
+}
+.tiny-vertical-margin {
+	@include margin-vertical(5px);
 }

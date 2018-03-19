@@ -49,11 +49,14 @@ refreshLists = exports.refreshLists = (callback)->
 			showListDict[video.show] =
 				name: video.show
 				seasons: if video.season? then [video.season] else []
+				hasUnseasoned: !video.season?
 				count: 1
 				videos: [video]
 		else
 			if video.season? && !(video.season in showListDict[video.show].seasons)
 				showListDict[video.show].seasons.push video.season
+			else if !video.season?
+				showListDict[video.show].hasUnseasoned = true
 			showListDict[video.show].count++
 			showListDict[video.show].videos.push video
 	showList = []
@@ -117,6 +120,7 @@ router.get '/', (req, res)->
 			plot: show.plot
 			imdbRating: show.imdbRating
 			rating: show.rating
+			hasUnseasoned: show.hasUnseasoned
 	if !shows
 		res.sendStatus 404
 	else
@@ -132,6 +136,18 @@ router.get '/:showName', (req, res)->
 		res.sendStatus 404
 	else
 		res.json videos
+
+router.get '/:showName/seasons/:season', (req, res)->
+	# List all videos for the season
+	season = Number req.params.season
+	videos = []
+	for show in showList
+		if show.name == req.params.showName
+			for video in show.videos
+				if (!video.season? && isNaN season) ||
+						(video.season == season)
+					videos.push video
+	res.send videos
 
 router.get '/:showName/:videoFilename/next', (req, res)->
 	# List the next show

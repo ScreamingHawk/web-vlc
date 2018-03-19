@@ -72,6 +72,21 @@ export default class Show extends Component {
 		if (this.state.isCurrentShow){
 			className += " highlight"
 		}
+		let seasonRenders = null
+		if (show.seasons){
+			const setVideo = this.props.setVideo
+			seasonRenders = show.seasons.map(function(season){
+				return (
+					<VideoList show={show} season={season} setVideo={setVideo} key={season} />
+				)
+			})
+		}
+		let unseasonedRender = null
+		if (show.hasUnseasoned){
+			unseasonedRender = (
+				<VideoList show={show} setVideo={this.props.setVideo} />
+			)
+		}
 		return (
 			<div className={className} key={show.name}>
 				{img}
@@ -84,7 +99,8 @@ export default class Show extends Component {
 						<br/>
 						<b>Episodes on disk:</b> {show.count}
 					</p>
-					<VideoList show={show} setVideo={this.props.setVideo} />
+					{seasonRenders}
+					{unseasonedRender}
 				</div>
 			</div>
 		)
