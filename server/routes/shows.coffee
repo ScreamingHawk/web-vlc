@@ -73,13 +73,21 @@ refreshLists = exports.refreshLists = (callback)->
 setApiDetails = (show)->
 	if config?.api?.omdb
 		request "#{config.api.omdb.url}?apikey=#{config.api.omdb.key}&t=#{show.name}", (err, res)=>
-			if res.statusCode is 200
+			if err?
+				log.error "Error contacting OMDB: #{err}"
+			else if res?.statusCode is 200
 				body = JSON.parse res.body
 				if body.Response == "True"
 					show.image = body.Poster
 					show.plot = body.Plot
 					show.imdbRating = body.imdbRating
 					show.rating = body.Rated
+				else
+					log.warn "OMDB couldn't find data for #{show.name}"
+			else if res?.statusCode is 401
+				log.error "The OMDB API key in your config is invalid"
+			else
+				log.error "Request failed from OMDB with code #{res?.statusCode}"
 
 getFileMeta = (fPath, fMime)->
 	# Create meta obj
