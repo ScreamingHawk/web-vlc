@@ -132,6 +132,7 @@ router.get '/:showName', (req, res)->
 	for show in showList
 		if show.name == req.params.showName
 			videos = show.videos
+			break
 	if !videos
 		res.sendStatus 404
 	else
