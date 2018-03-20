@@ -10,10 +10,11 @@ export default class Video extends Component {
 		this.props.setVideo(this.props)
 	}
 	render() {
+		const classN = this.props.watched ? "warn" : "success"
 		return (
 			<div className="video flex row spaced center">
 				<span>{this.props.filename}</span>
-				<button className="success" onClick={this.watchVideo}>Watch!</button>
+				<button className={classN} onClick={this.watchVideo}>Watch!</button>
 			</div>
 		)
 	}

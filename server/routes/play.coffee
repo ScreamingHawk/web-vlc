@@ -9,21 +9,25 @@ router = express.Router()
 exports = module.exports = router
 
 config = null
+data = null
+common = null
 
-exports.init = (c)->
+exports.init = (c, d, f)->
 	config = c
+	data = d
+	common = f
 
 nowPlaying = null
 
 # Request vlc to open a file
 router.post '/', (req, res)->
-	log.debug req.body
-	log.debug "Playing video at path #{req.body?.path}"
 	if !req.body?.path?
 		# Path required
 		log.warn "Video path not supplied"
 		res.sendStatus 400
 		return
+	fPath = req.body.path
+	log.debug "Playing video at path #{fPath}"
 
 	# Build vlc command
 	cmdFlags = ["--one-instance", "--no-playlist-enqueue"]
@@ -31,7 +35,7 @@ router.post '/', (req, res)->
 		cmdFlags.push "-f"
 	if config?.vlc.playAndExit
 		cmdFlags.push "--play-and-exit"
-	cmdFlags.push "#{req.body.path}"
+	cmdFlags.push fPath
 
 	# Open vlc
 	log.debug "Running command #{config?.vlc.command} with flags #{cmdFlags}"
@@ -40,8 +44,15 @@ router.post '/', (req, res)->
 		log.error "VLC error: #{err}"
 
 	# Get filename
-	parts = req.body.path.split path.sep
+	parts = fPath.split path.sep
 	nowPlaying = parts[parts.length - 1]
+
+	# Update stored data
+	common.setWatched fPath
+	if !data.watched?
+		data.watched = []
+	data.watched.push fPath
+	common.storeData()
 
 	res.sendStatus 200
 

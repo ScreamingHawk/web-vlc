@@ -1,2 +1,5 @@
 # CoffeeScript
 *.js
+
+# Data file
+data.json

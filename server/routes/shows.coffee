@@ -9,15 +9,20 @@ router = express.Router()
 exports = module.exports = router
 
 config = null
+data = null
+common = null
 
-exports.init = (c)->
+exports.init = (c, d, f)->
 	config = c
+	data = d
+	common = f
+	common.setWatched = setWatched
 	refreshLists()
 
 videoList = []
 showList = []
 # Refresh the list
-refreshLists = exports.refreshLists = (callback)->
+refreshLists = exports.refreshLists = (forceApi=false, callback=null)->
 	log.debug "Refreshing video list"
 
 	# Get all files in sub folders
@@ -61,7 +66,7 @@ refreshLists = exports.refreshLists = (callback)->
 			showListDict[video.show].videos.push video
 	showList = []
 	for name, show of showListDict
-		setApiDetails show
+		setApiDetails show, forceApi
 		show.seasons.sort (a, b)->
 			a - b
 		showList.push show
@@ -70,8 +75,24 @@ refreshLists = exports.refreshLists = (callback)->
 
 	callback?()
 
-setApiDetails = (show)->
+setApiDetails = (show, forceApi=false)->
+	if !data.omdb?
+		# Set up omdb in data if required
+		data.omdb = {}
+
+	if !forceApi
+		# Check the stored data for cached API
+		dataOmdbShow = data.omdb[show.name]
+		if dataOmdbShow?
+			log.debug "Using OMDB data for #{show.name} from cache"
+			show.image = dataOmdbShow.Poster
+			show.plot = dataOmdbShow.Plot
+			show.imdbRating = dataOmdbShow.imdbRating
+			show.rating = dataOmdbShow.Rated
+			return
+
 	if config?.api?.omdb
+		log.debug "Updating OMDB data for #{show.name}"
 		request "#{config.api.omdb.url}?apikey=#{config.api.omdb.key}&t=#{show.name}", (err, res)=>
 			if err?
 				log.error "Error contacting OMDB: #{err}"
@@ -82,12 +103,22 @@ setApiDetails = (show)->
 					show.plot = body.Plot
 					show.imdbRating = body.imdbRating
 					show.rating = body.Rated
+					# Update stored data
+					body._timestamp = Date()
+					data.omdb[show.name] = body
+					common.storeData()
 				else
 					log.warn "OMDB couldn't find data for #{show.name}"
 			else if res?.statusCode is 401
 				log.error "The OMDB API key in your config is invalid"
 			else
 				log.error "Request failed from OMDB with code #{res?.statusCode}"
+
+setWatched = (path)->
+	for video in videoList
+		if video.path == path
+			video.watched = true
+			break
 
 getFileMeta = (fPath, fMime)->
 	# Create meta obj
@@ -113,6 +144,10 @@ getFileMeta = (fPath, fMime)->
 		i++
 	# Get show
 	fMeta.show = parts[parts.length - i]
+	# Check if watched
+	fMeta.watched = false
+	if data.watched?
+		fMeta.watched = fPath in data.watched
 
 	return fMeta
 
