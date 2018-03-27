@@ -52,6 +52,7 @@ export default class ShowList extends Component {
 				</div>
 				<div className="flex row end spaced-children">
 					<a className="btn primary" href="/?refresh">Refresh List</a>
+					<a className="btn danger" href="/quit">Quit</a>
 				</div>
 			</div>
 		)
