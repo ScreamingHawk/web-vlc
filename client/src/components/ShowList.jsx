@@ -50,6 +50,9 @@ export default class ShowList extends Component {
 				<div className="flex wrap justify">
 					{showRenders}
 				</div>
+				<div className="flex row end spaced-children">
+					<a className="btn primary" href="/?refresh">Refresh List</a>
+				</div>
 			</div>
 		)
 	}

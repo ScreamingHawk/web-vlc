@@ -67,13 +67,15 @@ h1, h2, h3, h4, h5, h6 {
 	color: $main-brand;
 }
 
-button {
+button,
+a.btn {
 	@include border-radius(3px);
 	color: $light-shade;
 	@include transition-all(0.3s);
 	border: none;
 	cursor: pointer;
 	padding: 10px;
+	text-decoration: none;
 	&.large {
 		font-size: 1.2em;
 		padding: 15px;
@@ -136,6 +138,9 @@ input {
 	}
 	&.justify {
 		justify-content: center;
+	}
+	&.end {
+		justify-content: flex-end;
 	}
 	&.center {
 		align-items: center;
@@ -234,4 +239,7 @@ input {
 }
 .tiny-vertical-margin {
 	@include margin-vertical(5px);
+}
+.spaced-children > * {
+	@include margin-horizontal(2px);
 }
