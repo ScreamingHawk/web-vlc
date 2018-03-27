@@ -61,6 +61,11 @@ app.use '/config', configRoutes
 
 app.use '/', require './routes/client'
 
+app.get '/quit', (req, res)->
+	log.info "Quit command received. Closing"
+	res.sendStatus 204
+	server.close()
+
 # Run server
-app.listen config.server.port, ->
+server = app.listen config.server.port, ->
 	log.info "Server running at http://localhost:#{config.server.port}"
