@@ -34,10 +34,10 @@ commonFunctions =
 
 # Stored data
 data = {}
-dataLoc = path.join __dirname, 'data.json'
+dataLoc = path.join __dirname, config.server.dataFile ? "data.json"
 if !fs.existsSync dataLoc
 	commonFunctions.storeDataSync()
-data = require './data.json'
+data = require dataLoc
 
 # Configure server
 app = express()

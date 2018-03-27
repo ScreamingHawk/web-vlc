@@ -10,6 +10,7 @@ vlc:
 server:
   port: 3000
   logLevel: "debug"
+  dataFile: ".\\data.json"
 files:
   # The locations of the video files
   locations:
