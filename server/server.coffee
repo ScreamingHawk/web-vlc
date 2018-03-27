@@ -59,20 +59,7 @@ configRoutes = require './routes/config'
 configRoutes.init config, data, commonFunctions
 app.use '/config', configRoutes
 
-app.get '/', (req, res)->
-	sendHome = =>
-		# Send home page
-		res.sendFile path.join __dirname, '../client/index.html'
-	if req.query.refresh?
-		# Refresh the list
-		showsRoutes.refreshLists true, sendHome
-	else
-		sendHome()
-
-
-app.get '/bundle.js', (req, res)->
-	# Send bundled js
-	res.sendFile path.join __dirname, '../client/build/bundle.js'
+app.use '/', require './routes/client'
 
 # Run server
 app.listen config.server.port, ->
