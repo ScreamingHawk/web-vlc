@@ -19,6 +19,8 @@ exports.init = (c, d, f)->
 
 nowPlaying = null
 
+suppressContactError = false
+
 # Request vlc to open a file
 router.post '/', (req, res)->
 	if !req.body?.path?
@@ -131,13 +133,16 @@ vlcApi = (command, value, callback)->
 		, (err, res) =>
 			if err?
 				log.error "Error contacting VLC"
-				log.info "Have you configured the VLC HTTP API?" # Maybe it's just not running
-				log.error err
+				if !suppressContactError
+					log.info "Have you configured the VLC HTTP API?" # Maybe it's just not running
+					log.error err
 				callback? false
 				return
-			if res?.statusCode isnt 200
-				log.error "Error contact VLC (#{res.statusCode})"
-				if res.statusCode is 401
+			if res?.statusCode is 200
+				suppressContactError = true
+			else
+				log.error "Error contact VLC (#{res?.statusCode})"
+				if res?.statusCode is 401
 					log.error "Authentication error. Have you configured the VLC HTTP password correctly?"
 
 			callback? res?.statusCode is 200, res.body
