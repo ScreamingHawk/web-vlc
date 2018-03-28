@@ -65,6 +65,7 @@ app.get '/quit', (req, res)->
 	log.info "Quit command received. Closing"
 	res.sendStatus 204
 	server.close()
+	process.exit()
 
 # Run server
 server = app.listen config.server.port, ->
