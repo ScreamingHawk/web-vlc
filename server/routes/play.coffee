@@ -132,10 +132,14 @@ vlcApi = (command, value, callback)->
 				Authorization: "Basic #{new Buffer(":#{config?.vlc.http.password}").toString "base64"}"
 		, (err, res) =>
 			if err?
-				log.error "Error contacting VLC"
 				if !suppressContactError
-					log.info "Have you configured the VLC HTTP API?" # Maybe it's just not running
+					# Make contact before, probably just not running
+					log.error "Error contacting VLC"
+					log.info "Have you configured the VLC HTTP API?"
 					log.error err
+				else
+					# Log it at debug level this time
+					log.debug "Error contacting VLC"
 				callback? false
 				return
 			if res?.statusCode is 200
