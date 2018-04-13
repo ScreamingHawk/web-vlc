@@ -1,4 +1,5 @@
 express = require 'express'
+request = require 'request'
 log = require 'winston'
 path = require 'path'
 bodyParser = require 'body-parser'
@@ -13,10 +14,25 @@ log.add log.transports.Console,
 	timestamp: true
 	level: config.server.logLevel
 
+server = null
+portKillAttempted = false
+
+url = "http://localhost:#{config.server.port}"
+
 # Catch top level exceptions and log them.
 # This should prevent the server from terminating due to a rogue exception.
 process.on 'uncaughtException', (error) ->
-	log.error "CRITICAL: #{error.stack}"
+	if error.errno == 'EADDRINUSE' && !portKillAttempted
+		portKillAttempted = true
+		log.warn "Port in use. Attempting to quit and start again"
+		request "#{url}/quit", (err, resp)->
+			if err? || resp?.statusCode != 204
+				log.error "Did not respond to quit request at #{url}"
+				throw error
+			log.info "Quit application at #{url}. Starting up again"
+			startServer()
+	else
+		log.error "CRITICAL: #{error.stack}"
 
 # Shared functions
 commonFunctions =
@@ -67,6 +83,8 @@ app.get '/quit', (req, res)->
 	server.close()
 	process.exit()
 
-# Run server
-server = app.listen config.server.port, ->
-	log.info "Server running at http://localhost:#{config.server.port}"
+startServer = ->
+	# Run server
+	server = app.listen config.server.port, (err)->
+		log.info "Server running at #{url}"
+startServer()
