@@ -1,0 +1,11 @@
+{
+	"name": "Video Viewer",
+	"short_name": "Video Viewer",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#F4F5F6",
+	"theme_color": "#585088",
+	"description": "Select your VLC shows to watch here",
+	"icons": [
+	]
+}

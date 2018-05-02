@@ -21,3 +21,7 @@ router.get '/', (req, res)->
 router.get '/bundle.js', (req, res)->
 	# Send bundled js
 	res.sendFile path.join __dirname, '../../client/build/bundle.js'
+
+router.get '/manifest.json', (req, res)->
+	# Send manifest
+	res.sendFile path.join __dirname, '../../client/manifest.json'
