@@ -1,8 +1,12 @@
 webpack = require 'webpack'
 path = require 'path'
+CopyWebpackPlugin = require 'copy-webpack-plugin'
 
-BUILD_DIR = path.resolve __dirname, 'client/build'
 SRC_DIR = path.resolve __dirname, 'client/src'
+BUILD_DIR = path.resolve __dirname, 'client/build'
+
+IMG_SRC_DIR = path.resolve __dirname, 'client/src/img'
+IMG_BUILD_DIR = path.resolve __dirname, 'client/build/img'
 
 module.exports =
 	entry:
@@ -10,6 +14,13 @@ module.exports =
 	output:
 		filename: 'bundle.js'
 		path: BUILD_DIR
+	plugins: [
+		CopyWebpackPlugin [
+			test: /([^/]+)\/(.+)\.png$/
+			from: IMG_SRC_DIR
+			to: IMG_BUILD_DIR
+		]
+	]
 	module:
 			rules: [
 					test: /\.(css|scss)$/
@@ -36,7 +47,8 @@ module.exports =
 					use: [
 						loader: "url-loader"
 						options:
-								limit: 25000
+								limit: 8000
+								name: "img/[name].[ext]"
 					]
 				,
 					test: /\.svg$/

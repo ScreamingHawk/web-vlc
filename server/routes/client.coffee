@@ -25,3 +25,12 @@ router.get '/bundle.js', (req, res)->
 router.get '/manifest.json', (req, res)->
 	# Send manifest
 	res.sendFile path.join __dirname, '../../client/manifest.json'
+
+# Images
+router.use '/img', express.static path.join __dirname, '../../client/build/img'
+
+# Favicon
+router.get '/favicon.ico', (req, res)->
+	res.sendFile path.join __dirname, '../../client/build/img/icon/favicon.ico'
+router.get '/favicon.png', (req, res)->
+	res.sendFile path.join __dirname, '../../client/build/img/icon/icon-192x192.png'
