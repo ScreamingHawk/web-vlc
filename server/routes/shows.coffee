@@ -35,7 +35,7 @@ refreshLists = exports.refreshLists = (forceApi=false, callback=null)->
 						walkSync fPath, fileList
 					else
 						fMime = mime.getType file
-						if fMime.startsWith "video"
+						if fMime?.startsWith "video"
 							fileList.push getFileMeta fPath, fMime
 		catch err
 			log.error "Unable to read directory #{dir}. Is your config file set up correctly?"
