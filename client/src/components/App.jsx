@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
+import createHistory from 'history/createBrowserHistory'
 import ShowList from './ShowList.jsx'
 import Viewing from './Viewing.jsx'
+
+const history = createHistory()
 
 export default class App extends Component {
 	constructor(props){
@@ -8,12 +11,22 @@ export default class App extends Component {
 
 		this.setVideo = this.setVideo.bind(this)
 
+		history.listen((location, action) => {
+			if (action == "POP"){
+				this.toggleViewing(true)
+				return false
+			}
+		})
+
 		this.state = {
 			isViewing: false,
 			video: null
 		}
 	}
-	toggleViewing(){
+	toggleViewing(fromBack){
+		if (!fromBack){
+			history.push('/')
+		}
 		this.setState({
 			isViewing: !this.state.isViewing,
 		})

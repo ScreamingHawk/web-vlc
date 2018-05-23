@@ -7,6 +7,7 @@
     "body-parser": "^1.18.2",
     "cross-spawn": "^5.1.0",
     "express": "^4.16.2",
+    "history": "^4.7.2",
     "mime": "^2.2.0",
     "rc-slider": "^8.6.0",
     "react": "^16.2.0",
