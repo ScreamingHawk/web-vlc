@@ -26,6 +26,14 @@ router.get '/manifest.json', (req, res)->
 	# Send manifest
 	res.sendFile path.join __dirname, '../../client/manifest.json'
 
+router.get '/offline.html', (req, res)->
+	# Send offline HTML page
+	res.sendFile path.join __dirname, '../../client/offline.html'
+
+router.get '/serviceWorker.js', (req, res)->
+	# Send service worker
+	res.sendFile path.join __dirname, '../../client/serviceWorker.js'
+
 # Images
 router.use '/img', express.static path.join __dirname, '../../client/build/img'
 
