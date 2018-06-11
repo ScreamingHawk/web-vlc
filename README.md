@@ -1,6 +1,14 @@
-# web-vlc
+# Web-VLC
 
-A website for selecting shows to watch on VLC locally
+A website for selecting shows to watch locally on VLC.
+
+## Features
+
+* Configure a list of video locations
+* Recognise series and seasons
+* Load poster art, plot and more from IMDB
+* Volume and seek controls from your browser
+* Modern UI and design
 
 ## Configuration
 
