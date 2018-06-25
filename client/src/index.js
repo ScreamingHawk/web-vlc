@@ -10,5 +10,4 @@ render(
 	document.getElementById('root')
 );
 
-//FIXME Uncomment to enable service worker
-//registerServiceWorker();
+registerServiceWorker();
