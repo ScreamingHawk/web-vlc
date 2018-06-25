@@ -39,6 +39,13 @@ Ensure the `vlc.command` works in your console.
 
 Copy the paths to your videos into `files.locations`.
 
+#### Secure HTTPS
+
+To ensure `HTTPS` set the value of `server.secure` in `server/config.yaml` to `true`.
+
+Copy your private key to `server/cert/private.pem`.
+Copy your certificate to `server/cert/public.pem`.
+
 ### Video file structure
 
 Files must be organised like so:

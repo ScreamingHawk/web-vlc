@@ -14,10 +14,24 @@ log.add log.transports.Console,
 	timestamp: true
 	level: config.server.logLevel
 
+# Secure based configuration
+if config.server.secure
+	https = require 'https'
+	try
+		privateKey = fs.readFileSync path.join(__dirname, 'cert/private.pem'), 'utf8'
+		publicKey = fs.readFileSync path.join(__dirname, 'cert/public.pem'), 'utf8'
+	catch err
+		log.error "HTTPS key files not found", err
+		process.exit(1)
+	url = "https"
+else
+	http = require 'http'
+	url = "http"
+
+url += "://localhost:#{config.server.port}"
+
 server = null
 portKillAttempted = false
-
-url = "http://localhost:#{config.server.port}"
 
 # Catch top level exceptions and log them.
 # This should prevent the server from terminating due to a rogue exception.
@@ -85,6 +99,13 @@ app.get '/quit', (req, res)->
 
 startServer = ->
 	# Run server
-	server = app.listen config.server.port, (err)->
+	if config.server.secure
+		server = https.createServer
+				key: privateKey
+				cert: publicKey
+			, app
+	else
+		server = http.createServer app
+	server.listen config.server.port, (err)->
 		log.info "Server running at #{url}"
 startServer()
