@@ -46,6 +46,8 @@ To ensure `HTTPS` set the value of `server.secure` in `server/config.yaml` to `t
 Copy your private key to `server/cert/private.pem`.
 Copy your certificate to `server/cert/public.pem`.
 
+For more information on how to generate these keys for your site you can check out this [blog post about Let's Encrypt][1].
+
 ### Video file structure
 
 Files must be organised like so:
@@ -98,3 +100,5 @@ Run server watching for changes.
 ```
 npm run start-watch
 ```
+
+[1]: https://michael.standen.link/2018/06/22/lets-encrypt-cert.html
