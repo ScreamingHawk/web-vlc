@@ -7,7 +7,7 @@ self.addEventListener('install', function(event) {
 				console.log('[oninstall] Cached offline page', response.url);
 				return cache.put(offlineRequest, response);
 			});
-		});
+		})
 	);
 });
 
@@ -21,7 +21,7 @@ self.addEventListener('fetch', function(event) {
 				return caches.open('offline').then(function(cache){
 					return cache.match('offline.html');
 				});
-			});
+			})
 		);
 	}
 });
