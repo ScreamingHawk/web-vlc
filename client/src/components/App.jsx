@@ -20,8 +20,16 @@ export default class App extends Component {
 
 		this.state = {
 			isViewing: false,
-			video: null
+			video: null,
 		}
+
+		const dlEnabled = fetch('/config/client/downloadEnabled').then((response)=>{
+			this.setState({
+				config: {
+					dlEnabled: response.json(),
+				},
+			})
+		})
 	}
 	toggleViewing(fromBack){
 		if (!fromBack){
@@ -51,7 +59,8 @@ export default class App extends Component {
 	render(){
 		const sendProps = {
 			currentVideo: this.state.video,
-			setVideo: this.setVideo
+			setVideo: this.setVideo,
+			config: this.state.config,
 		}
 		let view
 		let isViewingText

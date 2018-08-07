@@ -75,9 +75,10 @@ export default class Show extends Component {
 		let seasonRenders = null
 		if (show.seasons){
 			const setVideo = this.props.setVideo
+			const config = this.props.config
 			seasonRenders = show.seasons.map(function(season){
 				return (
-					<VideoList show={show} season={season} setVideo={setVideo} key={season} />
+					<VideoList config={config} show={show} season={season} setVideo={setVideo} key={season} />
 				)
 			})
 		}

@@ -48,6 +48,10 @@ Copy your certificate to `server/cert/public.pem`.
 
 For more information on how to generate these keys for your site you can check out this [blog post about Let's Encrypt][1].
 
+#### Enable downloading
+
+To enable a download button for each video, set the value of `client.downloadEnabled` in `server/config.yaml` to `true`.
+
 ### Video file structure
 
 Files must be organised like so:

@@ -33,9 +33,10 @@ export default class VideoList extends Component {
 		}
 		const setVideo = this.props.setVideo
 		const show = this.props.show
+		const config = this.props.config
 		let videoRenders = this.state.videos.map(function(video){
 			return (
-				<Video {...video} key={video.filename} setVideo={setVideo} show={show} />
+				<Video {...video} config={config} key={video.filename} setVideo={setVideo} show={show} />
 			)
 		})
 		return (

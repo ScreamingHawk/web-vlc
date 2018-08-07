@@ -11,10 +11,20 @@ export default class Video extends Component {
 	}
 	render() {
 		const classN = this.props.watched ? "warn" : "success"
+		let dlButton = null
+		if (this.props.config && this.props.config.dlEnabled){
+			dlButton = (
+				<a className="btn info" href={this.props.config.dlEnabled} download>⤓</a>
+			)
+		}
+		const downloadUrl = `/download/${this.props.path}`
 		return (
 			<div className="video flex row spaced center">
 				<span>{this.props.filename}</span>
-				<button className={classN} onClick={this.watchVideo}>Watch!</button>
+				<div className="flex row spaced-children">
+					<button className={classN} onClick={this.watchVideo}>Watch!</button>
+					{dlButton}
+				</div>
 			</div>
 		)
 	}

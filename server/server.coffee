@@ -85,6 +85,12 @@ playRoutes = require './routes/play'
 playRoutes.init config, data, commonFunctions
 app.use '/play', playRoutes
 
+if config.client.downloadEnabled
+	log.info "Downloading enabled"
+	downloadRoutes = require './routes/download'
+	downloadRoutes.init config, data, commonFunctions
+	app.use '/download', downloadRoutes
+
 configRoutes = require './routes/config'
 configRoutes.init config, data, commonFunctions
 app.use '/config', configRoutes

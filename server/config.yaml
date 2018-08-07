@@ -12,6 +12,8 @@ server:
   secure: false
   logLevel: "debug"
   dataFile: ".\\data.json"
+client:
+  downloadEnabled: true
 files:
   # The locations of the video files
   locations:
