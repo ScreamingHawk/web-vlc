@@ -1,5 +1,7 @@
 # Web-VLC
 
+[![Build Status](https://travis-ci.com/ScreamingHawk/web-vlc.svg?branch=master)](https://travis-ci.com/ScreamingHawk/web-vlc)
+
 A website for selecting shows to watch locally on VLC.
 
 ## Features
