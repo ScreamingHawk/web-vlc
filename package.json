@@ -36,7 +36,7 @@
     "webpack": "^3.10.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run build",
     "build": "npm run coffee && npm run webpack",
     "coffee": "node ./node_modules/coffeescript/bin/coffee -c .",
     "coffee-watch": "node ./node_modules/coffeescript/bin/coffee -cw .",
