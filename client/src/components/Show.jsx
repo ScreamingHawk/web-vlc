@@ -73,9 +73,9 @@ export default class Show extends Component {
 			className += " highlight"
 		}
 		let seasonRenders = null
+		const setVideo = this.props.setVideo
+		const config = this.props.config
 		if (show.seasons){
-			const setVideo = this.props.setVideo
-			const config = this.props.config
 			seasonRenders = show.seasons.map(function(season){
 				return (
 					<VideoList config={config} show={show} season={season} setVideo={setVideo} key={season} />
@@ -85,7 +85,7 @@ export default class Show extends Component {
 		let unseasonedRender = null
 		if (show.hasUnseasoned){
 			unseasonedRender = (
-				<VideoList show={show} setVideo={this.props.setVideo} />
+				<VideoList config={config} show={show} setVideo={setVideo} />
 			)
 		}
 		return (
