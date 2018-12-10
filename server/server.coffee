@@ -75,6 +75,10 @@ app.use bodyParser.json
 	limit: '1mb'
 app.use bodyParser.urlencoded
 	extended: false
+app.use (req, res, next)->
+	# Prevent 403
+	req.headers['if-none-match'] = 'no-match-for-this'
+	next()
 
 # Configure routes
 showsRoutes = require './routes/shows'
