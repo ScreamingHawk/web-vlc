@@ -91,7 +91,7 @@ setApiDetails = (show, forceApi=false)->
 			show.rating = dataOmdbShow.Rated
 			return
 
-	if config?.api?.omdb
+	if config?.api?.omdb?.enabled
 		log.debug "Updating OMDB data for #{show.name}"
 		request "#{config.api.omdb.url}?apikey=#{config.api.omdb.key}&t=#{show.name}", (err, res)=>
 			if err?
