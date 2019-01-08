@@ -21,6 +21,6 @@ files:
     - "C:\\Users\\MichaelSta\\Videos"
 api:
   omdb:
-    enabled: true
+    enabled: false
     url: "http://www.omdbapi.com/"
     key: "XXXXXXXX"
