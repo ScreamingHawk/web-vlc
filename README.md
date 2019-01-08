@@ -56,6 +56,14 @@ For more information on how to generate these keys for your site you can check o
 
 To enable a download button for each video, set the value of `client.downloadEnabled` in `server/config.yaml` to `true`.
 
+#### API - OMDb
+
+[OMDb][2] is an API for IMDb. Using this feature will add plot and rating information for each of your shows.
+
+This feature is disabled by default.
+
+To enable this feature, optain a key from the [OMDb website][2] and add it to the setting `api.omdb.key`, then set the `api.omdb.enabled` flag to `enabled`.
+
 ### Video file structure
 
 Files must be organised like so:
@@ -110,3 +118,4 @@ npm run start-watch
 ```
 
 [1]: https://michael.standen.link/2018/06/22/lets-encrypt-cert.html
+[2]: https://www.omdbapi.com/
