@@ -35,6 +35,8 @@ To do this, check the following setting.
 
 ### App configuration
 
+Copy `server/config.example.yaml` to `server/config.yaml`.
+
 Edit `server/config.yaml` with your defaults.
 
 Ensure the `vlc.command` works in your console.
