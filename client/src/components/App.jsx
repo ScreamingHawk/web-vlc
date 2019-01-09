@@ -23,13 +23,11 @@ export default class App extends Component {
 			video: null,
 		}
 
-		fetch('/config/client/downloadEnabled').then((response)=>{
+		fetch('/config/client').then((response)=>{
 			return response.json()
 		}).then((responseJson)=>{
 			this.setState({
-				config: {
-					dlEnabled: responseJson.downloadEnabled,
-				},
+				config: responseJson,
 			})
 		})
 	}

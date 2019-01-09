@@ -12,7 +12,7 @@ export default class Video extends Component {
 	render() {
 		const classN = this.props.watched ? "warn" : "success"
 		let dlButton = null
-		if (this.props.config && this.props.config.dlEnabled){
+		if (this.props.config && this.props.config.downloadEnabled){
 			const downloadUrl = `/download/${this.props.path}`
 			dlButton = (
 				<a className="btn info" href={downloadUrl} download>⤓</a>

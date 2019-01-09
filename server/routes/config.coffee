@@ -9,11 +9,6 @@ config = null
 exports.init = (c)->
 	config = c
 
-router.get '/client/:client', (req, res)->
+router.get '/client', (req, res)->
 	# Return client config
-	clientData = config?.client[req.params.client]
-	if clientData?
-		res.json
-			"#{req.params.client}": clientData
-	else
-		res.sendStatus 404
+	res.json config?.client
