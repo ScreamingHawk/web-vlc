@@ -74,6 +74,12 @@ To enable this feature, set the `api.mal.enabled` flag to `enabled`.
 
 Please note that MyAnimeList has a very relaxed search feature which may result in poor matches.
 
+#### API - Preference
+
+With both API enabled, there may be a preference to use one set of results over another. This can be configured with the `api.prefer` flag.
+
+This feature is set to `omdb` by default.
+
 ### Video file structure
 
 Files must be organised like so:

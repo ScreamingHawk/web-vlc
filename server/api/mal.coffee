@@ -14,6 +14,19 @@ exports.init = (c, d, f)->
 	data = d
 	common = f
 
+checkAndSet = (show, key, value)->
+	if config?.api?.prefer == "mal"
+		show[key] = value
+	else if !show[key]
+		show[key] = value
+
+setValues = (show, apiData)->
+	checkAndSet show, "image", apiData.image
+	checkAndSet show, "plot", apiData.plot
+	checkAndSet show, "genres", apiData.genres
+	checkAndSet show, "malRating", apiData.malRating
+	checkAndSet show, "rating", apiData.rating
+
 exports.update = (show, forceApi=false)->
 	if !data.mal?
 		# Set up mal in data if required
@@ -24,11 +37,7 @@ exports.update = (show, forceApi=false)->
 		dataMalShow = data.mal[show.name]
 		if dataMalShow?
 			log.debug "Using MAL data for #{show.name} from cache"
-			show.image = dataMalShow.image
-			show.plot = dataMalShow.plot
-			show.genres = dataMalShow.genres
-			show.malRating = dataMalShow.malRating
-			show.rating = dataMalShow.rating
+			setValues show, dataMalShow
 			return
 
 	if config?.api?.mal?.enabled
@@ -56,26 +65,28 @@ exports.update = (show, forceApi=false)->
 							log.error "Request failed from MAL with code #{res?.statusCode}"
 						else
 							jq = cheerio.load res.body
-							show.image = jq ".ac"
+							apiData = {}
+							apiData.image = jq ".ac"
 									?.attr("src")
-							show.plot = jq "span[itemprop=description]"
+							apiData.plot = jq "span[itemprop=description]"
 									?.first()?.text()?.replace "[Written by MAL Rewrite]", ""
 									?.trim()
-							show.malRating = jq ".score"
+							apiData.malRating = jq ".score"
 									?.first()?.text()?.replace /\n/g, ''
 									?.trim()
-							show.rating = jq ".js-scrollfix-bottom span.dark_text"
+							apiData.rating = jq ".js-scrollfix-bottom span.dark_text"
 									?.filter (i, e)->
 										jq(e).text() == "Rating:"
 									?.parent()?.text()?.replace /\n/g, ''
 									?.replace /Rating:/g, ''
 									?.trim()
-							show.genres = jq ".js-scrollfix-bottom span.dark_text"
+							apiData.genres = jq ".js-scrollfix-bottom span.dark_text"
 									?.filter (i, e)->
 										jq(e).text() == "Genres:"
 									?.parent()?.text()?.replace /\n/g, ''
 									?.replace /Genres:/g, ''
 									?.trim()
+							setValues show, apiData
 							# Update stored data
 							show._timestamp = Date()
 							data.mal[show.name] = show

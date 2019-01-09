@@ -27,3 +27,4 @@ api:
   mal:
     enabled: false
     url: "https://myanimelist.net/"
+  prefer: "omdb"

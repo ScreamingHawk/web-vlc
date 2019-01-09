@@ -13,6 +13,18 @@ exports.init = (c, d, f)->
 	data = d
 	common = f
 
+checkAndSet = (show, key, value)->
+	if config?.api?.prefer == "omdb"
+		show[key] = value
+	else if !show[key]
+		show[key] = value
+
+setValues = (show, apiData)->
+	checkAndSet show, "image", apiData.Poster
+	checkAndSet show, "plot", apiData.Plot
+	checkAndSet show, "imdbRating", apiData.imdbRating
+	checkAndSet show, "rating", apiData.Rated
+
 exports.update = (show, forceApi=false)->
 	if !data.omdb?
 		# Set up omdb in data if required
@@ -23,10 +35,7 @@ exports.update = (show, forceApi=false)->
 		dataOmdbShow = data.omdb[show.name]
 		if dataOmdbShow?
 			log.debug "Using OMDB data for #{show.name} from cache"
-			show.image = dataOmdbShow.Poster
-			show.plot = dataOmdbShow.Plot
-			show.imdbRating = dataOmdbShow.imdbRating
-			show.rating = dataOmdbShow.Rated
+			setValues show, dataOmdbShow
 			return
 
 	if config?.api?.omdb?.enabled
@@ -37,10 +46,7 @@ exports.update = (show, forceApi=false)->
 			else if res?.statusCode is 200
 				body = JSON.parse res.body
 				if body.Response == "True"
-					show.image = body.Poster
-					show.plot = body.Plot
-					show.imdbRating = body.imdbRating
-					show.rating = body.Rated
+					setValues show, body
 					# Update stored data
 					body._timestamp = Date()
 					data.omdb[show.name] = body
