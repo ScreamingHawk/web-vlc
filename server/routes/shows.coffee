@@ -6,6 +6,7 @@ mime = require 'mime'
 request = require 'request'
 
 omdb = require '../api/omdb'
+mal = require '../api/mal'
 
 router = express.Router()
 exports = module.exports = router
@@ -19,7 +20,10 @@ exports.init = (c, d, f)->
 	data = d
 	common = f
 	common.setWatched = setWatched
+	# Init apis
 	omdb.init config, data, common
+	mal.init config, data, common
+	# Init lists
 	refreshLists()
 
 videoList = []
@@ -79,7 +83,8 @@ refreshLists = exports.refreshLists = (forceApi=false, callback=null)->
 	callback?()
 
 setApiDetails = (show, forceApi=false)->
-	omdb.update show, data, common, forceApi
+	omdb.update show, forceApi
+	mal.update show, forceApi
 
 setWatched = (path)->
 	for video in videoList
@@ -129,6 +134,7 @@ router.get '/', (req, res)->
 			image: show.image
 			plot: show.plot
 			imdbRating: show.imdbRating
+			malRating: show.malRating
 			rating: show.rating
 			hasUnseasoned: show.hasUnseasoned
 	if !shows

@@ -59,11 +59,21 @@ export default class Show extends Component {
 				<i>Details not found.</i>
 			</p>
 		)
-		if (show.imdbRating){
+		if (show.malRating || show.imdbRating || show.rating){
 			apiP = (
 				<p>
-					<b>IMDB Rating:</b> {show.imdbRating}
-					<br/>
+					{
+						show.malRating && [
+							<span><b>MAL Rating:</b> {show.malRating}</span>,
+							<br/>,
+						]
+					}
+					{
+						show.imdbRating && [
+							<span><b>IMDB Rating:</b> {show.imdbRating}</span>,
+							<br/>,
+						]
+					}
 					<b>Rated:</b> {show.rating != null ? show.rating : "No Rating"}
 				</p>
 			)

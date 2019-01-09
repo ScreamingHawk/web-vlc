@@ -24,3 +24,6 @@ api:
     enabled: false
     url: "http://www.omdbapi.com/"
     key: "XXXXXXXX"
+  mal:
+    enabled: false
+    url: "https://myanimelist.net/"
