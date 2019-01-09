@@ -10,6 +10,7 @@ export default class Show extends Component {
 		super(props)
 
 		this.unhideRated = this.unhideRated.bind(this)
+		this.unshortenPlot = this.unshortenPlot.bind(this)
 
 		const { show } = this.props
 
@@ -22,6 +23,8 @@ export default class Show extends Component {
 			)
 		this.state = {
 			videos: [],
+			shortenPlot: true,
+			shortenPlotTo: 120,
 			ratingHidden: ratingHidden,
 			isCurrentShow: isCurrentShow
 		}
@@ -29,6 +32,13 @@ export default class Show extends Component {
 	unhideRated(){
 		this.setState({
 			ratingHidden: false
+		})
+	}
+	unshortenPlot(e){
+		e.preventDefault();
+		e.stopPropagation();
+		this.setState({
+			shortenPlot: false
 		})
 	}
 	render(){
@@ -53,6 +63,14 @@ export default class Show extends Component {
 		if (this.state.ratingHidden){
 			plotP = (
 				<p><i>Plot hidden.</i></p>
+			)
+		} else if (show.plot.length > this.state.shortenPlotTo - 10 && this.state.shortenPlot){
+			plotP = (
+				<p>
+					{show.plot.substring(0, this.state.shortenPlotTo)}...
+					&nbsp;
+					<a href="" onClick={this.unshortenPlot}>more</a>
+				</p>
 			)
 		}
 		let apiP = (
