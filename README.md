@@ -64,6 +64,16 @@ This feature is disabled by default.
 
 To enable this feature, optain a key from the [OMDb website][2] and add it to the setting `api.omdb.key`, then set the `api.omdb.enabled` flag to `enabled`.
 
+#### API - MAL
+
+[MyAnimeList][3] is by far the best source of anime information. Using this feature will add plot and rating information for each of your shows.
+
+This feature is disabled by default.
+
+To enable this feature, set the `api.mal.enabled` flag to `enabled`.
+
+Please note that MyAnimeList has a very relaxed search feature which may result in poor matches.
+
 ### Video file structure
 
 Files must be organised like so:
@@ -118,3 +128,4 @@ npm run start-watch
 
 [1]: https://michael.standen.link/2018/06/22/lets-encrypt-cert.html
 [2]: https://www.omdbapi.com/
+[3]: https://myanimelist.net/
