@@ -15,6 +15,7 @@ export default class Show extends Component {
 
 		const isCurrentShow = this.props.currentVideo != null && this.props.currentVideo.show.name == show.name
 		const ratingHidden = !isCurrentShow && show.rating && (
+				show.rating.indexOf("X") > -1 ||
 				show.rating.indexOf("R") > -1 ||
 				show.rating.indexOf("MA") > -1 ||
 				show.rating.indexOf("N/A") > -1 // Assume not rated is lewd
