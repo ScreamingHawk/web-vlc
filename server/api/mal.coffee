@@ -26,6 +26,7 @@ exports.update = (show, forceApi=false)->
 			log.debug "Using MAL data for #{show.name} from cache"
 			show.image = dataMalShow.image
 			show.plot = dataMalShow.plot
+			show.genres = dataMalShow.genres
 			show.malRating = dataMalShow.malRating
 			show.rating = dataMalShow.rating
 			return
@@ -59,6 +60,7 @@ exports.update = (show, forceApi=false)->
 									?.attr("src")
 							show.plot = jq "span[itemprop=description]"
 									?.first()?.text()?.replace "[Written by MAL Rewrite]", ""
+									?.trim()
 							show.malRating = jq ".score"
 									?.first()?.text()?.replace /\n/g, ''
 									?.trim()
@@ -67,6 +69,12 @@ exports.update = (show, forceApi=false)->
 										jq(e).text() == "Rating:"
 									?.parent()?.text()?.replace /\n/g, ''
 									?.replace /Rating:/g, ''
+									?.trim()
+							show.genres = jq ".js-scrollfix-bottom span.dark_text"
+									?.filter (i, e)->
+										jq(e).text() == "Genres:"
+									?.parent()?.text()?.replace /\n/g, ''
+									?.replace /Genres:/g, ''
 									?.trim()
 							# Update stored data
 							show._timestamp = Date()

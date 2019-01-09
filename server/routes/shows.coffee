@@ -133,6 +133,7 @@ router.get '/', (req, res)->
 			count: show.count
 			image: show.image
 			plot: show.plot
+			genres: show.genres
 			imdbRating: show.imdbRating
 			malRating: show.malRating
 			rating: show.rating
