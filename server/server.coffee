@@ -95,6 +95,12 @@ if config.client.downloadEnabled
 	downloadRoutes.init config, data, commonFunctions
 	app.use '/download', downloadRoutes
 
+if config.client.streamEnabled
+	log.info "Streaming enabled"
+	streamRoutes = require './routes/stream'
+	streamRoutes.init config, data, commonFunctions
+	app.use '/stream', streamRoutes
+
 configRoutes = require './routes/config'
 configRoutes.init config, data, commonFunctions
 app.use '/config', configRoutes

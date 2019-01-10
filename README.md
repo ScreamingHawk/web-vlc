@@ -54,7 +54,11 @@ For more information on how to generate these keys for your site you can check o
 
 #### Enable downloading
 
-To enable a download button for each video, set the value of `client.downloadEnabled` in `server/config.yaml` to `true`.
+To enable a download ⤓ button for each video, set the value of `client.downloadEnabled` in `server/config.yaml` to `true`.
+
+#### Enable streaming
+
+To enable a stream ≋ button for each video, set the value of `client.streamEnabled` in `server/config.yaml` to `true`.
 
 #### API - OMDb
 

@@ -31,12 +31,16 @@ export default class VideoList extends Component {
 				<button className="primary large tiny-vertical-margin block" onClick={this.getVideoList}>{loadText}</button>
 			)
 		}
-		const setVideo = this.props.setVideo
 		const show = this.props.show
-		const config = this.props.config
+		const sendProps = {
+			show: show,
+			setVideo: this.props.setVideo,
+			streamVideo: this.props.streamVideo,
+			config: this.props.config,
+		};
 		let videoRenders = this.state.videos.map(function(video){
 			return (
-				<Video {...video} config={config} key={video.filename} setVideo={setVideo} show={show} />
+				<Video {...video} {...sendProps} key={video.filename} />
 			)
 		})
 		return (

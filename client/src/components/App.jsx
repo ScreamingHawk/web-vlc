@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import createHistory from 'history/createBrowserHistory'
 import ShowList from './ShowList.jsx'
+import Streaming from './Streaming.jsx'
 import Viewing from './Viewing.jsx'
 
 const history = createHistory()
@@ -10,6 +11,7 @@ export default class App extends Component {
 		super(props)
 
 		this.setVideo = this.setVideo.bind(this)
+		this.streamVideo = this.streamVideo.bind(this)
 
 		history.listen((location, action) => {
 			if (action == "POP"){
@@ -19,7 +21,7 @@ export default class App extends Component {
 		})
 
 		this.state = {
-			isViewing: false,
+			location: "list",
 			video: null,
 		}
 
@@ -36,7 +38,7 @@ export default class App extends Component {
 			history.push('/')
 		}
 		this.setState({
-			isViewing: !this.state.isViewing,
+			location: this.state.location == "list" ? "viewing" : "list",
 		})
 	}
 	async setVideo(video, justState=false){
@@ -52,21 +54,29 @@ export default class App extends Component {
 			})
 		}
 		this.setState({
-			isViewing: true,
+			location: "viewing",
 			video: video
+		})
+	}
+	async streamVideo(video){
+		this.setState({
+			location: "streaming",
+			video: video,
 		})
 	}
 	render(){
 		const sendProps = {
 			currentVideo: this.state.video,
 			setVideo: this.setVideo,
+			streamVideo: this.streamVideo,
 			config: this.state.config,
 		}
 		let view
-		let isViewingText
-		if (this.state.isViewing){
+		let isViewingText = "View List"
+		if (this.state.location == "viewing"){
 			view = <Viewing {...sendProps} />
-			isViewingText = "View List"
+		} else if (this.state.location == "streaming"){
+			view = <Streaming {...sendProps} />
 		} else {
 			view = <ShowList {...sendProps} />
 			isViewingText = "Now Playing"

@@ -108,19 +108,23 @@ export default class Show extends Component {
 			className += " highlight"
 		}
 		let seasonRenders = null
-		const setVideo = this.props.setVideo
-		const config = this.props.config
+		const sendProps = {
+			show: show,
+			setVideo: this.props.setVideo,
+			streamVideo: this.props.streamVideo,
+			config: this.props.config,
+		};
 		if (show.seasons){
 			seasonRenders = show.seasons.map(function(season){
 				return (
-					<VideoList config={config} show={show} season={season} setVideo={setVideo} key={season} />
+					<VideoList {...sendProps} season={season} key={show.name+season} />
 				)
 			})
 		}
 		let unseasonedRender = null
 		if (show.hasUnseasoned){
 			unseasonedRender = (
-				<VideoList config={config} show={show} setVideo={setVideo} />
+				<VideoList {...sendProps} key={show.name+"0"} />
 			)
 		}
 		return (

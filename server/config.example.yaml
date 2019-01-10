@@ -14,6 +14,7 @@ server:
   dataFile: ".\\data.json"
 client:
   downloadEnabled: true
+  streamEnabled: true
 files:
   # The locations of the video files
   locations:
