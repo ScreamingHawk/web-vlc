@@ -139,3 +139,8 @@ npm run start-watch
 [1]: https://michael.standen.link/2018/06/22/lets-encrypt-cert.html
 [2]: https://www.omdbapi.com/
 [3]: https://myanimelist.net/
+
+## Support on Beerpay
+Hey dude! Help me out for a couple of :beers:!
+
+[![Beerpay](https://beerpay.io/ScreamingHawk/web-vlc/badge.svg?style=beer-square)](https://beerpay.io/ScreamingHawk/web-vlc)  [![Beerpay](https://beerpay.io/ScreamingHawk/web-vlc/make-wish.svg?style=flat-square)](https://beerpay.io/ScreamingHawk/web-vlc?focus=wish)
