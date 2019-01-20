@@ -43,6 +43,7 @@ export default class Show extends Component {
 	}
 	render(){
 		const { show } = this.props
+		// Image
 		let img = (
 			<NoImage />
 		)
@@ -57,22 +58,27 @@ export default class Show extends Component {
 				)
 			}
 		}
-		let plotP = (
-			<p>{show.plot}</p>
-		)
-		if (this.state.ratingHidden){
+		// Plot
+		let plotP = null
+		if (show.plot){
 			plotP = (
-				<p><i>Plot hidden.</i></p>
+				<p>{show.plot}</p>
 			)
-		} else if (show.plot.length > this.state.shortenPlotTo - 10 && this.state.shortenPlot){
-			plotP = (
-				<p>
-					{show.plot.substring(0, this.state.shortenPlotTo)}...
-					&nbsp;
-					<a href="" onClick={this.unshortenPlot}>more</a>
-				</p>
-			)
+			if (this.state.ratingHidden){
+				plotP = (
+					<p><i>Plot hidden.</i></p>
+				)
+			} else if (show.plot.length > this.state.shortenPlotTo - 10 && this.state.shortenPlot){
+				plotP = (
+					<p>
+						{show.plot.substring(0, this.state.shortenPlotTo)}...
+						&nbsp;
+						<a href="" onClick={this.unshortenPlot}>more</a>
+					</p>
+				)
+			}
 		}
+		// Other api data
 		let apiP = (
 			<p>
 				<i>Details not found.</i>
