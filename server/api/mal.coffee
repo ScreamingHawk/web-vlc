@@ -21,6 +21,8 @@ checkAndSet = (show, key, value)->
 		show[key] = value
 
 setValues = (show, apiData)->
+	checkAndSet show, "api", "mal"
+	checkAndSet show, "source", apiData.source
 	checkAndSet show, "image", apiData.image
 	checkAndSet show, "plot", apiData.plot
 	checkAndSet show, "genres", apiData.genres
@@ -66,6 +68,7 @@ exports.update = (show, forceApi=false)->
 						else
 							jq = cheerio.load res.body
 							apiData = {}
+							apiData.source = pageUrl
 							apiData.image = jq ".ac"
 									?.attr("src")
 							apiData.plot = jq "span[itemprop=description]"

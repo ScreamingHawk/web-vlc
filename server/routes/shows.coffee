@@ -131,6 +131,8 @@ router.get '/', (req, res)->
 			name: show.name
 			seasons: show.seasons
 			count: show.count
+			api: show.api
+			source: show.source
 			image: show.image
 			plot: show.plot
 			genres: show.genres

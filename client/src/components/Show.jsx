@@ -84,7 +84,13 @@ export default class Show extends Component {
 				<i>Details not found.</i>
 			</p>
 		)
-		if (show.genres || show.malRating || show.imdbRating || show.rating){
+		if (show.api){
+			let sourceLabel = "Source"
+			if (show.api == "mal"){
+				sourceLabel = "MyAnimeList Source"
+			} else if (show.api == "omdb"){
+				sourceLabel = "IMDB Source"
+			}
 			apiP = (
 				<p>
 					{
@@ -106,6 +112,12 @@ export default class Show extends Component {
 						]
 					}
 					<b>Rated:</b> {show.rating != null ? show.rating : "No Rating"}
+					{
+						show.source && [
+							<br/>,
+							<span><a href={show.source}>{sourceLabel}</a></span>,
+						]
+					}
 				</p>
 			)
 		}

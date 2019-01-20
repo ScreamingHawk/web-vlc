@@ -20,6 +20,8 @@ checkAndSet = (show, key, value)->
 		show[key] = value
 
 setValues = (show, apiData)->
+	checkAndSet show, "api", "omdb"
+	checkAndSet show, "source", "https://www.imdb.com/title/#{apiData.imdbID}"
 	checkAndSet show, "image", apiData.Poster
 	checkAndSet show, "plot", apiData.Plot
 	checkAndSet show, "imdbRating", apiData.imdbRating
