@@ -89,6 +89,7 @@ exports.update = (show, forceApi=false)->
 									?.parent()?.text()?.replace /\n/g, ''
 									?.replace /Genres:/g, ''
 									?.trim()
+							apiData._timestamp = Date()
 							setValues show, apiData
 							# Update stored data
 							show._timestamp = Date()
