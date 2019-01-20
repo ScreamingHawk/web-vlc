@@ -92,5 +92,5 @@ exports.update = (show, forceApi=false)->
 							setValues show, apiData
 							# Update stored data
 							show._timestamp = Date()
-							data.mal[show.name] = show
+							data.mal[show.name] = apiData
 							common.storeData()
