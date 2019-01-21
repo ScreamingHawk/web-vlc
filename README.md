@@ -84,6 +84,14 @@ With both API enabled, there may be a preference to use one set of results over 
 
 This feature is set to `omdb` by default.
 
+#### API - Cache Period
+
+Data returned from the APIs are cached for a number of days.
+
+This number of days is configurable with the configuration parameter `api.cacheDays`.
+
+This feature is set to `30` by default.
+
 ### Video file structure
 
 Files must be organised like so:

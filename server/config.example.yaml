@@ -29,3 +29,4 @@ api:
     enabled: false
     url: "https://myanimelist.net/"
   prefer: "omdb"
+  cacheDays: 30

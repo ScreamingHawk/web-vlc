@@ -1,5 +1,6 @@
 cheerio = require 'cheerio'
 log = require 'winston'
+moment = require 'moment'
 path = require 'path'
 request = require 'request'
 
@@ -38,9 +39,14 @@ exports.update = (show, forceApi=false)->
 		# Check the stored data for cached API
 		dataMalShow = data.mal[show.name]
 		if dataMalShow?
-			log.debug "Using MAL data for #{show.name} from cache"
-			setValues show, dataMalShow
-			return
+			cacheLimit = moment().subtract (config?.api?.cacheDays || 0), 'days'
+			cachedAt = moment dataMalShow._timestamp
+			if cachedAt.isValid() && cachedAt.isAfter cacheLimit
+				log.debug "Using MAL data for #{show.name} from cache"
+				setValues show, dataMalShow
+				return
+			else
+				log.debug "MAL data for #{show.name} is too old"
 
 	if config?.api?.mal?.enabled
 		log.debug "Updating MAL data for #{show.name}"
@@ -89,9 +95,8 @@ exports.update = (show, forceApi=false)->
 									?.parent()?.text()?.replace /\n/g, ''
 									?.replace /Genres:/g, ''
 									?.trim()
-							apiData._timestamp = Date()
+							apiData._timestamp = moment()
 							setValues show, apiData
 							# Update stored data
-							show._timestamp = Date()
 							data.mal[show.name] = apiData
 							common.storeData()

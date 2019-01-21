@@ -1,4 +1,5 @@
 log = require 'winston'
+moment = require 'moment'
 path = require 'path'
 request = require 'request'
 
@@ -36,9 +37,15 @@ exports.update = (show, forceApi=false)->
 		# Check the stored data for cached API
 		dataOmdbShow = data.omdb[show.name]
 		if dataOmdbShow?
-			log.debug "Using OMDB data for #{show.name} from cache"
-			setValues show, dataOmdbShow
-			return
+			cacheLimit = moment().subtract (config?.api?.cacheDays || 0), 'days'
+			cachedAt = moment dataOmdbShow._timestamp
+			log.debug "Comparing #{cacheLimit} and #{cachedAt} for #{show.name}"
+			if cachedAt.isValid() && cachedAt.isAfter cacheLimit
+				log.debug "Using OMDB data for #{show.name} from cache"
+				setValues show, dataOmdbShow
+				return
+			else
+				log.debug "OMDB data for #{show.name} is too old"
 
 	if config?.api?.omdb?.enabled
 		log.debug "Updating OMDB data for #{show.name}"
@@ -50,7 +57,7 @@ exports.update = (show, forceApi=false)->
 				if body.Response == "True"
 					setValues show, body
 					# Update stored data
-					body._timestamp = Date()
+					body._timestamp = moment()
 					data.omdb[show.name] = body
 					common.storeData()
 				else
