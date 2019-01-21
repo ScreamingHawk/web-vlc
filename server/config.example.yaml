@@ -16,6 +16,7 @@ client:
   downloadEnabled: true
   streamEnabled: true
 files:
+  watch: true
   # The locations of the video files
   locations:
     - "E:\\Videos\\Anime"

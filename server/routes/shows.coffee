@@ -2,6 +2,7 @@ log = require 'winston'
 express = require 'express'
 fs = require 'fs'
 path = require 'path'
+chokidar = require 'chokidar'
 mime = require 'mime'
 request = require 'request'
 
@@ -15,6 +16,9 @@ config = null
 data = null
 common = null
 
+refreshing = false
+watchRefresh = false
+
 exports.init = (c, d, f)->
 	config = c
 	data = d
@@ -23,6 +27,19 @@ exports.init = (c, d, f)->
 	# Init apis
 	omdb.init config, data, common
 	mal.init config, data, common
+	# Init watcher
+	if c.files?.watch
+		for loc in config.files.locations
+			log.debug "Watching directory #{loc}"
+			chokidar.watch loc,
+					ignored: /(^|[\/\\])\../
+					ignoreInitial: true
+				.on 'all', (event, path)->
+					if event in ['add', 'change', 'unlink']
+						log.debug "Refreshing due to #{event} in #{loc} with path #{path}"
+						watchRefresh = true
+						refreshLists false, ->
+							watchRefresh = false
 	# Init lists
 	refreshLists()
 
@@ -31,6 +48,12 @@ showList = []
 # Refresh the list
 refreshLists = exports.refreshLists = (forceApi=false, callback=null)->
 	log.debug "Refreshing video list"
+
+	if refreshing
+		log.debug "Currently refreshing list. Skipping..."
+		callback?()
+		return
+	refreshing = true
 
 	# Get all files in sub folders
 	walkSync = (dir, fileList = [])->
@@ -79,6 +102,8 @@ refreshLists = exports.refreshLists = (forceApi=false, callback=null)->
 		showList.push show
 	showList.sort (a, b)->
 		a.name.localeCompare b.name
+
+	refreshing = false
 
 	callback?()
 

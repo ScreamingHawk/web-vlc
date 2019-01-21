@@ -43,6 +43,10 @@ Ensure the `vlc.command` works in your console.
 
 Copy the paths to your videos into `files.locations`.
 
+#### Folder Watching
+
+The application watches for changes in the supplied folders by default. To disable this, change the value at `files.watch` to `false`.
+
 #### Secure HTTPS
 
 To ensure `HTTPS` set the value of `server.secure` in `server/config.yaml` to `true`.
