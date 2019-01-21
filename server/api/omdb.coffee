@@ -39,7 +39,6 @@ exports.update = (show, forceApi=false)->
 		if dataOmdbShow?
 			cacheLimit = moment().subtract (config?.api?.cacheDays || 0), 'days'
 			cachedAt = moment dataOmdbShow._timestamp
-			log.debug "Comparing #{cacheLimit} and #{cachedAt} for #{show.name}"
 			if cachedAt.isValid() && cachedAt.isAfter cacheLimit
 				log.debug "Using OMDB data for #{show.name} from cache"
 				setValues show, dataOmdbShow
