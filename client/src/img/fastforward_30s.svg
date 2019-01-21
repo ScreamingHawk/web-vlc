@@ -18,6 +18,7 @@
 		x="50%"
 		y="50%"
 		alignment-baseline="central"
+		dominant-baseline="central"
 		text-anchor="middle"
 		font-weight="400"
 		font-size="25"
