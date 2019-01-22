@@ -160,6 +160,7 @@ input {
 	margin: 30px;
 	padding: 30px;
 	@include border-radius(8px);
+	width: 300px;
 	max-width: 300px;
 	& > img,
 	& > svg {
