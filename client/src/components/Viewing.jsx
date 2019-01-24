@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { ToastContainer, toast } from 'react-toastify'
 import ViewingControls from './ViewingControls.jsx'
 
-import NoImage from '../img/no_image.svg'
+import { NoImage } from './Icons'
 
 export default class Viewing extends Component {
 	constructor(props){

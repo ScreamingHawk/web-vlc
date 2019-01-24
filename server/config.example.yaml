@@ -15,6 +15,7 @@ server:
 client:
   downloadEnabled: true
   streamEnabled: true
+  skipSeconds: 20
 files:
   watch: true
   # The locations of the video files

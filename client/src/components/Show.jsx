@@ -2,8 +2,10 @@ import React, { Component } from 'react'
 
 import VideoList from './VideoList.jsx'
 
-import NoImage from '../img/no_image.svg'
-import Mature from '../img/mature.svg'
+import {
+	NoImage,
+	Mature,
+} from './Icons'
 
 export default class Show extends Component {
 	constructor(props){

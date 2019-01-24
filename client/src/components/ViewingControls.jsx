@@ -4,13 +4,15 @@ import { ToastContainer, toast } from 'react-toastify'
 import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css';
 
-import Pause from '../img/pause.svg'
-import Play from '../img/play.svg'
-import VolumePlus from '../img/volume_plus.svg'
-import VolumeMinus from '../img/volume_minus.svg'
-import Rewind30s from '../img/rewind_30s.svg'
-import FastForward30s from '../img/fastforward_30s.svg'
-import PlayNext from '../img/play_next.svg'
+import {
+	VolumePlus,
+	VolumeMinus,
+	Rewind,
+	FastForward,
+	PlayNext,
+	Pause,
+	Play,
+} from './Icons'
 
 export default class Viewing extends Component {
 	constructor(props){
@@ -309,6 +311,7 @@ export default class Viewing extends Component {
 		})
 	}
 	render() {
+		const skipSeconds = this.props.config.skipSeconds || 20;
 		const pauseIcon = this.state.paused ? (<Play />) : (<Pause />)
 		const playNextButton = this.state.nextVideo == null ? null : (
 			<button className="info" onClick={() => this.playNextVideo()}>
@@ -346,11 +349,11 @@ export default class Viewing extends Component {
 					<button className="info" onClick={this.pause}>
 						{pauseIcon}
 					</button>
-					<button className="info" onClick={() => this.seek("-30s")}>
-						<Rewind30s />
+					<button className="info" onClick={() => this.seek(`-${skipSeconds}s`)}>
+						<Rewind seconds={skipSeconds} />
 					</button>
-					<button className="info" onClick={() => this.seek("+30s")}>
-						<FastForward30s />
+					<button className="info" onClick={() => this.seek(`-${skipSeconds}s`)}>
+						<FastForward seconds={skipSeconds} />
 					</button>
 					<button className="info" onClick={() => this.volume("down")}>
 						<VolumeMinus />

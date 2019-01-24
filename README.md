@@ -64,6 +64,12 @@ To enable a download ⤓ button for each video, set the value of `client.downloa
 
 To enable a stream ≋ button for each video, set the value of `client.streamEnabled` in `server/config.yaml` to `true`.
 
+#### Skip amount
+
+The skip forward / backward buttons on the app are configurable with the parameter `client.skipSeconds`.
+
+The default value is `20` for 20 seconds.
+
 #### API - OMDb
 
 [OMDb][2] is an API for IMDb. Using this feature will add plot and rating information for each of your shows.
