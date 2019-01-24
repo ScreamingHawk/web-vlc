@@ -111,10 +111,10 @@ setApiDetails = (show, forceApi=false)->
 	omdb.update show, forceApi
 	mal.update show, forceApi
 
-setWatched = (path)->
+setWatched = (path, watched=true)->
 	for video in videoList
 		if video.path == path
-			video.watched = true
+			video.watched = watched
 			break
 
 getFileMeta = (fPath, fMime)->
@@ -209,6 +209,19 @@ router.get '/:showName/:videoFilename/next', (req, res)->
 					sendNext = true
 	# Fail over
 	res.sendStatus 404
+
+router.post '/unwatch', (req, res)->
+	if !req.body?.path?
+		# Path required
+		log.warn "Video path not supplied"
+		res.sendStatus 400
+		return
+	fPath = req.body.path
+	common.setWatched fPath, false
+	data.watched.filter (e) ->
+		e != fPath
+	common.storeData()
+	res.sendStatus 200
 
 router.post '/search', (req, res)->
 	if !req.body?.filename?

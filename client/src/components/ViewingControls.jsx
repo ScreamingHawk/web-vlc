@@ -30,6 +30,8 @@ export default class Viewing extends Component {
 		this.pause = this.pause.bind(this)
 		this.getNextVideo = this.getNextVideo.bind(this)
 		this.playNextVideo = this.playNextVideo.bind(this)
+		this.showExtraButtons = this.showExtraButtons.bind(this)
+		this.unwatchVideo = this.unwatchVideo.bind(this)
 
 		this.state = {
 			video: this.props.currentVideo,
@@ -43,6 +45,7 @@ export default class Viewing extends Component {
 			nextVideo: null,
 			vlcErrorToastId: null,
 			intervals: [],
+			showExtraButtons: false,
 		}
 	}
 	componentDidMount(){
@@ -310,6 +313,29 @@ export default class Viewing extends Component {
 			}
 		})
 	}
+	showExtraButtons(){
+		this.setState({
+			showExtraButtons: true,
+		})
+	}
+	async unwatchVideo(){
+		if (this.state.video != null){
+			await fetch(`/shows/unwatch`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json"
+				},
+				body: JSON.stringify({
+					path: this.state.video.path
+				}),
+			}).then(this.handleApiErrors)
+				.then(() => {
+					toast.info("Video marked as unwatched", {
+						position: toast.POSITION.BOTTOM_CENTER
+					})
+				})
+		}
+	}
 	render() {
 		const skipSeconds = this.props.config.skipSeconds || 20;
 		const pauseIcon = this.state.paused ? (<Play />) : (<Pause />)
@@ -337,6 +363,19 @@ export default class Viewing extends Component {
 			formatted += String(seconds).padStart(2, "0")
 			return formatted
 		}
+		// Secon button row
+		let extraButtons = (
+			<button className="info" onClick={this.showExtraButtons}>
+				...
+			</button>
+		)
+		if (this.state.showExtraButtons) {
+			extraButtons = (
+				<button className="warn" onClick={this.unwatchVideo}>
+					Unwatch
+				</button>
+			)
+		}
 		return (
 			<div>
 				<ToastContainer autoClose={5000} />
@@ -362,6 +401,9 @@ export default class Viewing extends Component {
 						<VolumePlus />
 					</button>
 					{playNextButton}
+				</div>
+				<div className="controls">
+					{extraButtons}
 				</div>
 			</div>
 		)
