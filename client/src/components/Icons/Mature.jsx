@@ -25,8 +25,7 @@ export default class Mature extends Component {
 					fontFamily="sans-serif"
 					letterSpacing="0"
 					wordSpacing="0"
-					fill="#7d7d7d"
-					style="line-height: 1.25;">
+					fill="#7d7d7d">
 					!
 				</text>
 				<circle
