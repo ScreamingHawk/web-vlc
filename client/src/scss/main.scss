@@ -232,7 +232,9 @@ input {
 }
 
 .clickable {
-	cursor: pointer;
+	& {
+		cursor: pointer;
+	}
 }
 
 .wide75 {
