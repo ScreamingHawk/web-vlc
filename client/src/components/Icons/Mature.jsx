@@ -4,7 +4,7 @@ export default class Mature extends Component {
 
 	render(){
 		return (
-			<svg xmlns="http://www.w3.org/2000/svg" width="300" height="450">
+			<svg xmlns="http://www.w3.org/2000/svg" width="300" height="450" {...this.props}>
 				<rect
 					x="0"
 					y="0"
