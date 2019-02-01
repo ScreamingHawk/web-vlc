@@ -363,7 +363,7 @@ export default class Viewing extends Component {
 			formatted += String(seconds).padStart(2, "0")
 			return formatted
 		}
-		// Secon button row
+		// Second button row
 		let extraButtons = (
 			<button className="info" onClick={this.showExtraButtons}>
 				...
@@ -374,6 +374,21 @@ export default class Viewing extends Component {
 				<button className="warn" onClick={this.unwatchVideo}>
 					Unwatch
 				</button>
+			)
+		}
+		let sourceLink = null
+		if (this.state.video && this.state.video.show && this.state.video.show.api && this.state.video.show.source){
+			const { show } = this.state.video
+			let sourceLabel = "Source"
+			if (show.api == "mal"){
+				sourceLabel = "MyAnimeList Source"
+			} else if (show.api == "omdb"){
+				sourceLabel = "IMDB Source"
+			}
+			sourceLink = (
+				<p className="text-center">
+					<span><a href={show.source}>{sourceLabel}</a></span>
+				</p>
 			)
 		}
 		return (
@@ -405,6 +420,7 @@ export default class Viewing extends Component {
 				<div className="controls">
 					{extraButtons}
 				</div>
+				{ sourceLink }
 			</div>
 		)
 	}
