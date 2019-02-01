@@ -18,6 +18,7 @@ client:
   skipSeconds: 20
 files:
   watch: true
+  ignoreHidden: true
   # The locations of the video files
   locations:
     - "E:\\Videos\\Anime"

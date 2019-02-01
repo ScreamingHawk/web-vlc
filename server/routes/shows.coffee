@@ -61,6 +61,10 @@ refreshLists = exports.refreshLists = (forceApi=false, callback=null)->
 			fs.readdirSync dir
 				.forEach (file)->
 					fPath = path.join dir, file
+					if config.files.ignoreHidden && /(^|\/)\.[^\/\.]/g.test file
+						# Ignore hidden files
+						log.debug "Ignoring hidden: #{fPath}"
+						return
 					if fs.statSync(fPath).isDirectory()
 						walkSync fPath, fileList
 					else

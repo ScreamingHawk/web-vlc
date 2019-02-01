@@ -47,6 +47,10 @@ Copy the paths to your videos into `files.locations`.
 
 The application watches for changes in the supplied folders by default. To disable this, change the value at `files.watch` to `false`.
 
+#### Ignore Hidden Folders and Files
+
+Hidden folders and files can be ignored. This can be changed with the value at `files.ignoreHidden`, and is enabled by default. 
+
 #### Secure HTTPS
 
 To ensure `HTTPS` set the value of `server.secure` in `server/config.yaml` to `true`.
