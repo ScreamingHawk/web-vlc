@@ -6,7 +6,14 @@ bodyParser = require 'body-parser'
 requireYaml = require 'require-yml'
 fs = require 'fs'
 
-config = requireYaml path.join __dirname, 'config.yaml'
+configPath = path.join __dirname, 'config.yaml'
+
+if !fs.existsSync configPath
+	console.log "No config file! Please create a config file."
+	console.log "View the README for more information."
+	process.exit()
+
+config = requireYaml configPath
 
 # Configure logger
 log.remove log.transports.Console
