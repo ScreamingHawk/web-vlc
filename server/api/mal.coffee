@@ -52,6 +52,7 @@ exports.update = (show, forceApi=false)->
 		log.debug "Updating MAL data for #{show.name}"
 		url = "#{config.api.mal.url}anime.php?q=#{show.name}"
 		log.debug "Requesting #{url}"
+		url = encodeURI url
 		request url, (err, res)=>
 			if err?
 				log.error "Error contacting MAL: #{err}"
@@ -65,6 +66,7 @@ exports.update = (show, forceApi=false)->
 				if !pageUrl
 					log.warn "MAL couldn't find data for #{show.name}"
 				else
+					pageUrl = encodeURI pageUrl
 					log.debug "Found MAL entry #{pageUrl} for #{show.name}"
 					request pageUrl, (err, res)=>
 						if err?
