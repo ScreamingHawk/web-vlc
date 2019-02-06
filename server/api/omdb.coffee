@@ -14,26 +14,19 @@ exports.init = (c, d, f)->
 	data = d
 	common = f
 
-checkAndSet = (show, key, value)->
-	if config?.api?.prefer == "omdb"
-		show[key] = value
-	else if !show[key]
-		show[key] = value
-
 setValues = (show, apiData)->
-	checkAndSet show, "api", "omdb"
-	checkAndSet show, "source", "https://www.imdb.com/title/#{apiData.imdbID}"
-	checkAndSet show, "image", apiData.Poster
-	checkAndSet show, "plot", apiData.Plot
-	checkAndSet show, "imdbRating", apiData.imdbRating
-	checkAndSet show, "rating", apiData.Rated
+	show["source"] = "https://www.imdb.com/title/#{apiData.imdbID}"
+	show["image"] = apiData.Poster
+	show["plot"] = apiData.Plot
+	show["imdbRating"] = apiData.imdbRating
+	show["rating"] = apiData.Rated
 
 exports.update = (show, forceApi=false)->
 	if !data.omdb?
 		# Set up omdb in data if required
 		data.omdb = {}
 
-	if !forceApi
+	if !forceApi && show.api == "omdb"
 		# Check the stored data for cached API
 		dataOmdbShow = data.omdb[show.name]
 		if dataOmdbShow?
@@ -46,7 +39,7 @@ exports.update = (show, forceApi=false)->
 			else
 				log.debug "OMDB data for #{show.name} is too old"
 
-	if config?.api?.omdb?.enabled
+	if config?.api?.omdb?.enabled && (forceApi || show.api == "omdb")
 		log.debug "Updating OMDB data for #{show.name}"
 		request "#{config.api.omdb.url}?apikey=#{config.api.omdb.key}&t=#{show.name}", (err, res)=>
 			if err?

@@ -21,8 +21,10 @@ files:
   ignoreHidden: true
   # The locations of the video files
   locations:
-    - "E:\\Videos\\Anime"
-    - "C:\\Users\\MichaelSta\\Videos"
+    - folder: "E:\\Videos\\Anime"
+      api: "mal"
+    - folder: "C:\\Users\\MichaelSta\\Videos"
+      api: "omdb"
 api:
   omdb:
     enabled: false
@@ -31,5 +33,4 @@ api:
   mal:
     enabled: false
     url: "https://myanimelist.net/"
-  prefer: "omdb"
   cacheDays: 30

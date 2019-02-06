@@ -30,6 +30,9 @@ exports.init = (c, d, f)->
 	# Init watcher
 	if c.files?.watch
 		for loc in config.files.locations
+			if loc.folder?
+				# Get folder only
+				loc = loc.folder
 			log.debug "Watching directory #{loc}"
 			chokidar.watch loc,
 					ignored: /(^|[\/\\])\../
@@ -56,7 +59,8 @@ refreshLists = exports.refreshLists = (forceApi=false, callback=null)->
 	refreshing = true
 
 	# Get all files in sub folders
-	walkSync = (dir, fileList = [])->
+	walkSync = (location, fileList = [])->
+		dir = location.folder
 		try
 			fs.readdirSync dir
 				.forEach (file)->
@@ -66,11 +70,14 @@ refreshLists = exports.refreshLists = (forceApi=false, callback=null)->
 						log.debug "Ignoring hidden: #{fPath}"
 						return
 					if fs.statSync(fPath).isDirectory()
-						walkSync fPath, fileList
+						nextLocation =
+							folder: fPath
+							api: location.api
+						walkSync nextLocation, fileList
 					else
 						fMime = mime.getType file
 						if fMime?.startsWith "video"
-							fileList.push getFileMeta fPath, fMime
+							fileList.push getFileMeta fPath, fMime, location.api
 		catch err
 			log.error "Unable to read directory #{dir}. Is your config file set up correctly?"
 			log.error err
@@ -79,6 +86,10 @@ refreshLists = exports.refreshLists = (forceApi=false, callback=null)->
 	# Build the list of videos from all locations
 	videoList = []
 	for loc in config.files.locations
+		if typeof loc is String
+			# Convert string to object (for backwards compatible)
+			loc =
+				folder: loc
 		videoList = videoList.concat walkSync loc
 
 	# Build the list of shows from all videos
@@ -91,6 +102,7 @@ refreshLists = exports.refreshLists = (forceApi=false, callback=null)->
 				hasUnseasoned: !video.season?
 				count: 1
 				videos: [video]
+				api: video.api
 		else
 			if video.season? && !(video.season in showListDict[video.show].seasons)
 				showListDict[video.show].seasons.push video.season
@@ -121,10 +133,11 @@ setWatched = (path, watched=true)->
 			video.watched = watched
 			break
 
-getFileMeta = (fPath, fMime)->
+getFileMeta = (fPath, fMime, api)->
 	# Create meta obj
 	fMeta =
 		path: fPath
+		api: api
 	# Get filename
 	parts = fPath.split path.sep
 	fMeta.filename = parts[parts.length - 1]

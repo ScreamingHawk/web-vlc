@@ -41,7 +41,30 @@ Edit `server/config.yaml` with your defaults.
 
 Ensure the `vlc.command` works in your console.
 
-Copy the paths to your videos into `files.locations`.
+Copy the paths to your videos into `files.locations` as per below.
+
+#### Setting up Folders and API Data
+
+The for the app to pick up your videos you need to add a list of folders to the configuration. This is stored in the `files.locations` section.
+
+The folders should be separated by the API you would like to use. For example, I have a folder containing all anime, and another containing all movies / traditional TV series so that one can use the MAL API and the other IMDB (via OMBd). See below for more information about APIs.
+
+Example:
+
+```yaml
+files:
+  watch: true
+  # The locations of the video files
+  locations:
+    - folder: "E:\\Videos\\Anime"
+      api: "mal"
+    - folder: "C:\\Users\\MichaelSta\\Videos"
+      api: "omdb"
+```
+
+If you do not specify an `api`, none will be used.
+
+See **Video file structure** section below for information about how to store the videos on your disk.
 
 #### Folder Watching
 
@@ -49,7 +72,7 @@ The application watches for changes in the supplied folders by default. To disab
 
 #### Ignore Hidden Folders and Files
 
-Hidden folders and files can be ignored. This can be changed with the value at `files.ignoreHidden`, and is enabled by default. 
+Hidden folders and files can be ignored. This can be changed with the value at `files.ignoreHidden`, and is enabled by default.
 
 #### Secure HTTPS
 
@@ -91,12 +114,6 @@ This feature is disabled by default.
 To enable this feature, set the `api.mal.enabled` flag to `enabled`.
 
 Please note that MyAnimeList has a very relaxed search feature which may result in poor matches.
-
-#### API - Preference
-
-With both API enabled, there may be a preference to use one set of results over another. This can be configured with the `api.prefer` flag.
-
-This feature is set to `omdb` by default.
 
 #### API - Cache Period
 

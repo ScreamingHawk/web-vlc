@@ -15,27 +15,20 @@ exports.init = (c, d, f)->
 	data = d
 	common = f
 
-checkAndSet = (show, key, value)->
-	if config?.api?.prefer == "mal"
-		show[key] = value
-	else if !show[key]
-		show[key] = value
-
 setValues = (show, apiData)->
-	checkAndSet show, "api", "mal"
-	checkAndSet show, "source", apiData.source
-	checkAndSet show, "image", apiData.image
-	checkAndSet show, "plot", apiData.plot
-	checkAndSet show, "genres", apiData.genres
-	checkAndSet show, "malRating", apiData.malRating
-	checkAndSet show, "rating", apiData.rating
+	show["source"] = apiData.source
+	show["image"] = apiData.image
+	show["plot"] = apiData.plot
+	show["genres"] = apiData.genres
+	show["malRating"] = apiData.malRating
+	show["rating"] = apiData.rating
 
 exports.update = (show, forceApi=false)->
 	if !data.mal?
 		# Set up mal in data if required
 		data.mal = {}
 
-	if !forceApi
+	if !forceApi && show.api == "mal"
 		# Check the stored data for cached API
 		dataMalShow = data.mal[show.name]
 		if dataMalShow?
@@ -48,7 +41,7 @@ exports.update = (show, forceApi=false)->
 			else
 				log.debug "MAL data for #{show.name} is too old"
 
-	if config?.api?.mal?.enabled
+	if config?.api?.mal?.enabled && (forceApi || show.api == "mal")
 		log.debug "Updating MAL data for #{show.name}"
 		url = "#{config.api.mal.url}anime.php?q=#{show.name}"
 		log.debug "Requesting #{url}"
