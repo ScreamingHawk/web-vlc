@@ -88,10 +88,13 @@ export default class Show extends Component {
 		)
 		if (show.api){
 			let sourceLabel = "Source"
+			let ratingLabel = "Score"
 			if (show.api == "mal"){
 				sourceLabel = "MyAnimeList Source"
+				ratingLabel = "MAL Score"
 			} else if (show.api == "omdb"){
 				sourceLabel = "IMDB Source"
+				ratingLabel = "IMDB Score"
 			}
 			apiP = (
 				<p>
@@ -102,14 +105,8 @@ export default class Show extends Component {
 						]
 					}
 					{
-						show.malRating && [
-							<span><b>MAL Rating:</b> {show.malRating}</span>,
-							<br/>,
-						]
-					}
-					{
-						show.imdbRating && [
-							<span><b>IMDB Rating:</b> {show.imdbRating}</span>,
+						show.score && [
+							<span><b>{ratingLabel}:</b> {show.score}</span>,
 							<br/>,
 						]
 					}

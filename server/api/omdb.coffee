@@ -18,7 +18,7 @@ setValues = (show, apiData)->
 	show["source"] = "https://www.imdb.com/title/#{apiData.imdbID}"
 	show["image"] = apiData.Poster
 	show["plot"] = apiData.Plot
-	show["imdbRating"] = apiData.imdbRating
+	show["score"] = apiData.imdbRating
 	show["rating"] = apiData.Rated
 
 exports.update = (show, forceApi=false)->

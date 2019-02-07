@@ -20,7 +20,7 @@ setValues = (show, apiData)->
 	show["image"] = apiData.image
 	show["plot"] = apiData.plot
 	show["genres"] = apiData.genres
-	show["malRating"] = apiData.malRating
+	show["score"] = apiData.malRating
 	show["rating"] = apiData.rating
 
 exports.update = (show, forceApi=false)->

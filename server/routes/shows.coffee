@@ -178,8 +178,7 @@ router.get '/', (req, res)->
 			image: show.image
 			plot: show.plot
 			genres: show.genres
-			imdbRating: show.imdbRating
-			malRating: show.malRating
+			score: show.score
 			rating: show.rating
 			hasUnseasoned: show.hasUnseasoned
 	if !shows
