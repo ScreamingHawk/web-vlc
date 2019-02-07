@@ -4,6 +4,10 @@
 
 A website for selecting shows to watch locally on VLC.
 
+![Mobile Friendly](/readme/mobile.png?raw=true "Mobile Friendly!")
+![List Your Shows!](/readme/list.png?raw=true "List Your Shows!")
+![Control VLC Remotely!](/readme/viewing.png?raw=true "Control VLC Remotely!")
+
 ## Features
 
 * Configure a list of video locations
