@@ -86,7 +86,7 @@ refreshLists = exports.refreshLists = (forceApi=false, callback=null)->
 	# Build the list of videos from all locations
 	videoList = []
 	for loc in config.files.locations
-		if typeof loc is String
+		if typeof loc is "string"
 			# Convert string to object (for backwards compatible)
 			loc =
 				folder: loc
