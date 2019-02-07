@@ -11,10 +11,13 @@ A website for selecting shows to watch locally on VLC.
 ## Features
 
 * Configure a list of video locations
-* Recognise series and seasons
-* Load poster art, plot and more from IMDB
+* Automatically recognise series and seasons
+* Automatically load poster art, plot and more from [IMDB][4] and [MyAnimeList][3]
 * Volume and seek controls from your browser
-* Modern UI and design
+* Play next video without leaving your seat
+* Modern UI and design, perfect for any device
+* Download episodes through your browser
+* **So many configuration options**
 
 ## Configuration
 
@@ -189,6 +192,7 @@ npm run start-watch
 [1]: https://michael.standen.link/2018/06/22/lets-encrypt-cert.html
 [2]: https://www.omdbapi.com/
 [3]: https://myanimelist.net/
+[4]: https://www.imdb.com/
 
 ## Support on Beerpay
 Hey dude! Help me out for a couple of :beers:!
