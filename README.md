@@ -18,7 +18,14 @@ A website for selecting shows to watch locally on VLC.
 
 ## Configuration
 
-There are a couple of points of configuration required to use this app correctly.
+There are a couple mandatory settings required to make this app work on your system.
+
+1. Enable the VLC API as per the *VLC configuration* section below.
+2. Set up the minimal *App configuration*: `vlc.command` and `files.locations`.
+3. Compile and run the app with `npm i; npm run complete`.
+4. Check the command line output for more information.
+
+There are a **ton** of configuration options, please read the below carefully if you want to play with the options.
 
 ### VLC configuration
 
