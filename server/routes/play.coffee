@@ -139,7 +139,7 @@ vlcApi = (command, value, callback)->
 					log.error err
 				else
 					# Log it at debug level this time
-					log.debug "Error contacting VLC"
+					log.verbose "Error contacting VLC"
 				callback? false
 				return
 			if res?.statusCode is 200
