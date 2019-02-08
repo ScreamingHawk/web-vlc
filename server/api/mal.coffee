@@ -49,7 +49,7 @@ exports.updateApiData = (show, forceApi=false)->
 		request url, (err, res)=>
 			if err?
 				log.error "Error contacting MAL: #{err}"
-			else if res?.statusCode is not 200
+			else if res?.statusCode isnt 200
 				log.error "Request failed from MAL with code #{res?.statusCode}"
 			else
 				jq = cheerio.load res.body
@@ -64,7 +64,7 @@ exports.updateApiData = (show, forceApi=false)->
 					request pageUrl, (err, res)=>
 						if err?
 							log.error "Error contacting MAL: #{err}"
-						else if res?.statusCode is not 200
+						else if res?.statusCode isnt 200
 							log.error "Request failed from MAL with code #{res?.statusCode}"
 						else
 							jq = cheerio.load res.body
