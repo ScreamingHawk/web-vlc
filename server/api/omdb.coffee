@@ -21,7 +21,7 @@ setValues = (show, apiData)->
 	show["score"] = apiData.imdbRating
 	show["rating"] = apiData.Rated
 
-exports.update = (show, forceApi=false)->
+exports.updateApiData = (show, forceApi=false)->
 	if !data.omdb?
 		# Set up omdb in data if required
 		data.omdb = {}

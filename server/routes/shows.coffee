@@ -124,8 +124,8 @@ refreshLists = exports.refreshLists = (forceApi=false, callback=null)->
 	callback?()
 
 setApiDetails = (show, forceApi=false)->
-	omdb.update show, forceApi
-	mal.update show, forceApi
+	omdb.updateApiData show, forceApi
+	mal.updateApiData show, forceApi
 
 setWatched = (path, watched=true)->
 	for video in videoList

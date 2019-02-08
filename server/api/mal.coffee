@@ -23,7 +23,7 @@ setValues = (show, apiData)->
 	show["score"] = apiData.malRating
 	show["rating"] = apiData.rating
 
-exports.update = (show, forceApi=false)->
+exports.updateApiData = (show, forceApi=false)->
 	if !data.mal?
 		# Set up mal in data if required
 		data.mal = {}
