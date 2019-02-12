@@ -131,6 +131,11 @@ setWatched = (path, watched=true)->
 	for video in videoList
 		if video.path == path
 			video.watched = watched
+			# Find show from video for MAL update
+			for show in showList
+				if video.show == show.name
+					mal.setWatched show, video, watched
+					break
 			break
 
 getFileMeta = (fPath, fMime, api)->

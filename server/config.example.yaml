@@ -33,4 +33,6 @@ api:
   mal:
     enabled: false
     url: "https://myanimelist.net/"
+    username: "XXXXXXXX"
+    password: "XXXXXXXX"
   cacheDays: 30

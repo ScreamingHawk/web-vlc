@@ -50,6 +50,7 @@ router.post '/', (req, res)->
 	nowPlaying = parts[parts.length - 1]
 
 	# Update stored data
+	log.debug "Setting watched for path #{fPath}"
 	common.setWatched fPath
 	if !data.watched?
 		data.watched = []
