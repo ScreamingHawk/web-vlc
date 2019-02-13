@@ -77,6 +77,10 @@ export default class Show extends Component {
 				<VideoList {...sendProps} key={show.name+"0"} />
 			)
 		}
+		let seasonsOnDisk = "None"
+		if (show.seasons.length > 0){
+			seasonsOnDisk = show.seasons.map(s => `S${s}`).join(", ")
+		}
 		return (
 			<div className={className} key={show.name}>
 				{img}
@@ -87,9 +91,9 @@ export default class Show extends Component {
 						ratingHidden={this.state.ratingHidden}
 					/>
 					<p>
-						<b>Seasons on disk:</b> {show.seasons.length > 0 ? show.seasons.join(", ") : "None"}
+						<b>Seasons on disk:</b> {seasonsOnDisk}
 						<br/>
-						<b>Episodes on disk:</b> {show.count}
+						<b>No. episodes on disk:</b> {show.count}
 					</p>
 					{seasonRenders}
 					{unseasonedRender}
