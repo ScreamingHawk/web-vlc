@@ -4,6 +4,8 @@ import { ToastContainer, toast } from 'react-toastify'
 import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css';
 
+import ViewingControlsExtras from './ViewingControlsExtras.jsx';
+
 import {
 	VolumePlus,
 	VolumeMinus,
@@ -30,8 +32,7 @@ export default class Viewing extends Component {
 		this.pause = this.pause.bind(this)
 		this.getNextVideo = this.getNextVideo.bind(this)
 		this.playNextVideo = this.playNextVideo.bind(this)
-		this.showExtraButtons = this.showExtraButtons.bind(this)
-		this.unwatchVideo = this.unwatchVideo.bind(this)
+		this.makeToast = this.makeToast.bind(this)
 
 		this.state = {
 			video: this.props.currentVideo,
@@ -45,7 +46,6 @@ export default class Viewing extends Component {
 			nextVideo: null,
 			vlcErrorToastId: null,
 			intervals: [],
-			showExtraButtons: false,
 		}
 	}
 	componentDidMount(){
@@ -76,10 +76,7 @@ export default class Viewing extends Component {
 			if (!toast.isActive(vlcErrorToastId)){
 				// Clear all toasts
 				toast.dismiss()
-				vlcErrorToastId = toast.error("Error contacting VLC!", {
-					position: toast.POSITION.BOTTOM_CENTER,
-					autoClose: false,
-				})
+				vlcErrorToastId = this.makeToast("Error contacting VLC!", "error", false);
 				this.setState({
 					vlcErrorToastId: vlcErrorToastId,
 				})
@@ -180,9 +177,7 @@ export default class Viewing extends Component {
 					this.componentDidMount()
 				})
 			} else {
-				toast.error("Error getting playing video!", {
-					position: toast.POSITION.BOTTOM_CENTER,
-				})
+				this.makeToast("Error getting playing video!", "error");
 			}
 		})
 	}
@@ -206,9 +201,7 @@ export default class Viewing extends Component {
 					if (statusVolume >= 300){
 						// Max is 320 but give some buffer
 						if (!toast.isActive(volumeToastId) && this.state.testVolume){
-							volumeToastId = toast.info("Volume at max", {
-								position: toast.POSITION.BOTTOM_CENTER
-							})
+							volumeToastId = this.makeToast("Volume at max");
 						}
 					} else if (volumeToastId) {
 						toast.dismiss(volumeToastId)
@@ -291,7 +284,7 @@ export default class Viewing extends Component {
 				})
 			})
 			.then(this.handleApiErrors)
-			.then(response => {
+			.then(() => {
 				if (isNaN(val)){
 					this.getVideoStatus()
 				}
@@ -313,27 +306,15 @@ export default class Viewing extends Component {
 			}
 		})
 	}
-	showExtraButtons(){
-		this.setState({
-			showExtraButtons: true,
-		})
-	}
-	async unwatchVideo(){
-		if (this.state.video != null){
-			await fetch(`/shows/unwatch`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify({
-					path: this.state.video.path
-				}),
-			}).then(this.handleApiErrors)
-				.then(() => {
-					toast.info("Video marked as unwatched", {
-						position: toast.POSITION.BOTTOM_CENTER
-					})
-				})
+	makeToast(msg, type="info", autoClose=true){
+		const args = {
+			position: toast.POSITION.BOTTOM_CENTER,
+			autoClose: autoClose,
+		};
+		if (type == "info"){
+			return toast.info(msg, args);
+		} else if (type == "error") {
+			return toast.error(msg, args);
 		}
 	}
 	render() {
@@ -363,19 +344,7 @@ export default class Viewing extends Component {
 			formatted += String(seconds).padStart(2, "0")
 			return formatted
 		}
-		// Second button row
-		let extraButtons = (
-			<button className="info" onClick={this.showExtraButtons}>
-				...
-			</button>
-		)
-		if (this.state.showExtraButtons) {
-			extraButtons = (
-				<button className="warn" onClick={this.unwatchVideo}>
-					Unwatch
-				</button>
-			)
-		}
+		// Source link
 		let sourceLink = null
 		if (this.state.video && this.state.video.show && this.state.video.show.api && this.state.video.show.source){
 			const { show } = this.state.video
@@ -391,6 +360,11 @@ export default class Viewing extends Component {
 				</p>
 			)
 		}
+		const sendProps = {
+			handleApiErrors: this.handleApiErrors,
+			makeToast: this.makeToast,
+			video: this.state.video,
+		};
 		return (
 			<div>
 				<ToastContainer autoClose={5000} />
@@ -417,9 +391,7 @@ export default class Viewing extends Component {
 					</button>
 					{playNextButton}
 				</div>
-				<div className="controls">
-					{extraButtons}
-				</div>
+				<ViewingControlsExtras {...this.props} {...sendProps} />
 				{ sourceLink }
 			</div>
 		)
