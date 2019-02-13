@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 
+import ShowDetails from './ShowDetails.jsx';
 import VideoList from './VideoList.jsx'
 
 import {
@@ -12,7 +13,6 @@ export default class Show extends Component {
 		super(props)
 
 		this.unhideRated = this.unhideRated.bind(this)
-		this.unshortenPlot = this.unshortenPlot.bind(this)
 
 		const { show } = this.props
 
@@ -36,13 +36,6 @@ export default class Show extends Component {
 			ratingHidden: false
 		})
 	}
-	unshortenPlot(e){
-		e.preventDefault();
-		e.stopPropagation();
-		this.setState({
-			shortenPlot: false
-		})
-	}
 	render(){
 		const { show } = this.props
 		// Image
@@ -59,66 +52,6 @@ export default class Show extends Component {
 					<img src={show.image}></img>
 				)
 			}
-		}
-		// Plot
-		let plotP = null
-		if (show.plot){
-			plotP = (
-				<p>{show.plot}</p>
-			)
-			if (this.state.ratingHidden){
-				plotP = (
-					<p><i>Plot hidden.</i></p>
-				)
-			} else if (show.plot.length > this.state.shortenPlotTo - 10 && this.state.shortenPlot){
-				plotP = (
-					<p>
-						{show.plot.substring(0, this.state.shortenPlotTo)}...
-						&nbsp;
-						<a href="" onClick={this.unshortenPlot}>more</a>
-					</p>
-				)
-			}
-		}
-		// Other api data
-		let apiP = (
-			<p>
-				<i>Details not found.</i>
-			</p>
-		)
-		if (show.api){
-			let sourceLabel = "Source"
-			let ratingLabel = "Score"
-			if (show.api == "mal"){
-				sourceLabel = "MyAnimeList Source"
-				ratingLabel = "MAL Score"
-			} else if (show.api == "omdb"){
-				sourceLabel = "IMDB Source"
-				ratingLabel = "IMDB Score"
-			}
-			apiP = (
-				<p>
-					{
-						show.genres && [
-							<span><b>Genres:</b> {show.genres}</span>,
-							<br/>,
-						]
-					}
-					{
-						show.score && [
-							<span><b>{ratingLabel}:</b> {show.score}</span>,
-							<br/>,
-						]
-					}
-					<b>Rated:</b> {show.rating != null ? show.rating : "No Rating"}
-					{
-						show.source && [
-							<br/>,
-							<span><a href={show.source}>{sourceLabel}</a></span>,
-						]
-					}
-				</p>
-			)
 		}
 		let className = "box card"
 		if (this.state.isCurrentShow){
@@ -149,8 +82,10 @@ export default class Show extends Component {
 				{img}
 				<div className="content">
 					<h2>{show.name}</h2>
-					{plotP}
-					{apiP}
+					<ShowDetails
+						show={this.props.show}
+						ratingHidden={this.state.ratingHidden}
+					/>
 					<p>
 						<b>Seasons on disk:</b> {show.seasons.length > 0 ? show.seasons.join(", ") : "None"}
 						<br/>
