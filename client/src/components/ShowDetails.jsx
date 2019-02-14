@@ -56,26 +56,29 @@ export default class ShowDetails extends Component {
 				sourceLabel = "IMDB Source"
 				ratingLabel = "IMDB Score"
 			}
+			const apiContent = [];
+			if (show.genres){
+				apiContent.push(
+					<span><b>Genres:</b> {show.genres}</span>
+				);
+			}
+			if (show.score){
+				apiContent.push(
+					<span><b>{ratingLabel}:</b> {show.score}</span>
+				);
+			}
+			apiContent.push(
+				<span><b>Rated:</b> {show.rating != null ? show.rating : "No Rating"}</span>
+			);
+			if (show.source){
+				apiContent.push(
+					<span><a href={show.source}>{sourceLabel}</a></span>
+				);
+			}
 			apiP = (
-				<p>
+				<p className="blockspans">
 					{
-						show.genres && [
-							<span><b>Genres:</b> {show.genres}</span>,
-							<br/>,
-						]
-					}
-					{
-						show.score && [
-							<span><b>{ratingLabel}:</b> {show.score}</span>,
-							<br/>,
-						]
-					}
-					<b>Rated:</b> {show.rating != null ? show.rating : "No Rating"}
-					{
-						show.source && [
-							<br/>,
-							<span><a href={show.source}>{sourceLabel}</a></span>,
-						]
+						apiContent.map(e => e)
 					}
 				</p>
 			)
