@@ -127,7 +127,33 @@ exports.getTokens = getTokens = (callback)->
 				log.debug "Login to MAL successful"
 				return callback()
 
-exports.updateApiData = (show, forceApi=false)->
+userOrSearchSource = (show, callback)->
+	if show.userSource
+		log.debug "Using user source for #{show.name}"
+		return callback null, show.userSource
+	log.debug "Searching for MAL source for #{show.name}"
+	url = "#{config.api.mal.url}anime.php?q=#{show.name}"
+	url = encodeURI url
+	log.verbose "Requesting #{url}"
+	request url, (err, res)->
+		if err?
+			log.error "Error contacting MAL: #{err}"
+		else if res?.statusCode isnt 200
+			log.error "Request failed from MAL with code #{res?.statusCode}"
+		else
+			jq = cheerio.load res.body
+			pageUrl = jq ".pt4"
+					?.find "a"
+					?.first()?.attr "href"
+			if !pageUrl
+				log.warn "MAL couldn't find data for #{show.name}"
+			else
+				pageUrl = encodeURI pageUrl
+				log.debug "Found MAL entry #{pageUrl} for #{show.name}"
+				return callback null, pageUrl
+		callback "MAL search failed"
+
+exports.updateApiData = (show, forceApi=false, callback=null)->
 	if !data.mal?
 		# Set up mal in data if required
 		data.mal = {}
@@ -141,64 +167,61 @@ exports.updateApiData = (show, forceApi=false)->
 			if cachedAt.isValid() && cachedAt.isAfter cacheLimit
 				log.debug "Using MAL data for #{show.name} from cache"
 				setValues show, dataMalShow
-				return
+				return callback? null, show
 			else
 				log.debug "MAL data for #{show.name} is too old"
 
 	if checkUseMal show, forceApi
 		log.debug "Updating MAL data for #{show.name}"
-		url = "#{config.api.mal.url}anime.php?q=#{show.name}"
-		url = encodeURI url
-		log.verbose "Requesting #{url}"
-		request url, (err, res)->
+		userOrSearchSource show, (err, pageUrl)->
 			if err?
-				log.error "Error contacting MAL: #{err}"
-			else if res?.statusCode isnt 200
-				log.error "Request failed from MAL with code #{res?.statusCode}"
-			else
-				jq = cheerio.load res.body
-				pageUrl = jq ".pt4"
-						?.find "a"
-						?.first()?.attr "href"
-				if !pageUrl
-					log.warn "MAL couldn't find data for #{show.name}"
+				callback? err
+				return
+			request pageUrl, (err, res)->
+				if err?
+					err = "Error contacting MAL: #{err}"
+					log.error err
+					return callback? err
+				else if res?.statusCode isnt 200
+					err = "Request failed from MAL with code #{res?.statusCode}"
+					log.error err
+					return callback? err
 				else
-					pageUrl = encodeURI pageUrl
-					log.debug "Found MAL entry #{pageUrl} for #{show.name}"
-					request pageUrl, (err, res)->
-						if err?
-							log.error "Error contacting MAL: #{err}"
-						else if res?.statusCode isnt 200
-							log.error "Request failed from MAL with code #{res?.statusCode}"
-						else
-							jq = cheerio.load res.body
-							apiData = {}
-							apiData.source = pageUrl
-							apiData.image = jq ".ac"
-									?.attr("src")
-							apiData.plot = jq "span[itemprop=description]"
-									?.first()?.text()?.replace "[Written by MAL Rewrite]", ""
-									?.trim()
-							apiData.malRating = jq ".score"
-									?.first()?.text()?.replace /\n/g, ''
-									?.trim()
-							apiData.rating = jq ".js-scrollfix-bottom span.dark_text"
-									?.filter (i, e)->
-										jq(e).text() == "Rating:"
-									?.parent()?.text()?.replace /\n/g, ''
-									?.replace /Rating:/g, ''
-									?.trim()
-							apiData.genres = jq ".js-scrollfix-bottom span.dark_text"
-									?.filter (i, e)->
-										jq(e).text() == "Genres:"
-									?.parent()?.text()?.replace /\n/g, ''
-									?.replace /Genres:/g, ''
-									?.trim()
-							apiData._timestamp = moment()
-							setValues show, apiData
-							# Update stored data
-							data.mal[show.name] = apiData
-							common.storeData()
+					jq = cheerio.load res.body
+					apiData = {}
+					apiData.source = pageUrl
+					apiData.userSource = show.userSource
+					apiData.image = jq ".ac"
+							?.attr("src")
+					apiData.plot = jq "span[itemprop=description]"
+							?.first()?.text()?.replace "[Written by MAL Rewrite]", ""
+							?.trim()
+					apiData.malRating = jq ".score"
+							?.first()?.text()?.replace /\n/g, ''
+							?.trim()
+					apiData.rating = jq ".js-scrollfix-bottom span.dark_text"
+							?.filter (i, e)->
+								jq(e).text() == "Rating:"
+							?.parent()?.text()?.replace /\n/g, ''
+							?.replace /Rating:/g, ''
+							?.trim()
+					apiData.genres = jq ".js-scrollfix-bottom span.dark_text"
+							?.filter (i, e)->
+								jq(e).text() == "Genres:"
+							?.parent()?.text()?.replace /\n/g, ''
+							?.replace /Genres:/g, ''
+							?.trim()
+					apiData._timestamp = moment()
+					setValues show, apiData
+					callback? null, show
+					# Update stored data
+					data.mal[show.name] = apiData
+					common.storeData()
+					return
+	else
+		err = "MAL updated not allowed for #{show.name}"
+		log.debug err
+		callback err
 
 exports.setWatched = (show, video, watched=true, next=null)->
 	if !checkUseMal show, false

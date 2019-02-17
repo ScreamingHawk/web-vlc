@@ -123,9 +123,9 @@ refreshLists = exports.refreshLists = (forceApi=false, callback=null)->
 
 	callback?()
 
-setApiDetails = (show, forceApi=false)->
+setApiDetails = (show, forceApi=false, callback=null)->
 	omdb.updateApiData show, forceApi
-	mal.updateApiData show, forceApi
+	mal.updateApiData show, forceApi, callback
 
 setWatched = (path, watched=true)->
 	for video in videoList
@@ -170,22 +170,24 @@ getFileMeta = (fPath, fMime, api)->
 
 	return fMeta
 
+uiShowDetails = (show)->
+	name: show.name
+	seasons: show.seasons
+	count: show.count
+	api: show.api
+	source: show.source
+	image: show.image
+	plot: show.plot
+	genres: show.genres
+	score: show.score
+	rating: show.rating
+	hasUnseasoned: show.hasUnseasoned
+
 router.get '/', (req, res)->
 	# List all shows
 	shows = []
 	for show in showList
-		shows.push
-			name: show.name
-			seasons: show.seasons
-			count: show.count
-			api: show.api
-			source: show.source
-			image: show.image
-			plot: show.plot
-			genres: show.genres
-			score: show.score
-			rating: show.rating
-			hasUnseasoned: show.hasUnseasoned
+		shows.push uiShowDetails show
 	if !shows
 		res.sendStatus 404
 	else
@@ -202,6 +204,41 @@ router.get '/:showName', (req, res)->
 		res.sendStatus 404
 	else
 		res.json videos
+
+router.put '/:showName', (req, res)->
+	update = false
+	# Find show to update
+	s = null
+	for show in showList
+		if show.name == req.params.showName
+			s = show
+			break
+	if !s
+		# No show
+		log.warn "Attempt to update #{req.params.showName} not found"
+		res.sendStatus 404
+		return
+	log.debug "Updating show #{s.name}"
+	# Update supplied params
+	if req.body?.source?
+		s.source = req.body.source
+		s.userSource = req.body.source
+		update = true
+	if !update
+		# No params
+		log.warn "No parameters supplied to update call"
+		res.sendStatus 400
+		return
+	# Update api details
+	mal.updateApiData s, true, (err, show)->
+		if err?
+			log.error err
+			res.sendStatus 500
+		else if show?
+			res.json uiShowDetails show
+		else
+			# Some unknown error
+			res.sendStatus 500
 
 router.get '/:showName/seasons/:season', (req, res)->
 	# List all videos for the season

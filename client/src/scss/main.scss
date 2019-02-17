@@ -52,6 +52,9 @@ $danger: #f44336;
 %uninvertable {
 	background-color: $dark-shade;
 	color: $light-shade;
+	input {
+		color: $light-shade;
+	}
 	&.inverted {
 		color: $dark-shade;
 		background-color: $light-shade;
@@ -101,6 +104,13 @@ a.btn {
 	}
 	&:hover {
 		opacity: 0.8;
+	}
+	&.icon {
+		background-color: transparent;
+		padding: 0;
+		&:hover {
+			opacity: 1.0;
+		}
 	}
 }
 
@@ -256,6 +266,9 @@ input {
 }
 .tiny-vertical-margin {
 	@include margin-vertical(5px);
+}
+.tiny-margin-right {
+	margin-right: 5px;
 }
 .spaced-children > * {
 	@include margin-horizontal(2px);

@@ -6,6 +6,7 @@ export default class ShowList extends Component {
 		super(props)
 
 		this.filterShows = this.filterShows.bind(this)
+		this.getShowList = this.getShowList.bind(this)
 
 		this.state = {
 			shows: [],
@@ -36,10 +37,13 @@ export default class ShowList extends Component {
 		})
 	}
 	render() {
-		const sendProps = this.props
+		const sendProps = {
+			getShowList: this.getShowList,
+		}
+		const props = this.props;
 		let showRenders = this.state.filteredShows.map(function(show){
 			return (
-					<Show {...sendProps} show={show} key={show.name} />
+					<Show {...sendProps} {...props} show={show} key={show.name} />
 			)
 		});
 		return (

@@ -58,7 +58,7 @@ export default class Show extends Component {
 			className += " highlight"
 		}
 		let seasonRenders = null
-		const sendProps = {
+		const videoListProps = {
 			show: show,
 			setVideo: this.props.setVideo,
 			streamVideo: this.props.streamVideo,
@@ -67,29 +67,32 @@ export default class Show extends Component {
 		if (show.seasons){
 			seasonRenders = show.seasons.map(function(season){
 				return (
-					<VideoList {...sendProps} season={season} key={show.name+season} />
+					<VideoList {...videoListProps} season={season} key={show.name+season} />
 				)
 			})
 		}
 		let unseasonedRender = null
 		if (show.hasUnseasoned){
 			unseasonedRender = (
-				<VideoList {...sendProps} key={show.name+"0"} />
+				<VideoList {...videoListProps} key={show.name+"0"} />
 			)
 		}
 		let seasonsOnDisk = "None"
 		if (show.seasons.length > 0){
 			seasonsOnDisk = show.seasons.map(s => `S${s}`).join(", ")
 		}
+		const showDetailsProps = {
+			show: show,
+			ratingHidden: this.state.ratingHidden,
+			config: this.props.config,
+			getShowList: this.props.getShowList,
+		};
 		return (
 			<div className={className} key={show.name}>
 				{img}
 				<div className="content">
 					<h2>{show.name}</h2>
-					<ShowDetails
-						show={this.props.show}
-						ratingHidden={this.state.ratingHidden}
-					/>
+					<ShowDetails {...showDetailsProps} />
 					<p>
 						<b>Seasons on disk:</b> {seasonsOnDisk}
 						<br/>

@@ -111,6 +111,14 @@ The skip forward / backward buttons on the app are configurable with the paramet
 
 The default value is `20` for 20 seconds.
 
+#### Edit API Source
+
+Sometimes the API show detection is not accurate. Enabling this flag will let the user correct the API source from the application.
+
+This feature is enabled by default.
+
+This feature currently only supports MAL API sources.
+
 #### API - OMDb
 
 [OMDb][2] is an API for IMDb. Using this feature will add plot and rating information for each of your shows.

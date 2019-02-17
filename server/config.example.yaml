@@ -16,6 +16,7 @@ client:
   downloadEnabled: true
   streamEnabled: true
   skipSeconds: 20
+  editApiSource: true
 files:
   watch: true
   ignoreHidden: true
