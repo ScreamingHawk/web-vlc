@@ -221,7 +221,7 @@ exports.updateApiData = (show, forceApi=false, callback=null)->
 	else
 		err = "MAL updated not allowed for #{show.name}"
 		log.debug err
-		callback err
+		callback? err
 
 exports.setWatched = (show, video, watched=true, next=null)->
 	if !checkUseMal show, false
