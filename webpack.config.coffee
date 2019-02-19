@@ -9,6 +9,8 @@ IMG_SRC_DIR = path.resolve __dirname, 'client/src/img'
 IMG_BUILD_DIR = path.resolve __dirname, 'client/build/img'
 
 module.exports =
+	mode: "production"
+	target: "web"
 	entry:
 		main: path.join SRC_DIR, 'index.js'
 	output:
