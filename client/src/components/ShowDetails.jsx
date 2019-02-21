@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+import PencilIcon from '../img/pencil.svg'
+
 export default class ShowDetails extends Component {
 	constructor(props){
 		super(props)
@@ -140,7 +142,9 @@ export default class ShowDetails extends Component {
 					if (show.api == "mal" && this.props.config &&
 							this.props.config.editApiSource){
 						pencil = (
-							<button className="icon" onClick={this.toggleUpdateApiSource}>🖉</button>
+							<button className="icon" onClick={this.toggleUpdateApiSource}>
+								<PencilIcon />
+							</button>
 						);
 					}
 					sourceP = (

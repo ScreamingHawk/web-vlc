@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 
+import DownloadIcon from '../img/download.svg'
+import StreamIcon from '../img/stream.svg'
+
 export default class Video extends Component {
 	constructor(props){
 		super(props)
@@ -21,12 +24,16 @@ export default class Video extends Component {
 			if (this.props.config.downloadEnabled){
 				const downloadUrl = `/download/${this.props.path}`
 				dlButton = (
-					<a className="btn info" href={downloadUrl} download>⤓</a>
+					<a className="btn info" href={downloadUrl} download>
+						<DownloadIcon />
+					</a>
 				)
 			}
 			if (this.props.config.streamEnabled){
 				streamButton = (
-					<button className="info" onClick={this.streamVideo}>≋</button>
+					<button className="info" onClick={this.streamVideo}>
+						<StreamIcon />
+					</button>
 				)
 			}
 		}

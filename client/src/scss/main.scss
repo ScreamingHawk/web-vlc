@@ -83,6 +83,11 @@ a.btn {
 	cursor: pointer;
 	padding: 10px;
 	text-decoration: none;
+	svg {
+		height: 1em;
+		width: 1em;
+		vertical-align: middle;
+	}
 	&.large {
 		font-size: 1.2em;
 		padding: 15px;
