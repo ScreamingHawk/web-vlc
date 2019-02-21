@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 
+import BrowserIcon from '../img/browser.svg'
 import DownloadIcon from '../img/download.svg'
-import StreamIcon from '../img/stream.svg'
+import TvIcon from '../img/tv.svg'
 
 export default class Video extends Component {
 	constructor(props){
@@ -32,7 +33,7 @@ export default class Video extends Component {
 			if (this.props.config.streamEnabled){
 				streamButton = (
 					<button className="info" onClick={this.streamVideo}>
-						<StreamIcon />
+						<BrowserIcon />
 					</button>
 				)
 			}
@@ -41,7 +42,9 @@ export default class Video extends Component {
 			<div className="video flex row spaced center">
 				<span>{this.props.filename}</span>
 				<div className="flex row spaced-children">
-					<button className={classN} onClick={this.watchVideo}>Watch!</button>
+					<button className={classN} onClick={this.watchVideo}>
+						<TvIcon />
+					</button>
 					{dlButton}
 					{streamButton}
 				</div>
