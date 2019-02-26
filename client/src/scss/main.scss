@@ -113,6 +113,9 @@ a.btn {
 	&.icon {
 		background-color: transparent;
 		padding: 0;
+		svg path {
+			fill: $light-accent;
+		}
 		&:hover {
 			opacity: 1.0;
 		}
