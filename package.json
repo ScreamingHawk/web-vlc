@@ -30,6 +30,7 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
     "coffeescript": "^2.1.1",
+    "concurrently": "^4.1.0",
     "copy-webpack-plugin": "^4.5.1",
     "css-loader": "^0.28.8",
     "jest": "^24.1.0",
@@ -52,7 +53,8 @@
     "webpack-watch": "./node_modules/.bin/webpack -w",
     "start": "node server/server.js",
     "start-watch": "node ./node_modules/nodemon/bin/nodemon server/server.js",
-    "complete": "npm run build && npm start"
+    "complete": "npm run build && npm start",
+    "dev": "concurrently \"npm run coffee-watch\" \"npm run webpack-watch\" \"npm run start-watch\""
   },
   "repository": {
     "type": "git",

@@ -197,6 +197,12 @@ Run server watching for changes.
 npm run start-watch
 ```
 
+Or watch for all changes in a single command.
+
+```sh
+npm run dev
+```
+
 [1]: https://michael.standen.link/2018/06/22/lets-encrypt-cert.html
 [2]: https://www.omdbapi.com/
 [3]: https://myanimelist.net/
