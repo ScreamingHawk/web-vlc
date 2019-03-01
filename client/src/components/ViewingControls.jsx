@@ -380,7 +380,7 @@ export default class Viewing extends Component {
 					<button className="info" onClick={() => this.seek(`-${skipSeconds}s`)}>
 						<Rewind seconds={skipSeconds} />
 					</button>
-					<button className="info" onClick={() => this.seek(`-${skipSeconds}s`)}>
+					<button className="info" onClick={() => this.seek(`+${skipSeconds}s`)}>
 						<FastForward seconds={skipSeconds} />
 					</button>
 					<button className="info" onClick={() => this.volume("down")}>
