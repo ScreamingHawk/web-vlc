@@ -44,17 +44,17 @@
     "webpack-cli": "^3.2.3"
   },
   "scripts": {
-    "test": "npm run build && jest --forceExit",
+    "test": "yarn build && jest --forceExit",
     "test-watch": "jest --watch",
-    "build": "npm run coffee && npm run webpack",
-    "coffee": "node ./node_modules/coffeescript/bin/coffee -c .",
-    "coffee-watch": "node ./node_modules/coffeescript/bin/coffee -cw .",
-    "webpack": "./node_modules/.bin/webpack",
-    "webpack-watch": "./node_modules/.bin/webpack -w",
+    "build": "yarn coffee && yarn webpack",
+    "coffee": "coffee -c .",
+    "coffee-watch": "coffee -cw .",
+    "webpack": "webpack",
+    "webpack-watch": "webpack -w",
     "start": "node server/server.js",
-    "start-watch": "node ./node_modules/nodemon/bin/nodemon server/server.js",
-    "complete": "npm run build && npm start",
-    "dev": "concurrently \"npm run coffee-watch\" \"npm run webpack-watch\" \"npm run start-watch\""
+    "start-watch": "nodemon server/server.js",
+    "complete": "yarn build && yarn start",
+    "dev": "concurrently \"yarn coffee-watch\" \"yarn webpack-watch\" \"yarn run start-watch\""
   },
   "repository": {
     "type": "git",

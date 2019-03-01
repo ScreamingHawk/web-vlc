@@ -25,7 +25,7 @@ There are a couple mandatory settings required to make this app work on your sys
 
 1. Enable the VLC API as per the *VLC configuration* section below.
 2. Set up the minimal *App configuration*: `vlc.command` and `files.locations`.
-3. Compile and run the app with `npm i; npm run complete`.
+3. Compile and run the app with `yarn; yarn run complete`.
 4. Check the command line output for more information.
 
 There are a **ton** of configuration options, please read the below carefully if you want to play with the options.
@@ -163,7 +163,7 @@ There is some intelligence to detect episode number, otherwise the video name ca
 Install dependencies.
 
 ```sh
-npm i
+yarn
 ```
 
 Edit `server/config.yaml` with your defaults.
@@ -171,7 +171,7 @@ Edit `server/config.yaml` with your defaults.
 Build everything and run in a single command, because you are lazy.
 
 ```sh
-npm run complete
+yarn run complete
 ```
 
 Navigate to the application at `http://localhost:3000`.
@@ -182,25 +182,25 @@ Note your path may be different if you changed the config.
 Watch for CoffeeScript changes.
 
 ```sh
-npm run coffee-watch
+yarn run coffee-watch
 ```
 
 Watch for Webpack changes.
 
 ```sh
-npm run webpack-watch
+yarn run webpack-watch
 ```
 
 Run server watching for changes.
 
 ```sh
-npm run start-watch
+yarn run start-watch
 ```
 
 Or watch for all changes in a single command.
 
 ```sh
-npm run dev
+yarn run dev
 ```
 
 [1]: https://michael.standen.link/2018/06/22/lets-encrypt-cert.html

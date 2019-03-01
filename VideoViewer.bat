@@ -1,1 +1,1 @@
-npm run complete
+yarn complete
