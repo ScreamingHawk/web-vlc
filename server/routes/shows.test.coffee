@@ -23,18 +23,33 @@ testData = [
 		episode: 32
 		season: 1
 		show: "Fullmetal Alchemist Brotherhood"
+	,
+		testName: 'Toy Story 4'
+		fname: "F:\\Videos\\Movies\\Toy Story 4\\Toy.Story.4.2019.1080p.BluRay.x264-[YTS.LT].mp4",
+		show: "Toy Story 4"
+	,
+		testName: 'Darling in the FranXX'
+		fname: "F:\\Videos\\Anime\\Darling in the FranXX\\Season 1\\[HorribleSubs] Darling in the FranXX - 02 [1080p].mkv",
+		episode: 2
+		season: 1
+		show: "Darling in the FranXX"
+	,
+		testName: 'Cencoroll'
+		fname: "F:\\Videos\\Anime\\Cencoroll\\[LoveRoll] Cencoroll [WEB 1080p AAC][EADBB390].mkv",
+		show: "Cencoroll"
 ]
 
 # Tests begin
 
 describe 'getFileMeta', ->
 	for d in testData
-		test d.testName, ->
-			meta = shows.getFileMeta d.fname, null, null
-			expect meta.episode
-				.toBe d.episode
-			expect meta.season
-				.toBe d.season
-			expect meta.show
-				.toBe d.show
+		do (d)->
+			it d.testName, =>
+				meta = shows.getFileMeta d.fname, null, null
+				expect meta.episode
+					.toBe d.episode
+				expect meta.season
+					.toBe d.season
+				expect meta.show
+					.toBe d.show
 
