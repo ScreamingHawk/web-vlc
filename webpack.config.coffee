@@ -40,8 +40,7 @@ module.exports =
 						options:
 								cacheDirectory: true
 								presets: [
-									"react"
-									"es2015"
+									"@babel/preset-react"
 								]
 					]
 				,
