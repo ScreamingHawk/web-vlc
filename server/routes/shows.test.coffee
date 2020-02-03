@@ -56,4 +56,4 @@ describe 'getFileMeta', ->
 					.toBe d.season
 				expect meta.show
 					.toBe d.show
-
+	return

@@ -182,12 +182,15 @@ describe 'checkUseMal', ->
 		expect mal.checkUseMal show, true
 			.toBe false
 
+	return
+
 describe 'getTokens', ->
 	test 'callback err on no creds', (done)->
 		mal.getTokens (err)->
 			expect err
 				.toBe "Unable to login to MAL, please set your credentials"
 			done()
+	return
 
 describe 'getShowPage', ->
 	test 'gets Madoka', (done)->
@@ -197,6 +200,7 @@ describe 'getShowPage', ->
 			expect url
 				.toBe "https://myanimelist.net/anime/9756/Mahou_Shoujo_Madoka%E2%98%85Magica"
 			done()
+	return
 
 describe 'getAnimeId', ->
 	test 'gets Id', ->
@@ -222,3 +226,5 @@ describe 'getAnimeId', ->
 			.toBeNull()
 		expect mal.getAnimeId()
 			.toBeNull()
+
+	return

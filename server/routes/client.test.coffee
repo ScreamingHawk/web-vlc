@@ -11,30 +11,35 @@ describe 'Root path', ->
 		request app
 			.get '/'
 			.expect 200
+	return
 
 describe 'bundle.js', ->
 	test 'Returns 200', ->
 		request app
 			.get '/bundle.js'
 			.expect 200
+	return
 
 describe 'manifest.json', ->
 	test 'Returns 200', ->
 		request app
 			.get '/manifest.json'
 			.expect 200
+	return
 
 describe 'offline.html', ->
 	test 'Returns 200', ->
 		request app
 			.get '/offline.html'
 			.expect 200
+	return
 
 describe 'serviceWorker.js', ->
 	test 'Returns 200', ->
 		request app
 			.get '/serviceWorker.js'
 			.expect 200
+	return
 
 describe 'favicon', ->
 	test 'Returns ico', ->
@@ -49,9 +54,11 @@ describe 'favicon', ->
 		request app
 			.get '/favicon.svg'
 			.expect 200
+	return
 
 describe 'img directory', ->
 	test 'Returns 200', ->
 		request app
 			.get '/img/icon/favicon.ico'
 			.expect 200
+	return
