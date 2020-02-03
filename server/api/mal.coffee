@@ -168,8 +168,8 @@ exports.getApiData = getApiData = (pageUrl, show, callback)->
 			apiData = {}
 			apiData.source = pageUrl
 			apiData.userSource = show.userSource
-			apiData.image = jq ".ac"
-					?.attr("src")
+			apiData.image = jq "img[itemprop='image']"
+					?.attr("data-src")
 			apiData.plot = jq "span[itemprop=description]"
 					?.first()?.text()?.replace "[Written by MAL Rewrite]", ""
 					?.trim()

@@ -214,6 +214,8 @@ describe 'getApiData', ->
 				.toBe "PG-13 - Teens 13 or older"
 			expect data.genres
 				.toBe "Psychological, Drama, Magic, Thriller"
+			expect data.image
+				.toBe "https://cdn.myanimelist.net/images/anime/11/55225.jpg"
 			done()
 	return
 
