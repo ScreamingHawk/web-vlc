@@ -153,6 +153,42 @@ exports.userOrSearchSource = userOrSearchSource = (show, callback)->
 				return callback null, pageUrl
 		callback "MAL search failed"
 
+exports.getApiData = getApiData = (pageUrl, show, callback)->
+	request pageUrl, (err, res)->
+		if err?
+			err = "Error contacting MAL: #{err}"
+			log.error err
+			return callback? err
+		else if res?.statusCode isnt 200
+			err = "Request failed from MAL with code #{res?.statusCode}"
+			log.error err
+			return callback? err
+		else
+			jq = cheerio.load res.body
+			apiData = {}
+			apiData.source = pageUrl
+			apiData.userSource = show.userSource
+			apiData.image = jq ".ac"
+					?.attr("src")
+			apiData.plot = jq "span[itemprop=description]"
+					?.first()?.text()?.replace "[Written by MAL Rewrite]", ""
+					?.trim()
+			apiData.malRating = jq ".score"
+					?.first()?.text()?.replace /\n/g, ''
+					?.trim()
+			apiData.rating = jq ".js-scrollfix-bottom span.dark_text"
+					?.filter (i, e)->
+						jq(e).text() == "Rating:"
+					?.parent()?.text()?.replace /\n/g, ''
+					?.replace /Rating:/g, ''
+					?.trim()
+			apiData.genres = jq "[itemprop='genre']"
+					?.map (i, e)->
+						jq(e).text()
+					?.get()?.join(', ')
+			apiData._timestamp = moment()
+			return callback? null, apiData
+
 exports.updateApiData = (show, forceApi=false, callback=null)->
 	if !data.mal?
 		# Set up mal in data if required
@@ -177,47 +213,16 @@ exports.updateApiData = (show, forceApi=false, callback=null)->
 			if err?
 				callback? err
 				return
-			request pageUrl, (err, res)->
+			getApiData pageUrl, show, (err, apiData)->
 				if err?
-					err = "Error contacting MAL: #{err}"
-					log.error err
-					return callback? err
-				else if res?.statusCode isnt 200
-					err = "Request failed from MAL with code #{res?.statusCode}"
-					log.error err
-					return callback? err
-				else
-					jq = cheerio.load res.body
-					apiData = {}
-					apiData.source = pageUrl
-					apiData.userSource = show.userSource
-					apiData.image = jq ".ac"
-							?.attr("src")
-					apiData.plot = jq "span[itemprop=description]"
-							?.first()?.text()?.replace "[Written by MAL Rewrite]", ""
-							?.trim()
-					apiData.malRating = jq ".score"
-							?.first()?.text()?.replace /\n/g, ''
-							?.trim()
-					apiData.rating = jq ".js-scrollfix-bottom span.dark_text"
-							?.filter (i, e)->
-								jq(e).text() == "Rating:"
-							?.parent()?.text()?.replace /\n/g, ''
-							?.replace /Rating:/g, ''
-							?.trim()
-					apiData.genres = jq ".js-scrollfix-bottom span.dark_text"
-							?.filter (i, e)->
-								jq(e).text() == "Genres:"
-							?.parent()?.text()?.replace /\n/g, ''
-							?.replace /Genres:/g, ''
-							?.trim()
-					apiData._timestamp = moment()
-					setValues show, apiData
-					callback? null, show
-					# Update stored data
-					data.mal[show.name] = apiData
-					common.storeData()
+					callback? err
 					return
+				setValues show, apiData
+				callback? null, show
+				# Update stored data
+				data.mal[show.name] = apiData
+				common.storeData()
+				return
 	else
 		err = "MAL updated not allowed for #{show.name}"
 		log.debug err

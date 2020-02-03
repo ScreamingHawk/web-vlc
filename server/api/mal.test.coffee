@@ -202,6 +202,21 @@ describe 'getShowPage', ->
 			done()
 	return
 
+describe 'getApiData', ->
+	test 'gets Madoka', (done)->
+		show =
+			name: 'Mahou Shoujo Madoka'
+		source = "https://myanimelist.net/anime/9756/Mahou_Shoujo_Madoka%E2%98%85Magica"
+		mal.getApiData source, show, (err, data)->
+			expect data.source
+				.toBe source
+			expect data.rating
+				.toBe "PG-13 - Teens 13 or older"
+			expect data.genres
+				.toBe "Psychological, Drama, Magic, Thriller"
+			done()
+	return
+
 describe 'getAnimeId', ->
 	test 'gets Id', ->
 		expect mal.getAnimeId "https://myanimelist.net/anime/9756/Mahou_Shoujo_Madoka%E2%98%85Magica"
