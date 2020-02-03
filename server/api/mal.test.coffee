@@ -189,6 +189,15 @@ describe 'getTokens', ->
 				.toBe "Unable to login to MAL, please set your credentials"
 			done()
 
+describe 'getShowPage', ->
+	test 'gets Madoka', (done)->
+		show =
+			name: 'Mahou Shoujo Madoka'
+		mal.userOrSearchSource show, (err, url)->
+			expect url
+				.toBe "https://myanimelist.net/anime/9756/Mahou_Shoujo_Madoka%E2%98%85Magica"
+			done()
+
 describe 'getAnimeId', ->
 	test 'gets Id', ->
 		expect mal.getAnimeId "https://myanimelist.net/anime/9756/Mahou_Shoujo_Madoka%E2%98%85Magica"

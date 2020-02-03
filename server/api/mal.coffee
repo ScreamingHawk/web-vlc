@@ -127,7 +127,7 @@ exports.getTokens = getTokens = (callback)->
 				log.debug "Login to MAL successful"
 				return callback()
 
-userOrSearchSource = (show, callback)->
+exports.userOrSearchSource = userOrSearchSource = (show, callback)->
 	if show.userSource
 		log.debug "Using user source for #{show.name}"
 		return callback null, show.userSource
