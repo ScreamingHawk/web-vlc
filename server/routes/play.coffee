@@ -11,11 +11,21 @@ exports = module.exports = router
 config = null
 data = null
 common = null
+io = null
 
-exports.init = (c, d, f)->
+exports.init = (c, d, f, io)->
 	config = c
 	data = d
 	common = f
+	io = io
+	# Set vlc ping interval
+	setInterval ()->
+		vlcStatus (err, status)->
+			if err
+				io.sockets.emit 'vlc error'
+				return
+			io.sockets.emit 'status is', status
+	, 1000
 
 nowPlaying = null
 
@@ -60,13 +70,18 @@ router.post '/', (req, res)->
 	res.sendStatus 200
 
 # Get VLC status
-router.get '/status', (req, res)->
+vlcStatus = (callback)->
 	vlcApi null, null, (ok, xmlStatus)->
 		if ok && xmlStatus?
 			parseString xmlStatus, (err, status)->
-				res.json status.root
+				callback null, status.root
 		else
-			res.sendStatus 503
+			callback 503
+router.get '/status', (req, res)->
+	vlcStatus (err, status)->
+		if err
+			return res.sendStatus err
+		res.json status
 
 # Get the filename of the currently playing video
 router.get '/nowplaying', (req, res)->

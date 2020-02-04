@@ -1,4 +1,6 @@
 express = require 'express'
+http = require 'http'
+socketio = require 'socket.io'
 request = require 'request'
 log = require 'winston'
 path = require 'path'
@@ -78,6 +80,16 @@ data = require dataLoc
 
 # Configure server
 app = express()
+if config.server.secure
+	server = https.createServer
+			key: privateKey
+			cert: publicKey
+		, app
+else
+	server = http.createServer app
+s = server.listen config.server.port, (err)->
+	log.info "Server running at #{url}"
+io = socketio s
 app.use bodyParser.json
 	limit: '1mb'
 app.use bodyParser.urlencoded
@@ -93,7 +105,7 @@ showsRoutes.init config, data, commonFunctions
 app.use '/shows', showsRoutes
 
 playRoutes = require './routes/play'
-playRoutes.init config, data, commonFunctions
+playRoutes.init config, data, commonFunctions, io
 app.use '/play', playRoutes
 
 if config.client.downloadEnabled
@@ -120,15 +132,9 @@ app.get '/quit', (req, res)->
 	server.close()
 	process.exit()
 
-startServer = ->
-	# Run server
-	if config.server.secure
-		server = https.createServer
-				key: privateKey
-				cert: publicKey
-			, app
-	else
-		server = http.createServer app
-	server.listen config.server.port, (err)->
-		log.info "Server running at #{url}"
-startServer()
+# Configure socketio
+io.on 'connection', (socket)->
+	log.debug "A user connected"
+	socket.on 'disconnect', ()->
+		log.debug "A user disconnected"
+

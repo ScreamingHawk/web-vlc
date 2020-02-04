@@ -5,6 +5,7 @@ import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css';
 
 import ViewingControlsExtras from './ViewingControlsExtras.jsx';
+import socket from '../global/socket';
 
 import {
 	VolumePlus,
@@ -17,7 +18,7 @@ import {
 } from './Icons'
 
 export default class Viewing extends Component {
-	constructor(props){
+	constructor(props) {
 		super(props)
 
 		this.handleApiErrors = this.handleApiErrors.bind(this)
@@ -25,8 +26,7 @@ export default class Viewing extends Component {
 		this.getVlcFilenameFromStatus = this.getVlcFilenameFromStatus.bind(this)
 		this.updateVideoUsingFilename = this.updateVideoUsingFilename.bind(this)
 		this.updatePlayingVideo = this.updatePlayingVideo.bind(this)
-		this.getVideoStatus = this.getVideoStatus.bind(this)
-		this.tick = this.tick.bind(this)
+		this.setVideoStatus = this.setVideoStatus.bind(this)
 		this.volume = this.volume.bind(this)
 		this.seek = this.seek.bind(this)
 		this.pause = this.pause.bind(this)
@@ -45,35 +45,31 @@ export default class Viewing extends Component {
 			testVolume: false,
 			nextVideo: null,
 			vlcErrorToastId: null,
-			intervals: [],
 		}
 	}
-	componentDidMount(){
-		if (this.state.video){
-			this.getVideoStatus()
+	componentDidMount() {
+		if (this.state.video) {
 			this.getNextVideo()
-			let intervals = []
-			// Tick every second
-			intervals.push(setInterval(this.tick, 1000))
-			// Call status every 2.5 seconds for variance
-			intervals.push(setInterval(this.getVideoStatus, 2500))
 			this.getVlcFilename()
-			this.setState({
-				intervals: intervals,
-			})
 		} else {
 			this.updatePlayingVideo()
 		}
+		socket.on('status is', this.setVideoStatus)
+		socket.on('vlc error', () => {
+			// It's a 503
+			this.handleApiErrors({
+				status: 503,
+			})
+		})
 	}
-	componentWillUnmount(){
-		for (let interval of this.state.intervals){
-			clearInterval(interval)
-		}
+	componentWillUnmount() {
+		socket.off('status is')
+		socket.off('vlc error')
 	}
-	handleApiErrors(response){
+	handleApiErrors(response) {
 		let vlcErrorToastId = this.state.vlcErrorToastId
-		if (response.status == 503){
-			if (!toast.isActive(vlcErrorToastId)){
+		if (response.status == 503) {
+			if (!toast.isActive(vlcErrorToastId)) {
 				// Clear all toasts
 				toast.dismiss()
 				vlcErrorToastId = this.makeToast("Error contacting VLC!", "error", false);
@@ -83,68 +79,54 @@ export default class Viewing extends Component {
 			}
 			return null
 		}
-		if (vlcErrorToastId){
+		if (vlcErrorToastId) {
 			toast.dismiss(vlcErrorToastId)
 		}
 		return response
 	}
-	apiJson(response){
-		if (response != null && response.status == 200){
+	apiJson(response) {
+		if (response != null && response.status == 200) {
 			return response.json()
 		}
 	}
-	tick(){
-		if (!this.state.paused){
-			if (this.state.videoTime >= this.state.videoLength){
-				this.setState({
-					videoTime: this.state.videoLength,
-					paused: true,
-				})
-			} else {
-				this.setState({
-					videoTime: this.state.videoTime + 1,
-				})
-			}
-		}
-	}
-	updatePlayingVideo(){
+	updatePlayingVideo() {
 		fetch(`/play/nowplaying`)
 			.then(this.handleApiErrors)
 			.then(this.apiJson)
 			.then(response => {
 				if ((response != null && response.filename != null) &&
-						(this.state.video == null || this.state.video.filename == null)){
+					(this.state.video == null || this.state.video.filename == null)) {
 					this.updateVideoUsingFilename(response.filename)
 				}
 			})
 	}
-	getVlcFilename(callback){
+	getVlcFilename(callback) {
 		fetch(`/play/status`)
 			.then(this.handleApiErrors)
 			.then(this.apiJson)
 			.then(status => {
-				if (this.state.video == null || this.state.video.filename == null){
+				if (this.state.video == null || this.state.video.filename == null) {
 					const filename = this.getVlcFilenameFromStatus(status)
 					this.setState({
 						vlcFilename: filename
-					}, ()=>{
-						if (callback != null){
+					}, () => {
+						if (callback != null) {
 							callback()
 						}
 					})
 				}
 			})
 	}
-	getVlcFilenameFromStatus(status){
-		if (status != null){
+	getVlcFilenameFromStatus(status) {
+		if (status != null) {
 			try {
-				for (let i of status.information[0].category[0].info){
-					if (i["$"].name == "filename"){
+				for (let i of status.information[0].category[0].info) {
+					if (i["$"].name == "filename") {
 						return i["_"]
 					}
 				}
-			} catch (e){
-				if (e instanceof TypeError){
+			} catch (e) {
+				if (e instanceof TypeError) {
 					// Some unexpected status type
 					console.log("TypeError reading status response", e)
 				} else {
@@ -153,7 +135,7 @@ export default class Viewing extends Component {
 			}
 		}
 	}
-	updateVideoUsingFilename(filename){
+	updateVideoUsingFilename(filename) {
 		// Got a playing video. Try to find it
 		fetch(`/shows/search`, {
 			method: "POST",
@@ -164,66 +146,61 @@ export default class Viewing extends Component {
 				filename: filename || this.state.vlcFilename
 			})
 		})
-		.then(this.handleApiErrors)
-		.then(this.apiJson)
-		.then(video => {
-			if (video != null){
-				this.props.setVideo(video, true)
-				this.setState({
-					video: video
-				}, () => {
-					// Try the mounting stuff again
-					this.componentWillUnmount()
-					this.componentDidMount()
-				})
-			} else {
-				this.makeToast("Error getting playing video!", "error");
-			}
-		})
-	}
-	async getVideoStatus(){
-		await fetch(`/play/status`)
 			.then(this.handleApiErrors)
 			.then(this.apiJson)
-			.then(status => {
-				if (status != null){
-					if (this.state.vlcFilename != null){
-						let vlcFilename = this.getVlcFilenameFromStatus(status)
-						if (vlcFilename != this.state.vlcFilename){
-							this.setState({
-								vlcFilename: vlcFilename
-							}, this.updateVideoUsingFilename)
-							return
-						}
-					}
-					let statusVolume = Number(status.volume[0])
-					let volumeToastId = this.state.volumeToastId
-					if (statusVolume >= 300){
-						// Max is 320 but give some buffer
-						if (!toast.isActive(volumeToastId) && this.state.testVolume){
-							volumeToastId = this.makeToast("Volume at max");
-						}
-					} else if (volumeToastId) {
-						toast.dismiss(volumeToastId)
-					}
+			.then(video => {
+				if (video != null) {
+					this.props.setVideo(video, true)
 					this.setState({
-						videoLength: Number(status.length[0]),
-						videoTime: Number(status.time[0]),
-						paused: status.state[0] != "playing",
-						volume: statusVolume,
-						volumeToastId: volumeToastId,
-						testVolume: false,
+						video: video
+					}, () => {
+						// Try the mounting stuff again
+						this.componentWillUnmount()
+						this.componentDidMount()
 					})
+				} else {
+					this.makeToast("Error getting playing video!", "error");
 				}
 			})
 	}
-	async getNextVideo(){
-		if (this.state.video != null){
+	setVideoStatus(status) {
+		if (status != null) {
+			if (this.state.vlcFilename != null) {
+				let vlcFilename = this.getVlcFilenameFromStatus(status)
+				if (vlcFilename != this.state.vlcFilename) {
+					this.setState({
+						vlcFilename: vlcFilename
+					}, this.updateVideoUsingFilename)
+					return
+				}
+			}
+			let statusVolume = Number(status.volume[0])
+			let volumeToastId = this.state.volumeToastId
+			if (statusVolume >= 300) {
+				// Max is 320 but give some buffer
+				if (!toast.isActive(volumeToastId) && this.state.testVolume) {
+					volumeToastId = this.makeToast("Volume at max");
+				}
+			} else if (volumeToastId) {
+				toast.dismiss(volumeToastId)
+			}
+			this.setState({
+				videoLength: Number(status.length[0]),
+				videoTime: Number(status.time[0]),
+				paused: status.state[0] != "playing",
+				volume: statusVolume,
+				volumeToastId: volumeToastId,
+				testVolume: false,
+			})
+		}
+	}
+	async getNextVideo() {
+		if (this.state.video != null) {
 			await fetch(`/shows/${this.state.video.show.name}/${this.state.video.filename}/next`)
 				.then(this.handleApiErrors)
 				.then(this.apiJson)
 				.then(video => {
-					if (video != null){
+					if (video != null) {
 						video.show = this.state.video.show
 					}
 					this.setState({
@@ -232,8 +209,8 @@ export default class Viewing extends Component {
 				})
 		}
 	}
-	playNextVideo(){
-		if (this.state.nextVideo){
+	playNextVideo() {
+		if (this.state.nextVideo) {
 			this.props.setVideo(this.state.nextVideo)
 			this.setState({
 				video: this.state.nextVideo,
@@ -242,76 +219,67 @@ export default class Viewing extends Component {
 			}, this.getNextVideo)
 		}
 	}
-	async volume(val){
-		if (!isNaN(val)){
+	async volume(val) {
+		if (!isNaN(val)) {
 			// Setting volume directly, update immediately
 			this.setState({
 				volume: val,
 			})
 		}
 		await fetch("/play/volume", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify({
-					volume: val
-				})
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				volume: val
 			})
+		})
 			.then(this.handleApiErrors)
-			.then(response => {
-				if (isNaN(val)){
+			.then(() => {
+				if (isNaN(val)) {
 					this.setState({
 						testVolume: true,
-					}, this.getVideoStatus);
+					});
 				}
 			})
 	}
-	async seek(val){
-		if (!isNaN(val)){
+	async seek(val) {
+		if (!isNaN(val)) {
 			// Seeking to position, set time immediately
 			this.setState({
 				videoTime: val
 			})
 		}
 		await fetch("/play/seek", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json"
-				},
-				body: JSON.stringify({
-					seek: val
-				})
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				seek: val
 			})
+		})
 			.then(this.handleApiErrors)
-			.then(() => {
-				if (isNaN(val)){
-					this.getVideoStatus()
-				}
-			})
 	}
-	async pause(){
+	async pause() {
 		await fetch("/play/pause", {
 			method: "POST"
 		}).then(this.handleApiErrors)
-		.then(response => {
-			if (response){
-				if (this.state.paused){
-					// Unpause, update time
-					this.getVideoStatus()
+			.then(response => {
+				if (response) {
+					this.setState({
+						paused: !this.state.paused,
+					})
 				}
-				this.setState({
-					paused: !this.state.paused,
-				})
-			}
-		})
+			})
 	}
-	makeToast(msg, type="info", autoClose=true){
+	makeToast(msg, type = "info", autoClose = true) {
 		const args = {
 			position: toast.POSITION.BOTTOM_CENTER,
 			autoClose: autoClose,
 		};
-		if (type == "info"){
+		if (type == "info") {
 			return toast.info(msg, args);
 		} else if (type == "error") {
 			return toast.error(msg, args);
@@ -326,17 +294,17 @@ export default class Viewing extends Component {
 			</button>
 		)
 		const formatTime = (time) => {
-			if (time == null || time == 0){
+			if (time == null || time == 0) {
 				return "0:00"
 			}
 			let seconds = time % 60
 			let minutes = Math.floor(time / 60) % 60
 			let hours = Math.floor(time / 3600)
 			let formatted = ""
-			if (hours > 0){
+			if (hours > 0) {
 				formatted = hours + ":"
 			}
-			if (hours > 0){
+			if (hours > 0) {
 				formatted += String(minutes).padStart(2, "0") + ":"
 			} else {
 				formatted = minutes + ":"
@@ -346,12 +314,12 @@ export default class Viewing extends Component {
 		}
 		// Source link
 		let sourceLink = null
-		if (this.state.video && this.state.video.show && this.state.video.show.api && this.state.video.show.source){
+		if (this.state.video && this.state.video.show && this.state.video.show.api && this.state.video.show.source) {
 			const { show } = this.state.video
 			let sourceLabel = "Source"
-			if (show.api == "mal"){
+			if (show.api == "mal") {
 				sourceLabel = "MyAnimeList Source"
-			} else if (show.api == "omdb"){
+			} else if (show.api == "omdb") {
 				sourceLabel = "IMDB Source"
 			}
 			sourceLink = (
@@ -392,7 +360,7 @@ export default class Viewing extends Component {
 					{playNextButton}
 				</div>
 				<ViewingControlsExtras {...this.props} {...sendProps} />
-				{ sourceLink }
+				{sourceLink}
 			</div>
 		)
 	}
