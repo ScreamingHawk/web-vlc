@@ -141,7 +141,6 @@ vlcApi = (command, value, callback)->
 		url += "?command=#{command}"
 		if value?
 			url += "&val=#{value}"
-	log.debug "VLC api: #{url}"
 	request
 			url: url
 			headers:
@@ -153,13 +152,11 @@ vlcApi = (command, value, callback)->
 					log.error "Error contacting VLC"
 					log.info "Have you configured the VLC HTTP API?"
 					log.error err
-				else
-					# Log it at debug level this time
-					log.verbose "Error contacting VLC"
+					suppressContactError = true
 				callback? false
 				return
 			if res?.statusCode is 200
-				suppressContactError = true
+				suppressContactError = false
 			else
 				log.error "Error contact VLC (#{res?.statusCode})"
 				if res?.statusCode is 401
