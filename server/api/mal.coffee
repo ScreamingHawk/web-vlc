@@ -176,7 +176,7 @@ exports.getApiData = getApiData = (pageUrl, show, callback)->
 			apiData.malRating = jq ".score"
 					?.first()?.text()?.replace /\n/g, ''
 					?.trim()
-			apiData.rating = jq ".js-scrollfix-bottom span.dark_text"
+			apiData.rating = jq "span.dark_text"
 					?.filter (i, e)->
 						jq(e).text() == "Rating:"
 					?.parent()?.text()?.replace /\n/g, ''
