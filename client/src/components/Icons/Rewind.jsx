@@ -32,7 +32,7 @@ export default class Rewind extends Component {
 					letterSpacing="0"
 					wordSpacing="0"
 					fill="#1a1e49">
-					-20s
+						-{this.props.seconds}s
 				</text>
 			</svg>
 		)

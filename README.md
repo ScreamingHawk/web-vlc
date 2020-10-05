@@ -105,12 +105,6 @@ To enable a download ⤓ button for each video, set the value of `client.downloa
 
 To enable a stream ≋ button for each video, set the value of `client.streamEnabled` in `server/config.yaml` to `true`.
 
-#### Skip amount
-
-The skip forward / backward buttons on the app are configurable with the parameter `client.skipSeconds`.
-
-The default value is `20` for 20 seconds.
-
 #### Edit API Source
 
 Sometimes the API show detection is not accurate. Enabling this flag will let the user correct the API source from the application.

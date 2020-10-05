@@ -45,6 +45,8 @@ export default class Viewing extends Component {
 			testVolume: false,
 			nextVideo: null,
 			vlcErrorToastId: null,
+			ffSeconds: 30,
+			rwSeconds: 10.
 		}
 	}
 	componentDidMount() {
@@ -286,7 +288,6 @@ export default class Viewing extends Component {
 		}
 	}
 	render() {
-		const skipSeconds = this.props.config.skipSeconds || 20;
 		const pauseIcon = this.state.paused ? (<Play />) : (<Pause />)
 		const playNextButton = this.state.nextVideo == null ? null : (
 			<button className="info" onClick={() => this.playNextVideo()}>
@@ -345,11 +346,11 @@ export default class Viewing extends Component {
 					<button className="info" onClick={this.pause}>
 						{pauseIcon}
 					</button>
-					<button className="info" onClick={() => this.seek(`-${skipSeconds}s`)}>
-						<Rewind seconds={skipSeconds} />
+					<button className="info" onClick={() => this.seek(`-${this.state.rwSeconds}s`)}>
+						<Rewind seconds={this.state.rwSeconds} />
 					</button>
-					<button className="info" onClick={() => this.seek(`+${skipSeconds}s`)}>
-						<FastForward seconds={skipSeconds} />
+					<button className="info" onClick={() => this.seek(`+${this.state.ffSeconds}s`)}>
+						<FastForward seconds={this.state.ffSeconds} />
 					</button>
 					<button className="info" onClick={() => this.volume("down")}>
 						<VolumeMinus />
