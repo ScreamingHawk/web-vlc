@@ -4,6 +4,9 @@ path = require 'path'
 
 mal = require './mal'
 
+# 10sec timeout on calls
+jest.setTimeout 10000
+
 # Get real config
 realConfig = null
 configPath = path.join __dirname, '..', 'config.yaml'
@@ -210,6 +213,8 @@ describe 'getApiData', ->
 		mal.getApiData source, show, (err, data)->
 			expect data.source
 				.toBe source
+			expect data.plot
+				.toContain "hope, despair, and friendship"
 			expect data.rating
 				.toBe "PG-13 - Teens 13 or older"
 			expect data.genres

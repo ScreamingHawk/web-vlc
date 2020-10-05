@@ -170,16 +170,14 @@ exports.getApiData = getApiData = (pageUrl, show, callback)->
 			apiData.userSource = show.userSource
 			apiData.image = jq "img[itemprop='image']"
 					?.attr("data-src")
-			apiData.plot = jq "span[itemprop=description]"
+			apiData.plot = jq "[itemprop='description']"
 					?.first()?.text()?.replace "[Written by MAL Rewrite]", ""
 					?.trim()
 			apiData.malRating = jq ".score"
 					?.first()?.text()?.replace /\n/g, ''
 					?.trim()
-			apiData.rating = jq "span.dark_text"
-					?.filter (i, e)->
-						jq(e).text() == "Rating:"
-					?.parent()?.text()?.replace /\n/g, ''
+			apiData.rating = jq "span:contains('Rating:')"
+					?.parent()?.text()
 					?.replace /Rating:/g, ''
 					?.trim()
 			apiData.genres = jq "[itemprop='genre']"
