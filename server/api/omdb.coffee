@@ -15,11 +15,13 @@ exports.init = (c, d, f)->
 	common = f
 
 setValues = (show, apiData)->
+	log.debug("Setting OMDB values for #{show.name}")
 	show["source"] = "https://www.imdb.com/title/#{apiData.imdbID}"
 	show["image"] = apiData.Poster
 	show["plot"] = apiData.Plot
 	show["score"] = apiData.imdbRating
 	show["rating"] = apiData.Rated
+	show["api"] = "omdb"
 
 exports.updateApiData = (show, forceApi=false)->
 	if !data.omdb?

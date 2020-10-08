@@ -27,12 +27,14 @@ exports.init = (c, d, f)->
 	common = f
 
 setValues = (show, apiData)->
+	log.debug("Setting MAL values for #{show.name}")
 	show["source"] = apiData.source
 	show["image"] = apiData.image
 	show["plot"] = apiData.plot
 	show["genres"] = apiData.genres
 	show["score"] = apiData.malRating
 	show["rating"] = apiData.rating
+	show["api"] = "mal"
 
 exports.checkUseMal = checkUseMal = (show, forceApi=false)->
 	return config?.api?.mal?.enabled && (forceApi || show.api == "mal")
