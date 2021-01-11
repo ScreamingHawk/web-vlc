@@ -7,6 +7,7 @@ path = require 'path'
 bodyParser = require 'body-parser'
 requireYaml = require 'require-yml'
 fs = require 'fs'
+pkceChallenge = require 'pkce-challenge'
 
 configPath = path.join __dirname, 'config.yaml'
 
@@ -22,6 +23,10 @@ log.remove log.transports.Console
 log.add log.transports.Console,
 	timestamp: true
 	level: config.server.logLevel
+
+# Set up pkce challenge (this should be done per request but eh)
+config.challenge = pkceChallenge()
+log.debug "Challenge code #{JSON.stringify config.challenge}"
 
 # Secure based configuration
 if config.server.secure
@@ -123,6 +128,10 @@ if config.client.streamEnabled
 configRoutes = require './routes/config'
 configRoutes.init config, data, commonFunctions
 app.use '/config', configRoutes
+
+verifyRoutes = require './routes/verify'
+verifyRoutes.init config
+app.use '/verify', verifyRoutes
 
 app.use '/', require './routes/client'
 

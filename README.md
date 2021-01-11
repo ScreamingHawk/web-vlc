@@ -131,6 +131,8 @@ To enable this feature, set the `api.mal.enabled` flag to `enabled`.
 
 Please note that MyAnimeList has a very relaxed search feature which may result in poor matches.
 
+To enable auto updating of your shows, log in to MAL and create a [clientId](https://myanimelist.net/apiconfig). Set the `api.mal.clientId` and `api.mal.clientSecret` with the provided values.
+
 #### API - Cache Period
 
 Data returned from the APIs are cached for a number of days.

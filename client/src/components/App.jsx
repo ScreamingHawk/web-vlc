@@ -65,27 +65,39 @@ export default class App extends Component {
 		})
 	}
 	render(){
+		const { config, location, video } = this.state
 		const sendProps = {
-			currentVideo: this.state.video,
+			currentVideo: video,
 			setVideo: this.setVideo,
 			streamVideo: this.streamVideo,
-			config: this.state.config,
+			config,
 		}
 		let view
 		let isViewingText = "View List"
-		if (this.state.location == "viewing"){
+		if (location == "viewing"){
 			view = <Viewing {...sendProps} />
-		} else if (this.state.location == "streaming"){
+		} else if (location == "streaming"){
 			view = <Streaming {...sendProps} />
 		} else {
 			view = <ShowList {...sendProps} />
 			isViewingText = "Now Playing"
 		}
+		// Generate MAL oAuth link
+		let malFrag = null
+		if (config && config.malLoggedIn){
+			malFrag = <span>Logged in to MAL</span>
+		} else if (config && config.malUrl){
+			const malAuthUrl = `${config.malUrl}v1/oauth2/authorize?response_type=code&client_id=${config.malClientId}&redirect_uri=${window.location}verify&code_challenge=${config.challenge}&code_challenge_method=plain`
+			malFrag = <a className="btn success" href={malAuthUrl}>Login to MAL</a>
+		}
 		return (
 			<div>
 				<header className="flex row spaced center">
 					<h1>Video Viewer</h1>
-					<button className="info" onClick={() => this.toggleViewing()}>{isViewingText}</button>
+					<div className="flex row end spaced-children center">
+						<button className="info" onClick={() => this.toggleViewing()}>{isViewingText}</button>
+						{ malFrag }
+					</div>
 				</header>
 				{view}
 			</div>
