@@ -187,14 +187,6 @@ describe 'checkUseMal', ->
 
 	return
 
-describe 'getTokens', ->
-	test 'callback err on no creds', (done)->
-		mal.getTokens (err)->
-			expect err
-				.toBe "Unable to login to MAL, please set your credentials"
-			done()
-	return
-
 describe 'getShowPage', ->
 	test 'gets Madoka', (done)->
 		show =

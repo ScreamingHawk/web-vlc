@@ -32,7 +32,7 @@ api:
     key: "XXXXXXXX"
   mal:
     enabled: false
-    url: "https://myanimelist.net/"
+    url: "https://api.myanimelist.net/v2"
     clientId: "XXXXXXXX"
     clientSecret: "XXXXXXXX"
   cacheDays: 30

@@ -86,8 +86,8 @@ export default class App extends Component {
 		let malFrag = null
 		if (config && config.malLoggedIn){
 			malFrag = <span>Logged in to MAL</span>
-		} else if (config && config.malUrl){
-			const malAuthUrl = `${config.malUrl}v1/oauth2/authorize?response_type=code&client_id=${config.malClientId}&redirect_uri=${window.location}verify&code_challenge=${config.challenge}&code_challenge_method=plain`
+		} else if (config && config.malClientId){
+			const malAuthUrl = `https://myanimelist.net/v1/oauth2/authorize?response_type=code&client_id=${config.malClientId}&redirect_uri=${window.location}verify&code_challenge=${config.challenge}&code_challenge_method=plain`
 			malFrag = <a className="btn success" href={malAuthUrl}>Login to MAL</a>
 		}
 		return (

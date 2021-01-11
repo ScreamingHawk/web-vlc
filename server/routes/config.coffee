@@ -13,7 +13,6 @@ router.get '/client', (req, res)->
 	# Return client config
 	c = config?.client || {}
 	if config?.api?.mal?.enabled
-		c.malUrl = config.api.mal.url
 		c.malClientId = config.api.mal.clientId
 		c.challenge = config.challenge.code_challenge
 		c.malLoggedIn = config.api.mal.token?

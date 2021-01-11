@@ -13,7 +13,7 @@ exports.init = (c) ->
 router.get '/', (req, res)->
 	mal = config.api.mal
 	reqOptions =
-		url: "#{mal.url}v1/oauth2/token"
+		url: "https://myanimelist.net/v1/oauth2/token"
 		form:
 			client_id: mal.clientId
 			client_secret: mal.clientSecret
