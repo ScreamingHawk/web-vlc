@@ -41,6 +41,6 @@ router.use '/img', express.static path.join __dirname, '../../client/build/img'
 router.get '/favicon.ico', (req, res)->
 	res.sendFile path.join __dirname, '../../client/build/img/icon/favicon.ico'
 router.get '/favicon.png', (req, res)->
-	res.sendFile path.join __dirname, '../../client/build/img/icon/icon-192x192.png'
+	res.sendFile path.join __dirname, '../../client/build/img/icon/icon.png'
 router.get '/favicon.svg', (req, res)->
 	res.sendFile path.join __dirname, '../../client/build/img/icon/icon.svg'
