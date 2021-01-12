@@ -95,8 +95,8 @@ export default class App extends Component {
 				<header className="flex row spaced center">
 					<h1>Video Viewer</h1>
 					<div className="flex row end spaced-children center">
+						{malFrag}
 						<button className="info" onClick={() => this.toggleViewing()}>{isViewingText}</button>
-						{ malFrag }
 					</div>
 				</header>
 				{view}
