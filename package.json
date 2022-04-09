@@ -13,7 +13,7 @@
     "history": "^4.7.2",
     "http-proxy-middleware": "^0.20.0",
     "mime": "^2.2.0",
-    "moment": "^2.23.0",
+    "moment": "^2.29.2",
     "pkce-challenge": "^2.1.0",
     "rc-slider": "^8.6.0",
     "react": "^16.2.0",
